@@ -120,7 +120,7 @@ namespace GFEC
             newSolver.LinearSolver = new CholeskyFactorization();
             newSolver.ActivateNonLinearSolution = true;
             newSolver.SolveNewmark();
-            newSolver.PrintExplicitSolution();
+            newSolver.PrintExplicitSolution();//
         }
 
     }
