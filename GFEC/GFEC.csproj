@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{496A0C65-9E07-46AE-BCFD-23D222B74B11}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>GFEC</RootNamespace>
+    <AssemblyName>GFEC</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Examples\BeamDynamicExample.cs" />
+    <Compile Include="Examples\CantileverInContact.cs" />
+    <Compile Include="Examples\CantileverQuadsExample.cs" />
+    <Compile Include="Examples\CentralDifferencesTest.cs" />
+    <Compile Include="Examples\DynamicExample.cs" />
+    <Compile Include="Examples\ExplicitLinearExample.cs" />
+    <Compile Include="Examples\LinearFrameExample.cs" />
+    <Compile Include="Examples\LinearFrameTrussHybridExample.cs" />
+    <Compile Include="Examples\LinearTrussExample.cs" />
+    <Compile Include="Examples\LinearTrussInContactExample.cs" />
+    <Compile Include="Examples\NonLinearCantileverExample.cs" />
+    <Compile Include="Examples\NonSymmetricSystem.cs" />
+    <Compile Include="Examples\TwoBeamsInContactExample.cs" />
+    <Compile Include="Examples\TwoBeamsInContactQuadsExample.cs" />
+    <Compile Include="Examples\TwoBeamsInFrContactQuadsExample.cs" />
+    <Compile Include="Examples\TwoBlocksInContact.cs" />
+    <Compile Include="Examples\TwoQuadsDynamicExample.cs" />
+    <Compile Include="Examples\TwoQuadsExample.cs" />
+    <Compile Include="Examples\TwoQuadsInContactNewExample.cs" />
+    <Compile Include="Solver\Dynamic.cs" />
+    <Compile Include="Solver\Dynamic\CentralDifferences.cs" />
+    <Compile Include="Solver\Dynamic\InitialConditions.cs" />
+    <Compile Include="Solver\ISolver.cs" />
+    <Compile Include="Solver\Linear\BiCGSTABSolver.cs" />
+    <Compile Include="Solver\Linear\CholeskyFactorization.cs" />
+    <Compile Include="Solver\Linear\GaussSolver.cs" />
+    <Compile Include="Solver\Linear\ILinearSolution.cs" />
+    <Compile Include="Solver\Linear\LinearSolution.cs" />
+    <Compile Include="Solver\Linear\LUFactorization.cs" />
+    <Compile Include="Solver\Linear\PCGSolver.cs" />
+    <Compile Include="Solver\NonLinear\INonLinearSolution.cs" />
+    <Compile Include="Solver\NonLinear\LoadControlledNewtonRaphson.cs" />
+    <Compile Include="Solver\NonLinear\NewtonIterations.cs" />
+    <Compile Include="Solver\NonLinear\NonLinearSolution.cs" />
+    <Compile Include="Solver\Static.cs" />
+    <Compile Include="Solver\TestingFolder\DynamicScheme.cs" />
+    <Compile Include="Solver\TestingFolder\DynamicSolver.cs" />
+    <Compile Include="Solver\TestingFolder\ExplicitSolver.cs" />
+    <Compile Include="Solver\TestingFolder\NRScheme.cs" />
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Assemble\Assembly.cs" />
+    <Compile Include="Assemble\BoundaryConditionsImposition.cs" />
+    <Compile Include="Assemble\IAssembly.cs" />
+    <Compile Include="Elements\Bar2D.cs" />
+    <Compile Include="Elements\Beam2D.cs" />
+    <Compile Include="Elements\BeamNL2D.cs" />
+    <Compile Include="Elements\ContactNtN2D.cs" />
+    <Compile Include="Elements\ContactNtN2Df.cs" />
+    <Compile Include="Elements\ContactNtS2D.cs" />
+    <Compile Include="Elements\ContactNtS2Df.cs" />
+    <Compile Include="Elements\ElementProperties.cs" />
+    <Compile Include="Elements\Hex8.cs" />
+    <Compile Include="Elements\IElement.cs" />
+    <Compile Include="Elements\IElementProperties.cs" />
+    <Compile Include="Elements\Quad4.cs" />
+    <Compile Include="IO Routines\ExportToFile.cs" />
+    <Compile Include="LinearAlgebra\MatrixOperations.cs" />
+    <Compile Include="LinearAlgebra\VectorOperations.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Node\INode.cs" />
+    <Compile Include="Node\Node.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
