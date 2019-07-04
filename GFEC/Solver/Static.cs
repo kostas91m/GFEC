@@ -42,5 +42,10 @@ namespace GFEC
             VectorOperations.PrintVector(staticSolutionVector);
         }
 
+        public double[] GetSolution()
+        {
+            return staticSolutionVector;
+        }
+
     }
 }

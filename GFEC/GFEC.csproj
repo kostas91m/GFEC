@@ -74,6 +74,7 @@
     <Compile Include="Examples\TwoQuadsDynamicExample.cs" />
     <Compile Include="Examples\TwoQuadsExample.cs" />
     <Compile Include="Examples\TwoQuadsInContactNewExample.cs" />
+    <Compile Include="IO Routines\ShowToGUI.cs" />
     <Compile Include="Solver\Dynamic.cs" />
     <Compile Include="Solver\Dynamic\CentralDifferences.cs" />
     <Compile Include="Solver\Dynamic\InitialConditions.cs" />

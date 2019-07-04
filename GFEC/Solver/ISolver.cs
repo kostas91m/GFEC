@@ -14,5 +14,6 @@ namespace GFEC
         INonLinearSolution NonLinearScheme { get; set; }
         void PrintSolution();
         double[,] CustomStiffnessMatrix { get; set; }
+        double[] GetSolution();
     }
 }

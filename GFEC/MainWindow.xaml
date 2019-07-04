@@ -7,6 +7,9 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <TextBox Name="Results"  HorizontalAlignment="Left" Height="201" Margin="28,194,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="741"/>
+        <Button Content="Run" Click="RunButton" HorizontalAlignment="Left" Margin="400,83,0,0" VerticalAlignment="Top" Width="85" Height="29"/>
+        <ComboBox Name="ComboBox1" HorizontalAlignment="Left" Margin="505,83,0,0" VerticalAlignment="Top" Width="264" Height="29"/>
+
     </Grid>
 </Window>

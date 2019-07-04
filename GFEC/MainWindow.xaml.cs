@@ -23,6 +23,43 @@ namespace GFEC
         public MainWindow()
         {
             InitializeComponent();
+            LoadComboBox();
+        }
+
+        private void RunButton(object sender, RoutedEventArgs args)
+        {
+            SolveSelectedExample();
+        }
+
+        private void LoadComboBox()
+        {
+            List<string> exampleList = new List<string>();
+            exampleList.Add("LinearTrussExample");
+            exampleList.Add("TwoQuadsExample");
+            
+            ComboBox1.ItemsSource = exampleList;
+        }
+
+        private void SolveSelectedExample()
+        {
+            double[] solution;
+            string selectedExample = ComboBox1.SelectedItem.ToString();
+            switch (selectedExample)
+            {
+                case "TwoQuadsExample":
+                    solution = TwoQuadsExample.RunStaticExample();
+                    break;
+                case "LinearTrussExample":
+                    solution = LinearTrussExample.RunExample();
+                    break;
+                default:
+                    solution = TwoQuadsExample.RunStaticExample();
+                    break;
+            }
+            Results.Text = solution[0].ToString();
+
         }
     }
+
+    
 }

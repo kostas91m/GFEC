@@ -46,5 +46,10 @@ namespace GFEC
             VectorOperations.PrintVector(dynamicSolutionVector);
         }
 
+        public double[] GetSolution()
+        {
+            return null;
+        }
+
     }
 }
