@@ -4,12 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GFEC"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="572" Width="959">
     <Grid>
-        <TextBox Name="Results"  HorizontalAlignment="Left" Height="201" Margin="28,194,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="741"/>
-        <Button Content="Run" Click="RunButton" HorizontalAlignment="Left" Margin="400,83,0,0" VerticalAlignment="Top" Width="85" Height="29"/>
-        <ComboBox Name="ComboBox1" HorizontalAlignment="Left" Margin="505,83,0,0" VerticalAlignment="Top" Width="264" Height="29"/>
-
+        <TextBox Name="Results"  HorizontalAlignment="Left" Height="390" Margin="543,141,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="398"/>
+        <Button Content="Run" Click="RunButton" HorizontalAlignment="Left" Margin="856,10,0,0" VerticalAlignment="Top" Width="85" Height="29"/>
+        <ComboBox Name="ComboBox1" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="264" Height="29"/>
+        <lvc:CartesianChart Name="CartChart" Series="{Binding Graph}" Margin="10,141,413,10" />
     </Grid>
 </Window>

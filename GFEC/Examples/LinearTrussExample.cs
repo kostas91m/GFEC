@@ -61,7 +61,7 @@ namespace GFEC
             return assembly;
         }
 
-        public static double[] RunExample()
+        public static Results RunExample()
         {
             IAssembly elementsAssembly = CreateAssembly();
             elementsAssembly.CreateElementsAssembly();
@@ -75,7 +75,7 @@ namespace GFEC
             newSolu.AssemblyData = elementsAssembly;
             newSolu.Solve(externalForces);
             newSolu.PrintSolution();
-            return newSolu.GetSolution();
+            return new Results();
         }
     }
 }

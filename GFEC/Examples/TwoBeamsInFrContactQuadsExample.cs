@@ -105,7 +105,7 @@ namespace GFEC
             newSolu.PrintSolution();
         }
 
-        public static void RunDynamicExample()
+        public static Results RunDynamicExample()
         {
             IAssembly elementsAssembly = CreateAssembly();
             elementsAssembly.CreateElementsAssembly();
@@ -130,6 +130,8 @@ namespace GFEC
             newSolver.ActivateNonLinearSolution = true;
             newSolver.SolveNewmark();
             //newSolver.PrintExplicitSolution();
+            Results finalResults = new Results() { DynamicSolution = newSolver.explicitSolution, TimeSteps = newSolver.TimeAtEachStep };
+            return finalResults;
         }
 
     }

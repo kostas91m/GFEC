@@ -19,14 +19,14 @@ namespace GFEC
         private int timeStepsNumber;
         private double timeStep;
         private double a0, a1, a2, a3;
-        private Dictionary<int, double[]> explicitSolution = new Dictionary<int, double[]>();
+        public Dictionary<int, double[]> explicitSolution = new Dictionary<int, double[]>();
         private Dictionary<int, double[]> explicitVelocity = new Dictionary<int, double[]>();
         private Dictionary<int, double[]> explicitAcceleration = new Dictionary<int, double[]>();
         public bool ActivateNonLinearSolution { get; set; }
         public double[,] CustomStiffnessMatrix { get; set; }
         public double[,] CustomMassMatrix { get; set; }
         public double[,] CustomDampingMatrix { get; set; }
-        private Dictionary<int, double> TimeAtEachStep { get; set; }
+        public Dictionary<int, double> TimeAtEachStep { get; set; }
 
         public ExplicitSolver(double totalTime, int timeStepsNumber)
         {
@@ -520,6 +520,7 @@ namespace GFEC
                 TimeAtEachStep.Add(i, time);
             }
             ExportToFile.ExportExplicitResults(explicitSolution, TimeAtEachStep, 1, 1);
+            //ShowToGUI.ShowResults(explicitSolution, TimeAtEachStep, 1, 1);
         }
 
         private double[] CalculateHatRVectorNewmarkNL(int i, List<double> aConstants, double[] previousIterationSolution)
@@ -628,5 +629,9 @@ namespace GFEC
             return solutionVector;
         }
         #endregion
+        public Tuple<Dictionary<int, double[]>, Dictionary<int, double>> GetResults()
+        {
+            return new Tuple<Dictionary<int, double[]>, Dictionary<int, double>>(explicitSolution, TimeAtEachStep);
+        }
     }
 }
