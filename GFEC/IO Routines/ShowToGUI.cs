@@ -12,6 +12,7 @@ namespace GFEC
     {
         public static SeriesCollection ShowResults(Results analysisResults, int dofNumber, int intervals)
         {
+            int countVector = analysisResults.DynamicSolution.Count;
             int step = 0;
             int line = 0;
             double[] xAxis = new double[analysisResults.DynamicSolution.Count];
@@ -30,10 +31,10 @@ namespace GFEC
             }
             SeriesCollection graph = new SeriesCollection
             {
-                new LineSeries
-                {
-                    Values = new ChartValues<double>(xAxis)
-                },
+                //new LineSeries
+                //{
+                //    Values = new ChartValues<double>(xAxis)
+                //},
                 new LineSeries
                 {
                     Values = new ChartValues<double>(yAxis)

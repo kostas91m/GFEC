@@ -35,7 +35,7 @@ namespace GFEC
         private void RunButton(object sender, RoutedEventArgs args)
         {
             SolveSelectedExample();
-            Graph = ShowToGUI.ShowResults(solverResults, 1, 100);
+            Graph = ShowToGUI.ShowResults(solverResults, 1, 1);
             DataContext = this;
             
             return;
