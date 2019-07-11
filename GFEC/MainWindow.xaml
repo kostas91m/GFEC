@@ -8,9 +8,10 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="572" Width="959">
     <Grid>
-        <TextBox Name="Results"  HorizontalAlignment="Left" Height="390" Margin="543,141,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="398"/>
-        <Button Content="Run" Click="RunButton" HorizontalAlignment="Left" Margin="856,10,0,0" VerticalAlignment="Top" Width="85" Height="29"/>
-        <ComboBox Name="ComboBox1" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="264" Height="29"/>
-        <lvc:CartesianChart Name="CartChart" Series="{Binding Graph}" Margin="10,141,413,10" />
+        <TextBox Name="Results"  HorizontalAlignment="Left" Height="348" Margin="543,141,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="375"/>
+        <Button Content="Run" Click="RunButton" HorizontalAlignment="Left" Margin="833,26,0,0" VerticalAlignment="Top" Width="85" Height="29"/>
+        <ComboBox Name="ComboBox1" HorizontalAlignment="Left" Margin="538,26,0,0" VerticalAlignment="Top" Width="285" Height="29"/>
+        <lvc:CartesianChart Name="CartChart" Series="{Binding Graph}" Margin="28,295,413,29" />
+        <lvc:CartesianChart Name="MeshDraw" Series="{Binding Mesh}" Margin="28,26,413,251" />
     </Grid>
 </Window>
