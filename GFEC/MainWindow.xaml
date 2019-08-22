@@ -13,5 +13,6 @@
         <ComboBox Name="ComboBox1" HorizontalAlignment="Left" Margin="538,26,0,0" VerticalAlignment="Top" Width="285" Height="29"/>
         <lvc:CartesianChart Name="CartChart" Series="{Binding Graph}" Margin="28,295,413,29" />
         <lvc:CartesianChart Name="MeshDraw" Series="{Binding Mesh}" Margin="28,26,413,251" />
+        <Button Content="Import Nodes" HorizontalAlignment="Left" Margin="739,97,0,0" VerticalAlignment="Top" Width="84" Click="Import_Nodes_Button_Click" Height="22"/>
     </Grid>
 </Window>

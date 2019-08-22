@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using LiveCharts;
 using LiveCharts.Wpf;
+using Microsoft.Win32;
 
 namespace GFEC
 {
@@ -99,6 +101,37 @@ namespace GFEC
             
             solverResults = finalResults;
         }
+
+        private async void Import_Nodes_Button_Click(object sender, RoutedEventArgs args)
+        {
+            try
+            {
+                OpenFileDialog dialog1 = new OpenFileDialog();
+                if (dialog1.ShowDialog() == true)
+                {
+                    StreamReader stream = new StreamReader(dialog1.FileName);
+                    string file = await stream.ReadToEndAsync();
+                    string[] lines = file.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+                    foreach (var line in lines)
+                    {
+                        // in case of first line ...
+                        string[] fields = line.Split(new string[] { "\t" }, StringSplitOptions.None);
+                        foreach(string field in fields)
+                        {
+                            double value = double.Parse(field);
+                        }
+                    }
+                }
+                
+                 
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 
     
