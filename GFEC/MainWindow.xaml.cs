@@ -133,6 +133,35 @@ namespace GFEC
             }
         }
 
+        private async void Import_Connectivity_Button_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                OpenFileDialog dialog1 = new OpenFileDialog();
+                if (dialog1.ShowDialog() == true)
+                {
+                    StreamReader stream = new StreamReader(dialog1.FileName);
+                    string file = await stream.ReadToEndAsync();
+                    List<string> lines = new List<string>(file.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries));
+                    lines.RemoveAt(0);
+
+                    foreach (var line in lines)
+                    {
+                        // in case of first line ...
+                        string[] fields = line.Split(new string[] { "\t" }, StringSplitOptions.None);
+                        int nodeIndex = int.Parse(fields[0]);
+                        var node = new Node(double.Parse(fields[1]), double.Parse(fields[2]));
+                        nodes[nodeIndex] = node;
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 
     
