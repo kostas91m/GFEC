@@ -28,6 +28,7 @@ namespace GFEC
         public SeriesCollection Mesh { get; set; }
         private Results solverResults;
         private Dictionary<int, INode> nodes = new Dictionary<int, INode>();
+        private Dictionary<int, Dictionary<int, int>> elementsConnectivity = new Dictionary<int, Dictionary<int, int>>();
 
         public MainWindow()
         {
@@ -149,9 +150,15 @@ namespace GFEC
                     {
                         // in case of first line ...
                         string[] fields = line.Split(new string[] { "\t" }, StringSplitOptions.None);
-                        int nodeIndex = int.Parse(fields[0]);
-                        var node = new Node(double.Parse(fields[1]), double.Parse(fields[2]));
-                        nodes[nodeIndex] = node;
+                        int elementIndex = int.Parse(fields[0]);
+
+                        var element = new Dictionary<int, int>() {
+                            { 1, int.Parse(fields[2]) },
+                            { 2, int.Parse(fields[3]) },
+                            { 3, int.Parse(fields[4]) },
+                            { 4, int.Parse(fields[5]) }
+                        };
+                        elementsConnectivity[elementIndex] = element;
                     }
                 }
 
