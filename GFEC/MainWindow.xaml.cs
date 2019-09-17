@@ -169,6 +169,18 @@ namespace GFEC
                 throw ex;
             }
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            using (Game game = new Game(800, 600, "LearnOpenTK"))
+            {
+                game.Run(60.0);
+            }
+
+            
+
+        }
+
     }
 
     
