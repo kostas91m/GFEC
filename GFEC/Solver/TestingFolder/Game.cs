@@ -8,6 +8,7 @@ using OpenTK.Graphics;
 //using OpenTK.Graphics.ES10;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
+using System.Drawing;
 
 namespace GFEC
 {
@@ -47,7 +48,23 @@ namespace GFEC
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
-            //Code goes here.
+            Matrix4 modelview = Matrix4.LookAt(Vector3.Zero, Vector3.UnitZ, Vector3.UnitY);
+
+            GL.MatrixMode(MatrixMode.Modelview);
+
+            GL.LoadMatrix(ref modelview);
+
+            GL.Begin(BeginMode.Triangles);
+            GL.Color3(1.0f, 0.0f, 0.0f);
+            GL.Vertex3(-1.0f, -1.0f, 4.0f);
+
+            GL.Color3(0.0f, 1.0f, 0.0f);
+            GL.Vertex3(1.0f, -1.0f, 4.0f);
+
+            GL.Color3(0.0f, 0.0f, 1.0f);
+            GL.Vertex3(0.0f, 1.0f, 4.0f);
+            GL.End();
+
 
             Context.SwapBuffers();
             base.OnRenderFrame(e);
@@ -55,8 +72,15 @@ namespace GFEC
 
         protected override void OnResize(EventArgs e)
         {
-            GL.Viewport(0, 0, Width, Height);
             base.OnResize(e);
+
+            GL.Viewport(ClientRectangle.X, ClientRectangle.Y, ClientRectangle.Width, ClientRectangle.Height);
+
+            Matrix4 projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 4, Width / (float)Height, 1.0f, 64.0f);
+
+            GL.MatrixMode(MatrixMode.Projection);
+
+            GL.LoadMatrix(ref projection);
         }
 
         protected override void OnUnload(EventArgs e)
