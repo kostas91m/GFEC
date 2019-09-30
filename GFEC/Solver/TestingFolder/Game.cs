@@ -54,15 +54,17 @@ namespace GFEC
 
             GL.LoadMatrix(ref modelview);
 
-            GL.Begin(BeginMode.Triangles);
-            GL.Color3(1.0f, 0.0f, 0.0f);
+            GL.Begin(BeginMode.Quads);
+            //GL.Color4(1.0f, 0.0f, 0.0f, 0.0f);
             GL.Vertex3(-1.0f, -1.0f, 4.0f);
 
-            GL.Color3(0.0f, 1.0f, 0.0f);
+            //GL.Color3(0.0f, 1.0f, 0.0f);
             GL.Vertex3(1.0f, -1.0f, 4.0f);
 
-            GL.Color3(0.0f, 0.0f, 1.0f);
+            //GL.Color3(0.0f, 0.0f, 1.0f);
             GL.Vertex3(0.0f, 1.0f, 4.0f);
+
+            GL.Vertex3(1.0f, 1.0f, 4.0f);
             GL.End();
 
 

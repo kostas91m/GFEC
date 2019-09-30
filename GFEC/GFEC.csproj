@@ -165,6 +165,8 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="Solver\TestingFolder\shader.frag" />
+    <None Include="Solver\TestingFolder\shader.vert" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
