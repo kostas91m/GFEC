@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenTK;
 using OpenTK.Graphics;
-//using OpenTK.Graphics.ES10;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using System.Drawing;
@@ -14,13 +13,21 @@ namespace GFEC
 {
     public class Game : GameWindow
     {
-        float[] vertices = {
-    -0.5f, -0.5f, 0.0f, //Bottom-left vertex
-     0.5f, -0.5f, 0.0f, //Bottom-right vertex
-     0.0f,  0.5f, 0.0f  //Top vertex
-};
 
+        float[] vertices = {
+             0.5f,  0.5f, 0.0f,  // top right
+             0.5f, -0.5f, 0.0f,  // bottom right
+            -0.5f, -0.5f, 0.0f,  // bottom left
+            -0.5f,  0.5f, 0.0f   // top left
+        };
+        uint[] indices = {  // note that we start from 0!
+            0, 1, 3,   // first triangle
+            1, 2, 3    // second triangle
+        };
         int VertexBufferObject;
+        int ElementBufferObject;
+        Shader shader;
+        int VertexArrayObject;
 
         public Game(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
 
@@ -32,6 +39,7 @@ namespace GFEC
             {
                 Exit();
             }
+
             base.OnUpdateFrame(e);
         }
 
@@ -40,6 +48,22 @@ namespace GFEC
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
             VertexBufferObject = GL.GenBuffer();
+            shader = new Shader("shader.vert", "shader.frag");
+
+            VertexArrayObject = GL.GenVertexArray();
+            GL.BindVertexArray(VertexArrayObject);
+            // 2. copy our vertices array in a buffer for OpenGL to use
+            GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
+            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
+            // 3. then set our vertex attributes pointers
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+            GL.EnableVertexAttribArray(0);
+
+            ElementBufferObject = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
+
+
 
             base.OnLoad(e);
         }
@@ -47,26 +71,11 @@ namespace GFEC
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
-
-            Matrix4 modelview = Matrix4.LookAt(Vector3.Zero, Vector3.UnitZ, Vector3.UnitY);
-
-            GL.MatrixMode(MatrixMode.Modelview);
-
-            GL.LoadMatrix(ref modelview);
-
-            GL.Begin(BeginMode.Quads);
-            //GL.Color4(1.0f, 0.0f, 0.0f, 0.0f);
-            GL.Vertex3(-1.0f, -1.0f, 4.0f);
-
-            //GL.Color3(0.0f, 1.0f, 0.0f);
-            GL.Vertex3(1.0f, -1.0f, 4.0f);
-
-            //GL.Color3(0.0f, 0.0f, 1.0f);
-            GL.Vertex3(0.0f, 1.0f, 4.0f);
-
-            GL.Vertex3(1.0f, 1.0f, 4.0f);
-            GL.End();
-
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+            shader.Use();
+            GL.BindVertexArray(VertexArrayObject);
+            //GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
+            GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
 
             Context.SwapBuffers();
             base.OnRenderFrame(e);
@@ -74,21 +83,15 @@ namespace GFEC
 
         protected override void OnResize(EventArgs e)
         {
+            GL.Viewport(0, 0, Width, Height);
             base.OnResize(e);
-
-            GL.Viewport(ClientRectangle.X, ClientRectangle.Y, ClientRectangle.Width, ClientRectangle.Height);
-
-            Matrix4 projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 4, Width / (float)Height, 1.0f, 64.0f);
-
-            GL.MatrixMode(MatrixMode.Projection);
-
-            GL.LoadMatrix(ref projection);
         }
 
         protected override void OnUnload(EventArgs e)
         {
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             GL.DeleteBuffer(VertexBufferObject);
+            shader.Dispose();
             base.OnUnload(e);
         }
     }

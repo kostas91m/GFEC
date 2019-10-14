@@ -107,7 +107,9 @@
     <Compile Include="Solver\TestingFolder\DynamicSolver.cs" />
     <Compile Include="Solver\TestingFolder\ExplicitSolver.cs" />
     <Compile Include="Solver\TestingFolder\Game.cs" />
+    <Compile Include="Solver\TestingFolder\Game2.cs" />
     <Compile Include="Solver\TestingFolder\NRScheme.cs" />
+    <Compile Include="Solver\TestingFolder\Shader.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
