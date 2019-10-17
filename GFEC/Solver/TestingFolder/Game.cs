@@ -18,11 +18,16 @@ namespace GFEC
              0.5f,  0.5f, 0.0f,  // top right
              0.5f, -0.5f, 0.0f,  // bottom right
             -0.5f, -0.5f, 0.0f,  // bottom left
-            -0.5f,  0.5f, 0.0f   // top left
+            -0.5f,  0.5f, 0.0f,   // top left
+             0.6f,  0.5f, 0.0f,
+             0.7f,  0.5f, 0.0f,
+             0.7f,  0.0f, 0.0f,
+             0.6f,  0.0f, 0.0f,
         };
         uint[] indices = {  // note that we start from 0!
-            0, 1, 3,   // first triangle
-            1, 2, 3    // second triangle
+            0, 1, 2, 3,
+            4, 5, 6, 7// first triangle
+                // second triangle
         };
         int VertexBufferObject;
         int ElementBufferObject;
@@ -75,7 +80,7 @@ namespace GFEC
             shader.Use();
             GL.BindVertexArray(VertexArrayObject);
             //GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
-            GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
+            GL.DrawElements(PrimitiveType.Quads, indices.Length, DrawElementsType.UnsignedInt, 0);
 
             Context.SwapBuffers();
             base.OnRenderFrame(e);
