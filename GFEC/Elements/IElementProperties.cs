@@ -13,6 +13,7 @@ namespace GFEC
         string ElementType { get; set; }
         double Density { get; set; }
         double Thickness { get; set; }
+        double ThermalConductivity { get; set; }
     }
 }
 

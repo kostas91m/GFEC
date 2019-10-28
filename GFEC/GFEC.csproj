@@ -65,6 +65,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Elements\Quad4Th.cs" />
     <Compile Include="Examples\BeamDynamicExample.cs" />
     <Compile Include="Examples\CantileverInContact.cs" />
     <Compile Include="Examples\CantileverQuadsExample.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Examples\LinearTrussInContactExample.cs" />
     <Compile Include="Examples\NonLinearCantileverExample.cs" />
     <Compile Include="Examples\NonSymmetricSystem.cs" />
+    <Compile Include="Examples\ThermalExample.cs" />
     <Compile Include="Examples\TwoBeamsInContactExample.cs" />
     <Compile Include="Examples\TwoBeamsInContactQuadsExample.cs" />
     <Compile Include="Examples\TwoBeamsInFrContactQuadsExample.cs" />
