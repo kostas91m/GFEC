@@ -109,6 +109,9 @@ namespace GFEC
                     case "Quad4Th":
                         ElementsAssembly[elem] = new Quad4Th(ElementsProperties[elem], elementNodes);
                         break;
+                    case "ContactNtN2DTh":
+                        ElementsAssembly[elem] = new ContactNtN2DTh(ElementsProperties[elem], elementNodes);
+                        break;
                 }
                 Dictionary<int, bool[]> efs = ElementsAssembly[elem].ElementFreedomSignature;
                 Dictionary<int, int> elemConnectivity = ElementsConnectivity[elem];

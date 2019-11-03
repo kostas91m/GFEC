@@ -23,12 +23,12 @@ namespace GFEC
             ElementFreedomSignature[1] = new bool[] { true, false, false, false, false, false };
             ElementFreedomSignature[2] = new bool[] { true, false, false, false, false, false };
             DisplacementVector = new double[2];
-            PenaltyFactor = properties.YoungMod * 100.0;
+            properties.SectionArea = ContactArea;
         }
 
         private double CalculateConductivity()
         {
-            double cc = 0.0;
+            double cc = 1.0;
             double cH = cc * ContactArea;
             return cH;
         }
@@ -36,7 +36,7 @@ namespace GFEC
         private double CalculateTemperatureJump()
         {
             double theta1 = 0.0;
-            double theta2 = 0.0;
+            double theta2 = 100.0;
             double gH = (theta2 + DisplacementVector[1]) - (theta1 + DisplacementVector[0]);
             return gH;
         }
