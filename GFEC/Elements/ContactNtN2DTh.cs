@@ -35,8 +35,8 @@ namespace GFEC
 
         private double CalculateTemperatureJump()
         {
-            double theta1 = 0.0;
-            double theta2 = 100.0;
+            double theta1 = 100.0;
+            double theta2 = 0.0;
             double gH = (theta2 + DisplacementVector[1]) - (theta1 + DisplacementVector[0]);
             return gH;
         }

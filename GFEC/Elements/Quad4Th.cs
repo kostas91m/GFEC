@@ -27,9 +27,7 @@ namespace GFEC
             ElementFreedomSignature[4] = new bool[] { true, false, false, false, false, false };
             DisplacementVector = new double[4];
         }
-
        
-
         public double[,] CreateGlobalStiffnessMatrix()
         {
             kc = Properties.ThermalConductivity;
@@ -70,7 +68,11 @@ namespace GFEC
 
         public double[] CreateInternalGlobalForcesVector()
         {
-            throw new Exception("Internal forces vector not implemented for Quad4Th element");
+            double[] intForces;
+            double[,] stiff = CreateGlobalStiffnessMatrix();
+
+            intForces = VectorOperations.MatrixVectorProduct(stiff, DisplacementVector);
+            return intForces;
         }
     }
 }
