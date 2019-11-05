@@ -28,14 +28,14 @@ namespace GFEC
 
         private double CalculateConductivity()
         {
-            double cc = 1.0;
+            double cc = 19.2;
             double cH = cc * ContactArea;
             return cH;
         }
 
         private double CalculateTemperatureJump()
         {
-            double theta1 = 100.0;
+            double theta1 = 0.0;
             double theta2 = 0.0;
             double gH = (theta2 + DisplacementVector[1]) - (theta1 + DisplacementVector[0]);
             return gH;
@@ -43,7 +43,7 @@ namespace GFEC
 
         public double[,] CreateGlobalStiffnessMatrix()
         {
-            double cH = 19.2;
+            double cH = CalculateConductivity();
             double[,] stiffMatrix = new double[,]
             {
                 {1.0 * cH, -1.0 * cH },

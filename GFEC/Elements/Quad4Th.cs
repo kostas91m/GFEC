@@ -72,6 +72,7 @@ namespace GFEC
             double[,] stiff = CreateGlobalStiffnessMatrix();
 
             intForces = VectorOperations.MatrixVectorProduct(stiff, DisplacementVector);
+            intForces = VectorOperations.VectorScalarProductNew(intForces, 1.0);
             return intForces;
         }
     }

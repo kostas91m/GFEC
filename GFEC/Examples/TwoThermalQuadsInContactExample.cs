@@ -50,8 +50,8 @@ namespace GFEC
 
         private static Dictionary<int, IElementProperties> CreateElementProperties()
         {
-            double thermalCond = 1000.0;
-            double A = 0.01;
+            double thermalCond = 1.0;
+            double A = 1.0;
             string type = "Quad4Th";
             string type2 = "ContactNtN2DTh";
 
@@ -91,12 +91,12 @@ namespace GFEC
             double[,] globalStiffnessMatrix = elementsAssembly.CreateTotalStiffnessMatrix();
 
             ISolver newSolu = new StaticSolver();
-            newSolu.LinearScheme = new LUFactorization();
+            newSolu.LinearScheme = new PCGSolver();
             newSolu.NonLinearScheme = new LoadControlledNewtonRaphson();
             newSolu.ActivateNonLinearSolver = true;
             newSolu.NonLinearScheme.numberOfLoadSteps = 10;
 
-            double[] externalForces = new double[] { 0, 0, 0, 0, 1.0, 0 };
+            double[] externalForces = new double[] { 0, 0, 0, 0, 250.0, 250.0 };
             newSolu.AssemblyData = elementsAssembly;
             newSolu.Solve(externalForces);
             newSolu.PrintSolution();
