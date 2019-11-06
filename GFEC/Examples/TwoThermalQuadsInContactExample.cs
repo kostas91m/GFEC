@@ -96,7 +96,7 @@ namespace GFEC
             newSolu.ActivateNonLinearSolver = true;
             newSolu.NonLinearScheme.numberOfLoadSteps = 10;
 
-            double[] externalForces = new double[] { 0, 0, 0, 0, 250.0, 250.0 };
+            double[] externalForces = new double[] { 0, 0, 0, 0, 150.0, 150.0 };
             newSolu.AssemblyData = elementsAssembly;
             newSolu.Solve(externalForces);
             newSolu.PrintSolution();
