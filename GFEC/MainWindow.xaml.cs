@@ -78,6 +78,7 @@ namespace GFEC
             exampleList.Add("ThermalExample");
             exampleList.Add("TwoThermalQuadsInContactExample");
             exampleList.Add("TwoThermalQuadsExample");
+            exampleList.Add("TwoQuadsInContactNewExample");
 
             ComboBox1.ItemsSource = exampleList;
         }
@@ -106,6 +107,9 @@ namespace GFEC
                     break;
                 case "TwoThermalQuadsExample":
                     finalResults = TwoThermalQuadsExample.RunStaticExample();
+                    break;
+                case "TwoQuadsInContactNewExample":
+                    finalResults = TwoQuadsInContactNewExample.RunStaticExample();
                     break;
                 default:
                     finalResults = TwoQuadsExample.RunStaticExample();

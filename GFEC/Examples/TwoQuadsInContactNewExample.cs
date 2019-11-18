@@ -80,7 +80,7 @@ namespace GFEC
             return assembly;
         }
 
-        public static void RunStaticExample()
+        public static Results RunStaticExample()
         {
             IAssembly elementsAssembly = CreateAssembly();
             elementsAssembly.CreateElementsAssembly();
@@ -97,6 +97,8 @@ namespace GFEC
             newSolu.AssemblyData = elementsAssembly;
             newSolu.Solve(externalForces);
             newSolu.PrintSolution();
+            double[] solVector = newSolu.GetSolution();
+            return new Results();
         }
 
         public static void RunDynamicExample()
