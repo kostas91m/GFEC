@@ -91,13 +91,43 @@ namespace GFEC
             newSolu.LinearScheme = new PCGSolver();
             newSolu.NonLinearScheme = new LoadControlledNewtonRaphson();
             newSolu.ActivateNonLinearSolver = true;
-            newSolu.NonLinearScheme.numberOfLoadSteps = 10;
+            newSolu.NonLinearScheme.numberOfLoadSteps = 1;
 
-            double[] externalForces = new double[] { 0, 0, 0, 0, -50000, -50000 };
+            double[] externalForces = new double[] { 0, 0, 0, 0, -10000, -10000 };
             newSolu.AssemblyData = elementsAssembly;
             newSolu.Solve(externalForces);
             newSolu.PrintSolution();
             double[] solVector = newSolu.GetSolution();
+
+
+            newSolu.NonLinearScheme = new LoadControlledNewtonRaphson(solVector);
+            externalForces = new double[] { 0, 0, 0, 0, -20000, -20000 };
+            newSolu.AssemblyData = elementsAssembly;
+            newSolu.Solve(externalForces);
+            solVector = newSolu.GetSolution();
+
+            newSolu.NonLinearScheme = new LoadControlledNewtonRaphson(solVector);
+            externalForces = new double[] { 0, 0, 0, 0, -30000, -30000 };
+            newSolu.AssemblyData = elementsAssembly;
+            newSolu.Solve(externalForces);
+            solVector = newSolu.GetSolution();
+
+            newSolu.NonLinearScheme = new LoadControlledNewtonRaphson(solVector);
+            externalForces = new double[] { 0, 0, 0, 0, -40000, -40000 };
+            newSolu.AssemblyData = elementsAssembly;
+            newSolu.Solve(externalForces);
+            solVector = newSolu.GetSolution();
+
+            newSolu.NonLinearScheme = new LoadControlledNewtonRaphson(solVector);
+            externalForces = new double[] { 0, 0, 0, 0, -50000, -50000 };
+            newSolu.AssemblyData = elementsAssembly;
+            newSolu.Solve(externalForces);
+            solVector = newSolu.GetSolution();
+
+
+            double[] completeFinalSolutionVector = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(solVector, new int[] { 1, 2, 3, 4, 5, 7, 9, 11, 13, 15 });            Dictionary<int, INode> finalNodesList = new Dictionary<int, INode>();
+            finalNodesList = Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, completeFinalSolutionVector);
+
             return new Results();
         }
 

@@ -287,5 +287,22 @@ namespace GFEC
             }
             return internalForcesTotalVector;
         }
+
+        public static Dictionary<int, INode> CalculateFinalNodalCoordinates(Dictionary<int, INode> nodesList, double[] diplacements)
+        {
+            if (nodesList.Count*2 != diplacements.Length)
+            {
+                throw new Exception("Nodes list does not match with displacements vector! Currently works only for 2 degreed of freedom per node");
+            }
+            Dictionary<int, INode> finalNodesList = new Dictionary<int, INode>();
+            for (int i = 1; i <= nodesList.Count; i++)
+            {
+                double x = nodesList[i].XCoordinate + diplacements[2*i - 2];
+                double y = nodesList[i].YCoordinate + diplacements[2 * i - 1];
+                INode finalNode = new Node(x, y);
+                finalNodesList.Add(i, finalNode); 
+            }
+            return finalNodesList;
+        }
     }
 }
