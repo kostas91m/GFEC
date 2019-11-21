@@ -48,6 +48,20 @@ namespace GFEC
             return nodeFAT;
         }
 
+        private static Dictionary<int, bool[]> CreateThermalNodeFAT()
+        {
+            Dictionary<int, bool[]> nodeFAT = new Dictionary<int, bool[]>();
+            nodeFAT[1] = new bool[] { true, false, false, false, false, false };
+            nodeFAT[2] = new bool[] { true, false, false, false, false, false };
+            nodeFAT[3] = new bool[] { true, false, false, false, false, false };
+            nodeFAT[4] = new bool[] { true, false, false, false, false, false };
+            nodeFAT[5] = new bool[] { true, false, false, false, false, false };
+            nodeFAT[6] = new bool[] { true, false, false, false, false, false };
+            nodeFAT[7] = new bool[] { true, false, false, false, false, false };
+            nodeFAT[8] = new bool[] { true, false, false, false, false, false };
+            return nodeFAT;
+        }
+
         private static Dictionary<int, IElementProperties> CreateElementProperties()
         {
             double E = 200.0e9;
@@ -69,6 +83,30 @@ namespace GFEC
             return elementProperties;
         }
 
+        private static Dictionary<int, IElementProperties> CreateThermalElementProperties()
+        {
+            double thermalCond = 60.5;
+            double A = 0.5;
+            string type = "Quad4Th";
+            string type2 = "ContactNtN2DTh";
+
+            Dictionary<int, IElementProperties> elementProperties = new Dictionary<int, IElementProperties>();
+            elementProperties[1] = new ElementProperties();
+            elementProperties[2] = new ElementProperties();
+            elementProperties[3] = new ElementProperties();
+            elementProperties[4] = new ElementProperties();
+            elementProperties[1].ElementType = type;
+            elementProperties[2].ElementType = type;
+            elementProperties[3].ElementType = type2;
+            elementProperties[4].ElementType = type2;
+            elementProperties[1].ThermalConductivity = thermalCond;
+            elementProperties[2].ThermalConductivity = thermalCond;
+            elementProperties[3].SectionArea = A;
+            elementProperties[4].SectionArea = A;
+
+            return elementProperties;
+        }
+
         private static IAssembly CreateAssembly()
         {
             IAssembly assembly = new Assembly();
@@ -80,8 +118,20 @@ namespace GFEC
             return assembly;
         }
 
+        private static IAssembly CreateThermalAssembly()
+        {
+            IAssembly assembly = new Assembly();
+            assembly.Nodes = CreateNodes();
+            assembly.ElementsConnectivity = CreateConnectivity();
+            assembly.ElementsProperties = CreateThermalElementProperties();
+            assembly.NodeFreedomAllocationList = CreateThermalNodeFAT();
+            assembly.BoundedDOFsVector = new int[] { 1, 2 };
+            return assembly;
+        }
+
         public static Results RunStaticExample()
         {
+            ///Structural settings
             IAssembly elementsAssembly = CreateAssembly();
             elementsAssembly.CreateElementsAssembly();
             elementsAssembly.ActivateBoundaryConditions = true;
@@ -93,39 +143,50 @@ namespace GFEC
             newSolu.ActivateNonLinearSolver = true;
             newSolu.NonLinearScheme.numberOfLoadSteps = 1;
 
-            double[] externalForces = new double[] { 0, 0, 0, 0, -10000, -10000 };
-            newSolu.AssemblyData = elementsAssembly;
-            newSolu.Solve(externalForces);
-            newSolu.PrintSolution();
-            double[] solVector = newSolu.GetSolution();
+            //Thermal Settings
+            IAssembly elementsAssembly2 = CreateThermalAssembly();
+            elementsAssembly2.CreateElementsAssembly();
+            elementsAssembly2.ActivateBoundaryConditions = true;
+            double[,] globalStiffnessMatrix2 = elementsAssembly2.CreateTotalStiffnessMatrix();
+
+            ISolver thermalSolution = new StaticSolver();
+            thermalSolution.LinearScheme = new CholeskyFactorization();
+            thermalSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+            thermalSolution.ActivateNonLinearSolver = true;
+            thermalSolution.NonLinearScheme.numberOfLoadSteps = 10;
+
+            //double[] externalFlux = new double[] { 0, 0, 0, 0, 250.0, 250.0 };
+            //newSolu2.AssemblyData = elementsAssembly;
+            //newSolu2.Solve(externalForces);
+            //newSolu2.PrintSolution();
+            //double[] tempSolution = newSolu.GetSolution();
+        
+            double[] solVector2 = new double[6];
+            List<double[]> structuralSolutions = new List<double[]>();
+            for (int i = 1; i <= 5; i++)
+            {
+                newSolu.NonLinearScheme = new LoadControlledNewtonRaphson(solVector2);
+                double[] externalForces2 = new double[] { 0, 0, 0, 0, -10000.0*i, -10000.0*i };
+                newSolu.AssemblyData = elementsAssembly;
+                newSolu.Solve(externalForces2);
+                solVector2 = newSolu.GetSolution();
+                structuralSolutions.Add(solVector2);
+            }
+
+            double[] temperatures = new double[6];
+            List<double[]> thermalSolutions = new List<double[]>();
+            for (int i = 1; i <= 5; i++)
+            {
+                thermalSolution.NonLinearScheme = new LoadControlledNewtonRaphson(temperatures);
+                double[] externalHeatFlux = new double[] { 0, 0, 0, 0, 250.0, 250.0 };
+                thermalSolution.AssemblyData = elementsAssembly2;
+                thermalSolution.Solve(externalHeatFlux);
+                temperatures = thermalSolution.GetSolution();
+                thermalSolutions.Add(temperatures);
+            }
 
 
-            newSolu.NonLinearScheme = new LoadControlledNewtonRaphson(solVector);
-            externalForces = new double[] { 0, 0, 0, 0, -20000, -20000 };
-            newSolu.AssemblyData = elementsAssembly;
-            newSolu.Solve(externalForces);
-            solVector = newSolu.GetSolution();
-
-            newSolu.NonLinearScheme = new LoadControlledNewtonRaphson(solVector);
-            externalForces = new double[] { 0, 0, 0, 0, -30000, -30000 };
-            newSolu.AssemblyData = elementsAssembly;
-            newSolu.Solve(externalForces);
-            solVector = newSolu.GetSolution();
-
-            newSolu.NonLinearScheme = new LoadControlledNewtonRaphson(solVector);
-            externalForces = new double[] { 0, 0, 0, 0, -40000, -40000 };
-            newSolu.AssemblyData = elementsAssembly;
-            newSolu.Solve(externalForces);
-            solVector = newSolu.GetSolution();
-
-            newSolu.NonLinearScheme = new LoadControlledNewtonRaphson(solVector);
-            externalForces = new double[] { 0, 0, 0, 0, -50000, -50000 };
-            newSolu.AssemblyData = elementsAssembly;
-            newSolu.Solve(externalForces);
-            solVector = newSolu.GetSolution();
-
-
-            double[] completeFinalSolutionVector = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(solVector, new int[] { 1, 2, 3, 4, 5, 7, 9, 11, 13, 15 });            Dictionary<int, INode> finalNodesList = new Dictionary<int, INode>();
+            double[] completeFinalSolutionVector = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(solVector2, new int[] { 1, 2, 3, 4, 5, 7, 9, 11, 13, 15 });            Dictionary<int, INode> finalNodesList = new Dictionary<int, INode>();
             finalNodesList = Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, completeFinalSolutionVector);
 
             return new Results();
