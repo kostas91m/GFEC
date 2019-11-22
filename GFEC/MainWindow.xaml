@@ -11,8 +11,8 @@
         <TextBox Name="Results"  HorizontalAlignment="Left" Height="348" Margin="543,141,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="375"/>
         <Button Content="Run" Click="RunButton" HorizontalAlignment="Left" Margin="833,26,0,0" VerticalAlignment="Top" Width="85" Height="29"/>
         <ComboBox Name="ComboBox1" HorizontalAlignment="Left" Margin="538,26,0,0" VerticalAlignment="Top" Width="285" Height="29"/>
-        <lvc:CartesianChart Name="CartChart" Series="{Binding Graph}" Margin="28,295,413,29" />
-        <lvc:CartesianChart Name="MeshDraw" Series="{Binding Mesh}" Margin="28,26,413,251" />
+        <lvc:CartesianChart Name="CartChart" Series="{Binding Graph}" Margin="23,26,418,298" />
+        <lvc:CartesianChart Name="MeshDraw" Series="{Binding Graph2}" Margin="23,248,418,52" />
         <Button Content="Import Nodes" HorizontalAlignment="Left" Margin="671,104,0,0" VerticalAlignment="Top" Width="116" Click="Import_Nodes_Button_Click" Height="32"/>
         <Button Content="Import Connectivity" HorizontalAlignment="Left" Margin="543,104,0,0" VerticalAlignment="Top" Width="123" Click="Import_Connectivity_Button_Click" Height="32"/>
         <Button Content="Graphics" HorizontalAlignment="Left" Margin="792,104,0,0" VerticalAlignment="Top" Width="126" Click="Button_Click" Height="32"/>

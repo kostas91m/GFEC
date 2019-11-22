@@ -13,7 +13,23 @@ namespace GFEC
 {
     public static class ShowToGUI
     {
-        public static SeriesCollection ShowResults(Results analysisResults, int dofNumber, int intervals)
+        public static SeriesCollection ShowResults(Results analysisResults)
+        {
+            switch (analysisResults.SolutionType)
+            {
+                case "Dynamic":
+                    return ShowDynamicLinearResults(analysisResults);
+                    break;
+                case "Nonlinear":
+                    return ShowStaticNonLinearResults(analysisResults);
+                    break;
+                default:
+                    return ShowDynamicLinearResults(analysisResults);
+                    break;
+            }
+        }
+
+        private static SeriesCollection ShowDynamicLinearResults(Results analysisResults)
         {
             int countVector = analysisResults.DynamicSolution.Count;
             int step = 0;
@@ -25,10 +41,10 @@ namespace GFEC
             {
                 double[] sol = analysisResults.DynamicSolution[step];
                 xAxis[line] = analysisResults.TimeSteps[step];
-                yAxis[line] = sol[dofNumber];
-                points[line] = new ObservablePoint() { X = analysisResults.TimeSteps[step], Y = sol[dofNumber] };
+                yAxis[line] = sol[analysisResults.SelectedDOF];
+                points[line] = new ObservablePoint() { X = analysisResults.TimeSteps[step], Y = sol[analysisResults.SelectedDOF] };
                 line = line + 1;
-                step = step + intervals;
+                step = step + analysisResults.SelectedInterval;
                 
                 //if (step >= solution.Count-1)
                 //{
@@ -52,38 +68,64 @@ namespace GFEC
             return graph;
         }
 
-        public static SeriesCollection DrawMesh(Dictionary<int, INode> nodes, Dictionary<int, Dictionary<int, int>> connectivity)
+        private static SeriesCollection ShowStaticNonLinearResults(Results analysisResults)
         {
-            SeriesCollection mesh = new SeriesCollection();
-            for (int j = 1; j <= connectivity.Count; j++)
-            {
-                var points = new ObservablePoint[connectivity[j].Count + 1];
-                for (int i = 0; i < connectivity[j].Count; i++)
-                {
-                    int nodeIndex = connectivity[j][i + 1];
-                    double x = nodes[nodeIndex].XCoordinate;
-                    double y = nodes[nodeIndex].YCoordinate;
-                    points[i] = new ObservablePoint() { X = x, Y = y };
-                }
-                points[points.Count() - 1] = new ObservablePoint();
-                points[points.Count() - 1] = points[0];
-                var mapper = Mappers.Xy<ObservablePoint>() //in this case value is of type <ObservablePoint>
-                    .X(value => value.X) //use the X property as X
-                    .Y(value => value.Y); //use the Y property as Y
+            var points = new ObservablePoint[analysisResults.NonlinearSolution.Count];
 
-                mesh.Add(new StepLineSeries
+            for (int i = 0; i < analysisResults.NonlinearSolution.Count; i++)
+            {
+                points[i] = new ObservablePoint() { X = i, Y = analysisResults.NonlinearSolution[i][analysisResults.SelectedDOF] };
+            }
+           
+            var mapper = Mappers.Xy<ObservablePoint>() //in this case value is of type <ObservablePoint>
+                .X(value => value.X) //use the X property as X
+                .Y(value => value.Y); //use the Y property as Y
+            SeriesCollection graph = new SeriesCollection
+            {
+                //new LineSeries
+                //{
+                //    Values = new ChartValues<double>(xAxis)
+                //},
+                new LineSeries
                 {
                     Values = new ChartValues<ObservablePoint>(points)
-                });
-            }
-            
-            //{
-            //    new StepLineSeries
-            //    {
-            //        Values = new ChartValues<ObservablePoint>(points)
-            //    }
-            //};
-            return mesh;
+                }
+            };
+            return graph;
         }
+
+        //public static SeriesCollection DrawMesh(Dictionary<int, INode> nodes, Dictionary<int, Dictionary<int, int>> connectivity)
+        //{
+        //    SeriesCollection mesh = new SeriesCollection();
+        //    for (int j = 1; j <= connectivity.Count; j++)
+        //    {
+        //        var points = new ObservablePoint[connectivity[j].Count + 1];
+        //        for (int i = 0; i < connectivity[j].Count; i++)
+        //        {
+        //            int nodeIndex = connectivity[j][i + 1];
+        //            double x = nodes[nodeIndex].XCoordinate;
+        //            double y = nodes[nodeIndex].YCoordinate;
+        //            points[i] = new ObservablePoint() { X = x, Y = y };
+        //        }
+        //        points[points.Count() - 1] = new ObservablePoint();
+        //        points[points.Count() - 1] = points[0];
+        //        var mapper = Mappers.Xy<ObservablePoint>() //in this case value is of type <ObservablePoint>
+        //            .X(value => value.X) //use the X property as X
+        //            .Y(value => value.Y); //use the Y property as Y
+
+        //        mesh.Add(new StepLineSeries
+        //        {
+        //            Values = new ChartValues<ObservablePoint>(points)
+        //        });
+        //    }
+
+        //{
+        //    new StepLineSeries
+        //    {
+        //        Values = new ChartValues<ObservablePoint>(points)
+        //    }
+        //};
+        //return mesh;
+        //}
     }
 }
