@@ -188,7 +188,7 @@ namespace GFEC
 
             //double[] completeFinalSolutionVector = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(solVector2, new int[] { 1, 2, 3, 4, 5, 7, 9, 11, 13, 15 });            Dictionary<int, INode> finalNodesList = new Dictionary<int, INode>();
             //finalNodesList = Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, completeFinalSolutionVector);
-
+             
             return new Results() { NonlinearSolution = structuralSolutions, SelectedDOF=2, SolutionType="Nonlinear" };
         }
 

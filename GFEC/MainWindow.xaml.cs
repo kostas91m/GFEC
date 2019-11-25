@@ -34,7 +34,9 @@ namespace GFEC
         {
             InitializeComponent();
             LoadComboBox();
-            
+            gnuplotImage.Source = null;
+
+
         }
 
         private void RunButton(object sender, RoutedEventArgs args)
@@ -201,6 +203,15 @@ namespace GFEC
 
         }
 
+        private void Button_Click_Gnuplot(object sender, RoutedEventArgs e)
+        {
+            GnuPlot.Set("terminal png size 400, 300");
+            GnuPlot.Set("output 'gnuplot.png'");
+            GnuPlot.Plot("sin(x) + 2");
+            GnuPlot.Close();
+            gnuplotImage.Source = null;
+            gnuplotImage.Source = new BitmapImage(new Uri("pack://siteoforigin:,,/gnuplot.png"));
+        }
     }
 
     
