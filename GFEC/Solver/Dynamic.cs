@@ -51,5 +51,10 @@ namespace GFEC
             return null;
         }
 
+        public Dictionary<int, double[]> GetInternalForces()
+        {
+            throw new Exception("Not implemented");
+        }
+
     }
 }

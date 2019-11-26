@@ -172,6 +172,7 @@ namespace GFEC
                 solVector2 = newSolu.GetSolution();
                 structuralSolutions.Add(solVector2);
             }
+            Dictionary<int, double[]> intForces = newSolu.GetInternalForces();
 
             double[] temperatures = new double[6];
             List<double[]> thermalSolutions = new List<double[]>();

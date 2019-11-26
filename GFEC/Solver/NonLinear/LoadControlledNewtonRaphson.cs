@@ -51,6 +51,7 @@ namespace GFEC
                     residualNorm = VectorOperations.VectorNorm2(residual);
                     iteration = iteration + 1;
                 }
+                InternalForces.Add(i + 1, internalForcesTotalVector);
                 solutionVector = VectorOperations.VectorVectorAddition(solutionVector, deltaU);
                 if (iteration >= maxIterations) Console.WriteLine("Newton-Raphson: Solution not converged at current iterations");
             }
@@ -60,6 +61,7 @@ namespace GFEC
 
         public override double[] Solve(IAssembly assembly, ILinearSolution linearScheme, double[] forceVector)
         {
+            InternalForces = new Dictionary<int, double[]>();
             if (localSolutionVector == null)
             {
                 localSolutionVector = new double[forceVector.Length];

@@ -15,6 +15,7 @@ namespace GFEC
         protected int maxIterations = 1000;
         public bool PrintResidual { get; set; } = false;
         protected ILinearSolution linearSolver;
+        public Dictionary<int, double[]> InternalForces { get; set; }
 
         public virtual double[] Solve(IAssembly assembly, ILinearSolution linearScheme, double[] forceVector)
         {

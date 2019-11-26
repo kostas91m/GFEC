@@ -47,5 +47,9 @@ namespace GFEC
             return staticSolutionVector;
         }
 
+        public Dictionary<int, double[]> GetInternalForces()
+        {
+            return NonLinearScheme.InternalForces;
+        }
     }
 }
