@@ -20,6 +20,7 @@ namespace GFEC
         double[] CreateTotalInternalForcesVector();
         double[,] CreateTotalMassMatrix();
         double[,] CreateTotalDampingMatrix();
+        Dictionary<int, double[]> GetElementsInternalForces(double[] totalInternalForcesVector);
 
 
 

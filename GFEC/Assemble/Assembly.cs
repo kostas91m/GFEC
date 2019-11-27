@@ -304,5 +304,18 @@ namespace GFEC
             }
             return finalNodesList;
         }
+
+        public Dictionary<int, double[]> GetElementsInternalForces(double[] totalInternalForcesVector)
+        {
+            UpdateDisplacements(totalInternalForcesVector);
+            Dictionary<int, double[]> elementsInternalForces = new Dictionary<int, double[]>();
+            for (int element = 1; element <= ElementsConnectivity.Count; element++)
+            {
+                double[] elementInternalGlobalForcesVector = ElementsAssembly[element].CreateInternalGlobalForcesVector();
+                elementsInternalForces.Add(element, elementInternalGlobalForcesVector);
+
+            }
+            return elementsInternalForces;
+        }
     }
 }
