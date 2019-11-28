@@ -317,5 +317,15 @@ namespace GFEC
             }
             return elementsInternalForces;
         }
+
+        public List<string> GetElementsType()
+        {
+            List<string> elementTypes = new List<string>();
+            for (int element = 1; element <= ElementsConnectivity.Count; element++)
+            {
+                elementTypes.Add(ElementsAssembly[element].GetType().ToString());
+            }
+            return elementTypes;
+        }
     }
 }

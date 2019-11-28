@@ -21,6 +21,7 @@ namespace GFEC
         double[,] CreateTotalMassMatrix();
         double[,] CreateTotalDampingMatrix();
         Dictionary<int, double[]> GetElementsInternalForces(double[] totalInternalForcesVector);
+        List<string> GetElementsType();
 
 
 

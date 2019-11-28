@@ -205,12 +205,49 @@ namespace GFEC
 
         private void Button_Click_Gnuplot(object sender, RoutedEventArgs e)
         {
-            GnuPlot.Set("terminal png size 400, 300");
-            GnuPlot.Set("output 'gnuplot.png'");
-            GnuPlot.Plot("sin(x) + 2");
-            GnuPlot.Close();
-            gnuplotImage.Source = null;
-            gnuplotImage.Source = new BitmapImage(new Uri("pack://siteoforigin:,,/gnuplot.png"));
+            //GnuPlot.Set("terminal png size 400, 300");
+            //GnuPlot.Set("output 'gnuplot.png'");
+            //GnuPlot.Plot("sin(x) + 2");
+            //GnuPlot.Close();
+            //gnuplotImage.Source = null;
+            //gnuplotImage.Source = new BitmapImage(new Uri("pack://siteoforigin:,,/gnuplot.png"));
+
+
+
+            //GnuPlot.Set("terminal png size 400, 300");
+            //GnuPlot.Set("output 'gnuplot.png'");
+            double[] X = new double[] { -15, -15, -15, -15, -15, -14, -14, -14, -14 };
+            double[] Y = new double[] { 11, 12, 13, 14, 15, -15, -14, -13, -12, -11 };
+            double[] Z = new double[] { 0.020394, 0.015745, 0.011885, 0.008771, 0.006330, 0.008771, 0.012155, 0.016469, 0.021818 };
+            //double[,] Y = new double[,]
+            //{
+            //    { 0,0,0,1,2,2,1,0,0,0},
+            //            { 0,0,2,3,3,3,3,2,0,0},
+            //            { 0,2,3,4,4,4,4,3,2,0},
+            //            { 2,3,4,5,5,5,5,4,3,2},
+            //            { 3,4,5,6,7,7,6,5,4,3},
+            //            { 3,4,5,6,7,7,6,5,4,3},
+            //            { 2,3,4,5,5,5,5,4,3,2},
+            //            { 0,2,3,4,4,4,4,3,2,0},
+            //            { 0,0,2,3,3,3,3,2,0,0},
+            //            { 0,0,0,1,2,2,1,0,0,0}
+            //};
+            //GnuPlot.Set("dgrid3d 50,50,2");
+            //GnuPlot.Set("7,7,7");
+            //GnuPlot.Set("pm3d");
+            GnuPlot.Set("dgrid3d");
+            //GnuPlot.Set("map");
+            //GnuPlot.Set("dgrid3d");
+            GnuPlot.Set("cntrparam levels 20", "isosamples 100");
+            //GnuPlot.Set("view map");
+            //GnuPlot.Set("pm3d interpolate 10,10");
+
+            GnuPlot.SPlot(X, Y, Z);
+            
+
+            //GnuPlot.Close();
+            //gnuplotImage.Source = null;
+            //gnuplotImage.Source = new BitmapImage(new Uri("pack://siteoforigin:,,/gnuplot.png"));
         }
     }
 
