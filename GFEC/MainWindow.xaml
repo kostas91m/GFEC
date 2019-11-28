@@ -8,14 +8,14 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="572" Width="959">
     <Grid>
-        <TextBox Name="Results"  HorizontalAlignment="Left" Height="348" Margin="543,141,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="375"/>
+        <TextBox Name="Results"  HorizontalAlignment="Left" Height="390" Margin="543,141,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="375"/>
         <Button Content="Run" Click="RunButton" HorizontalAlignment="Left" Margin="833,26,0,0" VerticalAlignment="Top" Width="85" Height="29"/>
         <ComboBox Name="ComboBox1" HorizontalAlignment="Left" Margin="538,26,0,0" VerticalAlignment="Top" Width="285" Height="29"/>
-        <lvc:CartesianChart Name="CartChart" Series="{Binding Graph}" Margin="23,26,418,298" />
+        <lvc:CartesianChart Name="CartChart" Series="{Binding Graph}" Margin="10,26,418,298" />
         <Button Content="Import Nodes" HorizontalAlignment="Left" Margin="671,104,0,0" VerticalAlignment="Top" Width="116" Click="Import_Nodes_Button_Click" Height="32"/>
         <Button Content="Import Connectivity" HorizontalAlignment="Left" Margin="543,104,0,0" VerticalAlignment="Top" Width="123" Click="Import_Connectivity_Button_Click" Height="32"/>
         <Button Content="GraphicsGL" HorizontalAlignment="Left" Margin="792,104,0,0" VerticalAlignment="Top" Width="126" Click="Button_Click" Height="32"/>
         <Button Content="GraphicsPlot" HorizontalAlignment="Left" Margin="792,67,0,0" VerticalAlignment="Top" Width="126" Height="32" Click="Button_Click_Gnuplot"/>
-        <Image Name="gnuplotImage"  HorizontalAlignment="Left" Height="241" Margin="23,248,0,0" VerticalAlignment="Top" Width="510"/>
+        <Image Name="gnuplotImage"  HorizontalAlignment="Left" Height="283" Margin="10,248,0,0" VerticalAlignment="Top" Width="523"/>
     </Grid>
 </Window>
