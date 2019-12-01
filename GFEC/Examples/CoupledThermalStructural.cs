@@ -38,8 +38,12 @@ namespace GFEC
             //GnuPlot.Set("lines");
             //GnuPlot.Set("with points");
 
+            GnuPlot.HoldOn();
+            double[] Xcoor = new double[] { 0.1, 0.2 }; double[] Ycoor = new double[] { 0.1, 0.2 };
+            GnuPlot.Plot(Xcoor, Ycoor, "with lines");
             //GnuPlot.Plot(new double[] { 1, 2 }, new double[] { 1, 2 }, "with lines");
-            
+            //GnuPlot.Plot(new double[] { 2, 3 }, new double[] { 2, 2 }, "with lines");
+
             //GnuPlot.HoldOn();
             //GnuPlot.SPlot("with pm3d");
             //GnuPlot.SPlot(X, Y, Z, "with points");
