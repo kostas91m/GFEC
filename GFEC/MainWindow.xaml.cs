@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -251,6 +252,8 @@ namespace GFEC
 
 
             GnuPlot.Close();
+            GnuPlot.KillProcess();
+            //GnuPlot.waitForFile("C:/Users/VasilisMerevis/source/repos/VasilisMerevis/GFEC/GFEC/bin/Debug/gnuplot.png", 3000);
             gnuplotImage.Source = null;
             gnuplotImage.Source = new BitmapImage(new Uri("pack://siteoforigin:,,/gnuplot.png"));
         }

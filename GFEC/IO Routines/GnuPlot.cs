@@ -571,6 +571,10 @@ namespace GFEC
             ExtPro.CloseMainWindow();
         }
 
+        public static void KillProcess()
+        {
+            ExtPro.Kill();
+        }
     }
 
     enum PointStyles

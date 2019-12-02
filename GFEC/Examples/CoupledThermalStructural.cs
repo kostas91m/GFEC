@@ -37,10 +37,15 @@ namespace GFEC
             //GnuPlot.HoldOn();
             //GnuPlot.Set("lines");
             //GnuPlot.Set("with points");
+            GnuPlot.Set("terminal png size 500, 300");
+            GnuPlot.Set("output 'gnuplot.png'");
 
             GnuPlot.HoldOn();
-            double[] Xcoor = new double[] { 0.1, 0.2 }; double[] Ycoor = new double[] { 0.1, 0.2 };
-            GnuPlot.Plot(Xcoor, Ycoor, "with lines");
+            double[] Xcoor = new double[] { 0.5, 1.0 }; double[] Ycoor = new double[] { 0.5, 1.0 };
+            //GnuPlot.Plot(Xcoor, Ycoor, "with linepoints");
+            GnuPlot.Plot("data1.dat", "with linespoints pt " + (int)PointStyles.DotCircle);
+            
+            //GnuPlot.Close();
             //GnuPlot.Plot(new double[] { 1, 2 }, new double[] { 1, 2 }, "with lines");
             //GnuPlot.Plot(new double[] { 2, 3 }, new double[] { 2, 2 }, "with lines");
 
