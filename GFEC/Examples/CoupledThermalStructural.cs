@@ -18,14 +18,14 @@ namespace GFEC
             double yIntervals = 0.1;
             int k, m;
             m = 1;
-            for (int j = 0; j < 10; j++)
+            k = 1;
+            for (int j = 0; j < 11; j++)
             {
-                Y[m - 1] = j * yIntervals * scaleFactor;
-                k = 1;
-                for (int i = 0; i < 10; i++)
+                //Y[m - 1] = j * yIntervals * scaleFactor;
+                for (int i = 0; i < 11; i++)
                 {
                     nodes[k] = new Node(i * xIntervals * scaleFactor, j * yIntervals * scaleFactor);
-                    X[k - 1] = i * xIntervals * scaleFactor;
+                    //X[k - 1] = i * xIntervals * scaleFactor;
                     k += 1;
                 }
                 m += 1;
@@ -38,11 +38,16 @@ namespace GFEC
         private static Dictionary<int, Dictionary<int, int>> CreateConnectivity()
         {
             Dictionary<int, Dictionary<int, int>> connectivity = new Dictionary<int, Dictionary<int, int>>();
-            
-            connectivity[1] = new Dictionary<int, int>() { { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 } };
-            connectivity[2] = new Dictionary<int, int>() { { 1, 5 }, { 2, 6 }, { 3, 7 }, { 4, 8 } };
-            connectivity[3] = new Dictionary<int, int>() { { 1, 4 }, { 2, 5 } };
-            connectivity[4] = new Dictionary<int, int>() { { 1, 3 }, { 2, 6 } };
+            int k = 1;
+            for (int j = 0; j <= 9; j++)
+            {
+                for (int i = 1; i <= 10; i++)
+                {
+                    connectivity[k] = new Dictionary<int, int>() { { 1, i+j*11 }, { 2, i + 1 +j*11}, { 3, i + 1 + 11+j*11 }, { 4, i + 11+j*11 } };
+                    k += 1;
+                }
+                
+            }
 
             return connectivity;
         }
@@ -50,28 +55,20 @@ namespace GFEC
         private static Dictionary<int, bool[]> CreateNodeFAT()
         {
             Dictionary<int, bool[]> nodeFAT = new Dictionary<int, bool[]>();
-            nodeFAT[1] = new bool[] { true, true, false, false, false, false };
-            nodeFAT[2] = new bool[] { true, true, false, false, false, false };
-            nodeFAT[3] = new bool[] { true, true, false, false, false, false };
-            nodeFAT[4] = new bool[] { true, true, false, false, false, false };
-            nodeFAT[5] = new bool[] { true, true, false, false, false, false };
-            nodeFAT[6] = new bool[] { true, true, false, false, false, false };
-            nodeFAT[7] = new bool[] { true, true, false, false, false, false };
-            nodeFAT[8] = new bool[] { true, true, false, false, false, false };
+            for (int i = 1; i <= 121; i++)
+            {
+                nodeFAT[i] = new bool[] { true, true, false, false, false, false };
+            }
             return nodeFAT;
         }
 
         private static Dictionary<int, bool[]> CreateThermalNodeFAT()
         {
             Dictionary<int, bool[]> nodeFAT = new Dictionary<int, bool[]>();
-            nodeFAT[1] = new bool[] { true, false, false, false, false, false };
-            nodeFAT[2] = new bool[] { true, false, false, false, false, false };
-            nodeFAT[3] = new bool[] { true, false, false, false, false, false };
-            nodeFAT[4] = new bool[] { true, false, false, false, false, false };
-            nodeFAT[5] = new bool[] { true, false, false, false, false, false };
-            nodeFAT[6] = new bool[] { true, false, false, false, false, false };
-            nodeFAT[7] = new bool[] { true, false, false, false, false, false };
-            nodeFAT[8] = new bool[] { true, false, false, false, false, false };
+            for (int i = 1; i <= 121; i++)
+            {
+                nodeFAT[i] = new bool[] { true, false, false, false, false, false };
+            }
             return nodeFAT;
         }
 
@@ -83,10 +80,14 @@ namespace GFEC
             string type2 = "ContactNtN2D";
 
             Dictionary<int, IElementProperties> elementProperties = new Dictionary<int, IElementProperties>();
-            elementProperties[1] = new ElementProperties(E, A, type);
-            elementProperties[2] = new ElementProperties(E, A, type);
-            elementProperties[3] = new ElementProperties(E / 1000.0, A, type2);
-            elementProperties[4] = new ElementProperties(E / 1000.0, A, type2);
+            for (int i = 1; i <= 100; i++)
+            {
+                elementProperties[i] = new ElementProperties(E, A, type);
+            }
+            //elementProperties[1] = new ElementProperties(E, A, type);
+            //elementProperties[2] = new ElementProperties(E, A, type);
+            //elementProperties[3] = new ElementProperties(E / 1000.0, A, type2);
+            //elementProperties[4] = new ElementProperties(E / 1000.0, A, type2);
             for (int i = 1; i <= 2; i++)
             {
                 elementProperties[i].Density = 8000.0;
@@ -104,10 +105,11 @@ namespace GFEC
             string type2 = "ContactNtN2DTh";
 
             Dictionary<int, IElementProperties> elementProperties = new Dictionary<int, IElementProperties>();
-            elementProperties[1] = new ElementProperties();
-            elementProperties[2] = new ElementProperties();
-            elementProperties[3] = new ElementProperties();
-            elementProperties[4] = new ElementProperties();
+            for (int i = 1; i <= 100; i++)
+            {
+                elementProperties[i] = new ElementProperties();
+            }
+            
             elementProperties[1].ElementType = type;
             elementProperties[2].ElementType = type;
             elementProperties[3].ElementType = type2;
