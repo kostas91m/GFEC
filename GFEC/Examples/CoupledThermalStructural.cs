@@ -41,9 +41,9 @@ namespace GFEC
             GnuPlot.Set("output 'gnuplot.png'");
 
             GnuPlot.HoldOn();
-            double[] Xcoor = new double[] { 0.5, 1.0 }; double[] Ycoor = new double[] { 0.5, 1.0 };
+            double[] Xcoor = new double[] { 0.5, 0.9 }; double[] Ycoor = new double[] { 0.5, 0.9 };
             //GnuPlot.Plot(Xcoor, Ycoor, "with linepoints");
-            GnuPlot.Plot("data1.dat", "with linespoints pt " + (int)PointStyles.DotCircle);
+            GnuPlot.Plot(Xcoor,Ycoor, "with linespoints pt " + (int)PointStyles.DotCircle);
             
             //GnuPlot.Close();
             //GnuPlot.Plot(new double[] { 1, 2 }, new double[] { 1, 2 }, "with lines");

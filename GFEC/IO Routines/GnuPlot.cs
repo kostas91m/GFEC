@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Linq;
+using System.Globalization;
 
 namespace GFEC
 {
@@ -382,8 +383,9 @@ namespace GFEC
         public static void WriteData(double[] x, double[] y, StreamWriter stream, bool flush = true)
         {
             for (int i = 0; i < y.Length; i++)
-                stream.WriteLine(x[i].ToString() + " " + y[i].ToString());
-
+            {
+                stream.WriteLine(x[i].ToString(new CultureInfo("en-US", false)) + " " + y[i].ToString(new CultureInfo("en-US", false)));
+            }
             if (flush) stream.Flush();
         }
 
