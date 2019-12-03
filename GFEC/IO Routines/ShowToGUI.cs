@@ -117,7 +117,7 @@ namespace GFEC
                         X = new double[] { element.Value.Nodes[i].XCoordinate, element.Value.Nodes[1].XCoordinate };
                         Y = new double[] { element.Value.Nodes[i].YCoordinate, element.Value.Nodes[1].YCoordinate };
                     }
-                    GnuPlot.Plot(X, Y, "with lines");
+                    GnuPlot.Plot(X, Y, "with linespoints pt " + (int)PointStyles.DotCircle);
                 }
             }
         }

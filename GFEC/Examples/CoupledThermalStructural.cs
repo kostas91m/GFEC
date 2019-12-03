@@ -16,43 +16,21 @@ namespace GFEC
             double scaleFactor = 1.0;
             double xIntervals = 0.1;
             double yIntervals = 0.1;
-            int k = 1;
+            int k, m;
+            m = 1;
             for (int j = 0; j < 10; j++)
             {
+                Y[m - 1] = j * yIntervals * scaleFactor;
+                k = 1;
                 for (int i = 0; i < 10; i++)
                 {
                     nodes[k] = new Node(i * xIntervals * scaleFactor, j * yIntervals * scaleFactor);
                     X[k - 1] = i * xIntervals * scaleFactor;
-                    Y[k - 1] = j * xIntervals * scaleFactor;
                     k += 1;
                 }
-                
+                m += 1;
             }
-            //GnuPlot.Set("terminal png size 500, 300");
-            //GnuPlot.Set("output 'gnuplot.png'");
-            //GnuPlot.Set("style line 1", "linecolor rgb '#0060ad'");
-            //GnuPlot.Set("pm3d");
-            //GnuPlot.Set("dgrid3d");
-            //GnuPlot.Set("view map");
-            //GnuPlot.HoldOn();
-            //GnuPlot.Set("lines");
-            //GnuPlot.Set("with points");
-            GnuPlot.Set("terminal png size 500, 300");
-            GnuPlot.Set("output 'gnuplot.png'");
-
-            GnuPlot.HoldOn();
-            double[] Xcoor = new double[] { 0.5, 0.9 }; double[] Ycoor = new double[] { 0.5, 0.9 };
-            //GnuPlot.Plot(Xcoor, Ycoor, "with linepoints");
-            GnuPlot.Plot(Xcoor,Ycoor, "with linespoints pt " + (int)PointStyles.DotCircle);
             
-            //GnuPlot.Close();
-            //GnuPlot.Plot(new double[] { 1, 2 }, new double[] { 1, 2 }, "with lines");
-            //GnuPlot.Plot(new double[] { 2, 3 }, new double[] { 2, 2 }, "with lines");
-
-            //GnuPlot.HoldOn();
-            //GnuPlot.SPlot("with pm3d");
-            //GnuPlot.SPlot(X, Y, Z, "with points");
-            //GnuPlot.Close();
 
             return nodes;
         }
