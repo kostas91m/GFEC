@@ -7,46 +7,63 @@ namespace GFEC
 {
     public static class CoupledThermalStructural
     {
+        private const int totalNodes = 121*2;
+        private const int totalElements = 112;
+        private const int nodesInXCoor = 15;
+        private const int nodesInYCoor = 5;
+        private const double scaleFactor = 1.0;
+        private const double xIntervals = 0.1;
+        private const double yIntervals = 0.1;
+        private const double offset = 0.7;
         private static Dictionary<int, INode> CreateNodes()
         {
             Dictionary<int, INode> nodes = new Dictionary<int, INode>();
-            double[] X = new double[100];
-            double[] Y = new double[100];
-            double[] Z = new double[100];
-            double scaleFactor = 1.0;
-            double xIntervals = 0.1;
-            double yIntervals = 0.1;
-            int k, m;
-            m = 1;
+
+            int k;
             k = 1;
-            for (int j = 0; j < 11; j++)
+            for (int j = 0; j < nodesInYCoor; j++)
             {
-                //Y[m - 1] = j * yIntervals * scaleFactor;
-                for (int i = 0; i < 11; i++)
+                for (int i = 0; i < nodesInXCoor; i++)
                 {
                     nodes[k] = new Node(i * xIntervals * scaleFactor, j * yIntervals * scaleFactor);
-                    //X[k - 1] = i * xIntervals * scaleFactor;
                     k += 1;
                 }
-                m += 1;
             }
-            
 
+            for (int j = 0; j < nodesInYCoor; j++)
+            {
+                for (int i = 0; i < nodesInXCoor; i++)
+                {
+                    nodes[k] = new Node(i * xIntervals * scaleFactor + offset, j * yIntervals * scaleFactor - 0.4);
+                    k += 1;
+                }
+            }
             return nodes;
         }
 
         private static Dictionary<int, Dictionary<int, int>> CreateConnectivity()
         {
+
             Dictionary<int, Dictionary<int, int>> connectivity = new Dictionary<int, Dictionary<int, int>>();
             int k = 1;
-            for (int j = 0; j <= 9; j++)
+            for (int j = 0; j <= nodesInYCoor-2; j++)
             {
-                for (int i = 1; i <= 10; i++)
+                for (int i = 1; i <= nodesInXCoor-1; i++)
                 {
-                    connectivity[k] = new Dictionary<int, int>() { { 1, i+j*11 }, { 2, i + 1 +j*11}, { 3, i + 1 + 11+j*11 }, { 4, i + 11+j*11 } };
+                    connectivity[k] = new Dictionary<int, int>() { { 1, i + j * nodesInXCoor }, { 2, i + 1 + j * nodesInXCoor }, { 3, i + 1 + nodesInXCoor + j * nodesInXCoor }, { 4, i + nodesInXCoor + j * nodesInXCoor } };
                     k += 1;
                 }
                 
+            }
+
+            for (int j = 0+ nodesInYCoor; j <= nodesInYCoor -2+ nodesInYCoor; j++)
+            {
+                for (int i = 1; i <= nodesInXCoor-1; i++)
+                {
+                    connectivity[k] = new Dictionary<int, int>() { { 1, i + j * nodesInXCoor }, { 2, i + 1 + j * nodesInXCoor }, { 3, i + 1 + nodesInXCoor + j * nodesInXCoor }, { 4, i + nodesInXCoor + j * nodesInXCoor } };
+                    k += 1;
+                }
+
             }
 
             return connectivity;
@@ -55,7 +72,7 @@ namespace GFEC
         private static Dictionary<int, bool[]> CreateNodeFAT()
         {
             Dictionary<int, bool[]> nodeFAT = new Dictionary<int, bool[]>();
-            for (int i = 1; i <= 121; i++)
+            for (int i = 1; i <= totalNodes; i++)
             {
                 nodeFAT[i] = new bool[] { true, true, false, false, false, false };
             }
@@ -65,7 +82,7 @@ namespace GFEC
         private static Dictionary<int, bool[]> CreateThermalNodeFAT()
         {
             Dictionary<int, bool[]> nodeFAT = new Dictionary<int, bool[]>();
-            for (int i = 1; i <= 121; i++)
+            for (int i = 1; i <= totalNodes; i++)
             {
                 nodeFAT[i] = new bool[] { true, false, false, false, false, false };
             }
@@ -80,15 +97,12 @@ namespace GFEC
             string type2 = "ContactNtN2D";
 
             Dictionary<int, IElementProperties> elementProperties = new Dictionary<int, IElementProperties>();
-            for (int i = 1; i <= 100; i++)
+            for (int i = 1; i <= totalElements; i++)
             {
                 elementProperties[i] = new ElementProperties(E, A, type);
             }
-            //elementProperties[1] = new ElementProperties(E, A, type);
-            //elementProperties[2] = new ElementProperties(E, A, type);
-            //elementProperties[3] = new ElementProperties(E / 1000.0, A, type2);
-            //elementProperties[4] = new ElementProperties(E / 1000.0, A, type2);
-            for (int i = 1; i <= 2; i++)
+
+            for (int i = 1; i <= totalElements; i++)
             {
                 elementProperties[i].Density = 8000.0;
                 elementProperties[i].Thickness = 0.1;
@@ -105,7 +119,7 @@ namespace GFEC
             string type2 = "ContactNtN2DTh";
 
             Dictionary<int, IElementProperties> elementProperties = new Dictionary<int, IElementProperties>();
-            for (int i = 1; i <= 100; i++)
+            for (int i = 1; i <= totalElements; i++)
             {
                 elementProperties[i] = new ElementProperties();
             }

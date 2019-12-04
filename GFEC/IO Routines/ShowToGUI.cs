@@ -136,7 +136,7 @@ namespace GFEC
                 }
             }
             GnuPlot.Plot(storedPlots);
-            //GnuPlot.HoldOff();
+            GnuPlot.HoldOff();
             //GnuPlot.Close();
             //GnuPlot.KillProcess();
 
