@@ -99,27 +99,47 @@ namespace GFEC
 
         public static void PlotWithGnuPlot(IAssembly assembly)
         {
+            GnuPlot.Set("terminal png size 500, 300");
+            GnuPlot.Set("output 'gnuplot.png'");
             GnuPlot.HoldOn();
+            GnuPlot.Unset("key");
+            double[] X,Y;
+            List<StoredPlot> storedPlots = new List<StoredPlot>();
+            //List<double> X = new List<double>();
+            //List<double> Y = new List<double>();
             foreach (var element in assembly.ElementsAssembly)
             {
                 int numberOfNodes = element.Value.Nodes.Count;
                 for (int i = 1; i <= numberOfNodes; i++)
                 {
-                    double[] X;
-                    double[] Y;
-                    if (i!=numberOfNodes)
+                    if (i != numberOfNodes)
                     {
+                        //X.Add(element.Value.Nodes[i].XCoordinate);
+                        //X.Add(element.Value.Nodes[i+1].XCoordinate);
+                        //Y.Add(element.Value.Nodes[i].YCoordinate);
+                        //Y.Add(element.Value.Nodes[i + 1].YCoordinate);
                         X = new double[] { element.Value.Nodes[i].XCoordinate, element.Value.Nodes[i + 1].XCoordinate };
                         Y = new double[] { element.Value.Nodes[i].YCoordinate, element.Value.Nodes[i + 1].YCoordinate };
                     }
                     else
                     {
+                        //X.Add(element.Value.Nodes[i].XCoordinate);
+                        //X.Add(element.Value.Nodes[ 1].XCoordinate);
+                        //Y.Add(element.Value.Nodes[i].YCoordinate);
+                        //Y.Add(element.Value.Nodes[ 1].YCoordinate);
                         X = new double[] { element.Value.Nodes[i].XCoordinate, element.Value.Nodes[1].XCoordinate };
-                        Y = new double[] { element.Value.Nodes[i].YCoordinate, element.Value.Nodes[1].YCoordinate };
+                       Y = new double[] { element.Value.Nodes[i].YCoordinate, element.Value.Nodes[1].YCoordinate };
                     }
-                    GnuPlot.Plot(X, Y, "with linespoints pt " + (int)PointStyles.DotCircle);
+                    storedPlots.Add(new StoredPlot(X, Y, "with linespoints pt " + (int)PointStyles.SolidCircle + " lt rgb \"blue\""));
+                    //GnuPlot.Plot(X, Y, "with linespoints pt " + (int)PointStyles.SolidCircle + " lt rgb \"blue\"");
+
                 }
             }
+            GnuPlot.Plot(storedPlots);
+            //GnuPlot.HoldOff();
+            //GnuPlot.Close();
+            //GnuPlot.KillProcess();
+
         }
 
         //public static SeriesCollection DrawMesh(Dictionary<int, INode> nodes, Dictionary<int, Dictionary<int, int>> connectivity)

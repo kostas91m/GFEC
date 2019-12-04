@@ -154,7 +154,7 @@ namespace GFEC
 
             //Gnuplot graphs
             ShowToGUI.PlotWithGnuPlot(elementsAssembly);
-
+            //return new Results() ;
 
             ISolver newSolu = new StaticSolver();
             newSolu.LinearScheme = new PCGSolver();

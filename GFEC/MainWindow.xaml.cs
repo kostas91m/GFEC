@@ -25,7 +25,7 @@ namespace GFEC
     /// </summary>
     public partial class MainWindow : Window
     {
-        public SeriesCollection Graph {get; set;}
+        public SeriesCollection Graph { get; set; }
         public SeriesCollection Mesh { get; set; }
         private Results solverResults;
         private Dictionary<int, INode> nodes = new Dictionary<int, INode>();
@@ -44,7 +44,7 @@ namespace GFEC
         {
             SolveSelectedExample();
             Graph = ShowToGUI.ShowResults(solverResults);
-            
+
 
             //Dictionary<int, INode> nodes = new Dictionary<int, INode>();
             //nodes[1] = new Node(0.0, 0.01);
@@ -92,7 +92,7 @@ namespace GFEC
         {
             Results finalResults;
             Tuple<Dictionary<int, double[]>, Dictionary<int, double>> results;
-              string selectedExample = ComboBox1.SelectedItem.ToString();
+            string selectedExample = ComboBox1.SelectedItem.ToString();
             switch (selectedExample)
             {
                 case "TwoQuadsExample":
@@ -127,7 +127,7 @@ namespace GFEC
                     break;
             }
             //Results.Text = solution[0].ToString();
-            
+
             solverResults = finalResults;
         }
 
@@ -149,11 +149,11 @@ namespace GFEC
                         string[] fields = line.Split(new string[] { "\t" }, StringSplitOptions.None);
                         int nodeIndex = int.Parse(fields[0]);
                         var node = new Node(double.Parse(fields[1]), double.Parse(fields[2]));
-                        nodes[nodeIndex] = node;                        
+                        nodes[nodeIndex] = node;
                     }
                 }
-                
-                 
+
+
             }
             catch (Exception ex)
             {
@@ -204,7 +204,7 @@ namespace GFEC
                 game.Run(60.0);
             }
 
-            
+
 
         }
 
@@ -249,15 +249,25 @@ namespace GFEC
             //GnuPlot.Set("pm3d interpolate 10,10");
 
             GnuPlot.SPlot(X, Y, Z);
-
+            GnuPlot.Set("output");
 
             GnuPlot.Close();
+
+            while (true)
+            {
+                if (File.Exists(AppContext.BaseDirectory + "gnuplot.png") && new FileInfo(AppContext.BaseDirectory + "gnuplot.png").Length > 0)
+                {
+                    break;
+
+                }
+                Thread.Sleep(100);
+            }
             GnuPlot.KillProcess();
-            //GnuPlot.waitForFile("C:/Users/VasilisMerevis/source/repos/VasilisMerevis/GFEC/GFEC/bin/Debug/gnuplot.png", 3000);
+
             gnuplotImage.Source = null;
-            gnuplotImage.Source = new BitmapImage(new Uri("pack://siteoforigin:,,/gnuplot.png"));
+            gnuplotImage.Source = new BitmapImage(new Uri("file://" + AppContext.BaseDirectory + "gnuplot.png"));
         }
     }
 
-    
+
 }

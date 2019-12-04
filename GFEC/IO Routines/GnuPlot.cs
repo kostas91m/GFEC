@@ -131,7 +131,6 @@ namespace GFEC
             PlotBuffer.Add(new StoredPlot(x, y, options));
             Plot(PlotBuffer);
         }
-
         public static void Contour(string filenameOrFunction, string options = "", bool labelContours = true)
         {
             if (!Hold) PlotBuffer.Clear();
@@ -534,7 +533,7 @@ namespace GFEC
                 GnupStWr.WriteLine("unset object " + contourLabelCount + ";unset label " + contourLabelCount--);
         }
 
-        static bool waitForFile(string filename, int timeout = 10000)
+        public static bool waitForFile(string filename, int timeout = 10000)
         {
             Thread.Sleep(20);
             int attempts = timeout / 100;
