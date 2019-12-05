@@ -12,7 +12,7 @@ namespace GFEC
         protected IAssembly discretization;
         protected double lambda;
         protected double tolerance = 1e-5;
-        protected int maxIterations = 1000;
+        protected int maxIterations = 100;
         public bool PrintResidual { get; set; } = false;
         protected ILinearSolution linearSolver;
         public Dictionary<int, double[]> InternalForces { get; set; }

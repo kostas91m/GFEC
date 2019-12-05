@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace GFEC
 {
     public static class CoupledThermalStructural
     {
-        private const int totalNodes = 121*2;
+        private const int totalNodes = 150;
         private const int totalElements = 112;
         private const int nodesInXCoor = 15;
         private const int nodesInYCoor = 5;
@@ -15,6 +17,7 @@ namespace GFEC
         private const double xIntervals = 0.1;
         private const double yIntervals = 0.1;
         private const double offset = 0.7;
+        
         private static Dictionary<int, INode> CreateNodes()
         {
             Dictionary<int, INode> nodes = new Dictionary<int, INode>();
@@ -66,6 +69,23 @@ namespace GFEC
 
             }
 
+            //Contact elements
+            //int xContactNodesNumber = (int)(nodesInXCoor - offset / 0.1);
+            //List<int> lowerContactNodes = new List<int>();
+            //List<int> upperContactNodes = new List<int>();
+
+            //for (int i = nodesInXCoor - xContactNodesNumber + 1; i <= nodesInXCoor; i++)
+            //{
+                
+            //}
+            connectivity[113] = new Dictionary<int, int>() { { 1, 136 }, { 2, 8 } };
+            connectivity[114] = new Dictionary<int, int>() { { 1, 137 }, { 2, 9 } };
+            connectivity[115] = new Dictionary<int, int>() { { 1, 138 }, { 2, 10 } };
+            connectivity[116] = new Dictionary<int, int>() { { 1, 139 }, { 2, 11 } };
+            connectivity[117] = new Dictionary<int, int>() { { 1, 140 }, { 2, 12 } };
+            connectivity[118] = new Dictionary<int, int>() { { 1, 141 }, { 2, 13 } };
+            connectivity[119] = new Dictionary<int, int>() { { 1, 142 }, { 2, 14 } };
+            connectivity[120] = new Dictionary<int, int>() { { 1, 143 }, { 2, 15 } };
             return connectivity;
         }
 
@@ -108,6 +128,12 @@ namespace GFEC
                 elementProperties[i].Thickness = 0.1;
             }
 
+            for (int i = 113; i <= 120; i++)
+            {
+                elementProperties[i] = new ElementProperties(E, A, type2);
+                elementProperties[i].Density = 8000.0;
+                elementProperties[i].Thickness = 0.1;
+            }
             return elementProperties;
         }
 
@@ -122,17 +148,15 @@ namespace GFEC
             for (int i = 1; i <= totalElements; i++)
             {
                 elementProperties[i] = new ElementProperties();
+                elementProperties[i].ElementType = type;
             }
-            
-            elementProperties[1].ElementType = type;
-            elementProperties[2].ElementType = type;
-            elementProperties[3].ElementType = type2;
-            elementProperties[4].ElementType = type2;
-            elementProperties[1].ThermalConductivity = thermalCond;
-            elementProperties[2].ThermalConductivity = thermalCond;
-            elementProperties[3].SectionArea = A;
-            elementProperties[4].SectionArea = A;
-
+            for (int i = 113; i <= 120; i++)
+            {
+                elementProperties[i] = new ElementProperties();
+                elementProperties[i].ElementType = type2;
+                elementProperties[i].ThermalConductivity = thermalCond;
+                elementProperties[i].SectionArea = A;
+            }
             return elementProperties;
         }
 
@@ -143,7 +167,7 @@ namespace GFEC
             assembly.ElementsConnectivity = CreateConnectivity();
             assembly.ElementsProperties = CreateElementProperties();
             assembly.NodeFreedomAllocationList = CreateNodeFAT();
-            assembly.BoundedDOFsVector = new int[] { 1, 2, 3, 4, 5, 7, 9, 11, 13, 15 };
+            assembly.BoundedDOFsVector = new int[] { 1, 2, 31, 32, 61, 62, 91, 92, 121, 122, 179, 180, 209, 210, 239, 240, 269, 270, 299, 300 };
             return assembly;
         }
 
@@ -154,7 +178,7 @@ namespace GFEC
             assembly.ElementsConnectivity = CreateConnectivity();
             assembly.ElementsProperties = CreateThermalElementProperties();
             assembly.NodeFreedomAllocationList = CreateThermalNodeFAT();
-            assembly.BoundedDOFsVector = new int[] { 1, 2 };
+            assembly.BoundedDOFsVector = new int[] { 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165 };
             return assembly;
         }
 
@@ -194,36 +218,85 @@ namespace GFEC
             //newSolu2.PrintSolution();
             //double[] tempSolution = newSolu.GetSolution();
 
-            double[] solVector2 = new double[6];
+            double[] solVector2 = new double[280];
             List<double[]> structuralSolutions = new List<double[]>();
+            int[] BoundedDOFsVector = new int[] { 1, 2, 31, 32, 61, 62, 91, 92, 121, 122, 179, 180, 209, 210, 239, 240, 269, 270, 299, 300 };
+            double[] externalForces2 = new double[300];
             for (int i = 1; i <= 5; i++)
             {
                 newSolu.NonLinearScheme = new LoadControlledNewtonRaphson(solVector2);
-                double[] externalForces2 = new double[] { 0, 0, 0, 0, -10000.0 * i, -10000.0 * i };
+                
+                
+                externalForces2[135] = -10000.0 * i;
+                externalForces2[137] = -10000.0 * i;
+                externalForces2[139] = -10000.0 * i;
+                externalForces2[141] = -10000.0 * i;
+                externalForces2[143] = -10000.0 * i;
+                externalForces2[145] = -10000.0 * i;
+                externalForces2[147] = -10000.0 * i;
+                externalForces2[149] = -10000.0 * i;
+                double[] reducedExternalForces2 = BoundaryConditionsImposition.ReducedVector(externalForces2, BoundedDOFsVector);
                 newSolu.AssemblyData = elementsAssembly;
-                newSolu.Solve(externalForces2);
+                newSolu.Solve(reducedExternalForces2);
                 solVector2 = newSolu.GetSolution();
                 structuralSolutions.Add(solVector2);
             }
             Dictionary<int, double[]> intForces = newSolu.GetInternalForces();
             Dictionary<int, double[]> elementInternalForces = elementsAssembly.GetElementsInternalForces(structuralSolutions[0]);
             List<string> elementTypes = elementsAssembly.GetElementsType();
+            double[] completeFinalSolutionVector = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(solVector2, BoundedDOFsVector);
+            Dictionary<int, INode> finalNodesList = new Dictionary<int, INode>();
+            finalNodesList = Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, completeFinalSolutionVector);
 
-            double[] temperatures = new double[6];
+
+            double[] temperatures = new double[135];
             List<double[]> thermalSolutions = new List<double[]>();
+            int[] BoundedDOFsVectorForHeat = new int[] { 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165 };
             for (int i = 1; i <= 5; i++)
             {
                 thermalSolution.NonLinearScheme = new LoadControlledNewtonRaphson(temperatures);
-                double[] externalHeatFlux = new double[] { 0, 0, 0, 0, 250.0, 250.0 };
+                double[] externalHeatFlux = new double[150];
+                double[] reducedExternalHeatFlux = BoundaryConditionsImposition.ReducedVector(externalHeatFlux, BoundedDOFsVectorForHeat);
                 thermalSolution.AssemblyData = elementsAssembly2;
-                thermalSolution.Solve(externalHeatFlux);
+                thermalSolution.Solve(reducedExternalHeatFlux);
                 temperatures = thermalSolution.GetSolution();
                 thermalSolutions.Add(temperatures);
             }
 
+            List<double> X = new List<double>();
+            List<double> Y = new List<double>();
+            double[] Z = thermalSolutions[4];
+            foreach (var node in elementsAssembly2.Nodes)
+            {
+                X.Add(node.Value.XCoordinate);
+                Y.Add(node.Value.YCoordinate);
 
-            //double[] completeFinalSolutionVector = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(solVector2, new int[] { 1, 2, 3, 4, 5, 7, 9, 11, 13, 15 });            Dictionary<int, INode> finalNodesList = new Dictionary<int, INode>();
-            //finalNodesList = Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, completeFinalSolutionVector);
+            }
+            double[] Xvec = X.ToArray();
+            double[] Yvec = Y.ToArray();
+
+            GnuPlot.Set("terminal png size 500, 300");
+            GnuPlot.Set("output 'gnuplot.png'");
+            GnuPlot.Set("pm3d");
+            GnuPlot.Set("dgrid3d");
+            GnuPlot.Set("view map");
+            GnuPlot.SPlot(Xvec, Yvec, Z);
+            GnuPlot.Set("output");
+
+            GnuPlot.Close();
+
+            while (true)
+            {
+                if (File.Exists(AppContext.BaseDirectory + "gnuplot.png") && new FileInfo(AppContext.BaseDirectory + "gnuplot.png").Length > 0)
+                {
+                    break;
+
+                }
+                Thread.Sleep(100);
+            }
+            GnuPlot.KillProcess();
+
+
 
             return new Results() { NonlinearSolution = structuralSolutions, SelectedDOF = 2, SolutionType = "Nonlinear" };
         }
