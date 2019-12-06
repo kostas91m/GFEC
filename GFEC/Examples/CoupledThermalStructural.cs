@@ -218,7 +218,7 @@ namespace GFEC
             elementsAssembly.UpdateDisplacements(solvector3);
             ShowToGUI.PlotFinalGeometry(elementsAssembly);
 
-                double[] solVector2 = new double[280];
+            double[] solVector2 = new double[280];
                 List<double[]> structuralSolutions = new List<double[]>();
                 int[] BoundedDOFsVector = new int[] { 1, 2, 31, 32, 61, 62, 91, 92, 121, 122, 179, 180, 209, 210, 239, 240, 269, 270, 299, 300 };
                 double[] externalForces2 = new double[300];
