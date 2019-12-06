@@ -27,7 +27,12 @@ namespace GFEC
             ElementFreedomSignature[4] = new bool[] { true, false, false, false, false, false };
             DisplacementVector = new double[4];
         }
-       
+
+        public Dictionary<int, INode> NodesAtFinalState()
+        {
+            throw new Exception("Method not implemenented");
+        }
+
         public double[,] CreateGlobalStiffnessMatrix()
         {
             kc = Properties.ThermalConductivity;

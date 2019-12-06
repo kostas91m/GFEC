@@ -17,11 +17,12 @@ namespace GFEC
         private const double xIntervals = 0.1;
         private const double yIntervals = 0.1;
         private const double offset = 0.7;
+        private const double gap = 0.01;
 
         private static Dictionary<int, INode> CreateNodes()
         {
             Dictionary<int, INode> nodes = new Dictionary<int, INode>();
-
+            //Upper cantilever
             int k;
             k = 1;
             for (int j = 0; j < nodesInYCoor; j++)
@@ -33,11 +34,12 @@ namespace GFEC
                 }
             }
 
+            //Lower cantilever
             for (int j = 0; j < nodesInYCoor; j++)
             {
                 for (int i = 0; i < nodesInXCoor; i++)
                 {
-                    nodes[k] = new Node(i * xIntervals * scaleFactor + offset, j * yIntervals * scaleFactor - 0.4);
+                    nodes[k] = new Node(i * xIntervals * scaleFactor + offset, j * yIntervals * scaleFactor - ((nodesInYCoor - 1) * yIntervals + gap));
                     k += 1;
                 }
             }
@@ -191,13 +193,30 @@ namespace GFEC
                 double[,] globalStiffnessMatrix = elementsAssembly.CreateTotalStiffnessMatrix();
 
                 //Gnuplot graphs
-                ShowToGUI.PlotWithGnuPlot(elementsAssembly);
+                ShowToGUI.PlotInitialGeometry(elementsAssembly);
+
 
                 ISolver structuralSolution = new StaticSolver();
                 structuralSolution.LinearScheme = new LUFactorization();
                 structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
                 structuralSolution.ActivateNonLinearSolver = true;
-                structuralSolution.NonLinearScheme.numberOfLoadSteps = 1;
+                structuralSolution.NonLinearScheme.numberOfLoadSteps = 10;
+                int[] BoundedDOFsVector2 = new int[] { 1, 2, 31, 32, 61, 62, 91, 92, 121, 122, 179, 180, 209, 210, 239, 240, 269, 270, 299, 300 };
+                double[] externalForces3 = new double[300];
+            externalForces3[135] = -100000000.0;
+            externalForces3[137] = -100000000.0;
+            externalForces3[139] = -100000000.0;
+            externalForces3[141] = -100000000.0;
+            externalForces3[143] = -100000000.0;
+            externalForces3[145] = -100000000.0;
+            externalForces3[147] = -100000000.0;
+            externalForces3[149] = -100000000.0;
+            double[] reducedExternalForces3 = BoundaryConditionsImposition.ReducedVector(externalForces3, BoundedDOFsVector2);
+                structuralSolution.AssemblyData = elementsAssembly;
+                structuralSolution.Solve(reducedExternalForces3);
+            double[] solvector3 = structuralSolution.GetSolution();
+            elementsAssembly.UpdateDisplacements(solvector3);
+            ShowToGUI.PlotFinalGeometry(elementsAssembly);
 
                 double[] solVector2 = new double[280];
                 List<double[]> structuralSolutions = new List<double[]>();

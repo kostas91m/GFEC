@@ -26,6 +26,11 @@ namespace GFEC
             ContactArea = properties.SectionArea;
         }
 
+        public Dictionary<int, INode> NodesAtFinalState()
+        {
+            throw new Exception("Method not implemenented");
+        }
+
         private double CalculateConductivity()
         {
             double cc = 19.2;

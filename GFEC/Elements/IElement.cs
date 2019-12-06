@@ -21,6 +21,7 @@ namespace GFEC
         double[] AccelerationVector { get; set; }
         double[] CreateInternalGlobalForcesVector();
         double[,] CreateDampingMatrix();
+        Dictionary<int, INode> NodesAtFinalState();
     }
 }
 

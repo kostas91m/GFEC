@@ -16,7 +16,7 @@ namespace GFEC
         public double poisson { get; set; }
         //private double thickness = 1.0; //To be included in Element Properties
         //private double density = 1.0; //To be included in Element Properties
-
+        
         public Quad4(IElementProperties properties, Dictionary<int, INode> nodes)
         {
             Properties = properties;
@@ -37,6 +37,16 @@ namespace GFEC
                 updatedCoor[2 * i - 1] = Nodes[i].YCoordinate + displacementVector[2 * i - 1];
             }
             return updatedCoor;
+        }
+
+        public Dictionary<int, INode> NodesAtFinalState()
+        {
+            Dictionary<int, INode> finalNodes = new Dictionary<int, INode>();
+            finalNodes[1] = new Node(Nodes[1].XCoordinate + DisplacementVector[0], Nodes[1].YCoordinate + DisplacementVector[1]);
+            finalNodes[2] = new Node(Nodes[2].XCoordinate + DisplacementVector[2], Nodes[2].YCoordinate + DisplacementVector[3]);
+            finalNodes[3] = new Node(Nodes[3].XCoordinate + DisplacementVector[4], Nodes[3].YCoordinate + DisplacementVector[5]);
+            finalNodes[4] = new Node(Nodes[4].XCoordinate + DisplacementVector[6], Nodes[4].YCoordinate + DisplacementVector[7]);
+            return finalNodes;
         }
 
         private Dictionary<int, double> CalculateShapeFunctions(double ksi, double ihta)

@@ -11,6 +11,7 @@ using LiveCharts.Wpf;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using System.Windows;
 
 namespace GFEC
 {
@@ -97,7 +98,7 @@ namespace GFEC
             return graph;
         }
 
-        public static void PlotWithGnuPlot(IAssembly assembly)
+        public static void PlotInitialGeometry(IAssembly assembly)
         {
             GnuPlot.Set("terminal png size 500, 300");
             GnuPlot.Set("output 'gnuplot.png'");
@@ -108,7 +109,7 @@ namespace GFEC
             //List<double> X = new List<double>();
             //List<double> Y = new List<double>();
             foreach (var element in assembly.ElementsAssembly)
-            {
+            {    
                 int numberOfNodes = element.Value.Nodes.Count;
                 for (int i = 1; i <= numberOfNodes; i++)
                 {
@@ -128,10 +129,66 @@ namespace GFEC
                         //Y.Add(element.Value.Nodes[i].YCoordinate);
                         //Y.Add(element.Value.Nodes[ 1].YCoordinate);
                         X = new double[] { element.Value.Nodes[i].XCoordinate, element.Value.Nodes[1].XCoordinate };
-                       Y = new double[] { element.Value.Nodes[i].YCoordinate, element.Value.Nodes[1].YCoordinate };
+                        Y = new double[] { element.Value.Nodes[i].YCoordinate, element.Value.Nodes[1].YCoordinate };
                     }
-                    storedPlots.Add(new StoredPlot(X, Y, "with linespoints pt " + (int)PointStyles.SolidCircle + " lt rgb \"blue\""));
-                    //GnuPlot.Plot(X, Y, "with linespoints pt " + (int)PointStyles.SolidCircle + " lt rgb \"blue\"");
+                    
+                    if (element.Value is ContactNtN2D)
+                    {
+                        storedPlots.Add(new StoredPlot(X, Y, "with linespoints pt " + (int)PointStyles.SolidCircle + " lt rgb \"red\""));
+                        //GnuPlot.Plot(X, Y, "with linespoints pt " + (int)PointStyles.SolidCircle + " lt rgb \"blue\"");
+                    }
+                    else
+                    {
+                        storedPlots.Add(new StoredPlot(X, Y, "with linespoints pt " + (int)PointStyles.SolidCircle + " lt rgb \"blue\""));
+                        //GnuPlot.Plot(X, Y, "with linespoints pt " + (int)PointStyles.SolidCircle + " lt rgb \"blue\"");
+                    }
+
+
+                }
+            }
+            GnuPlot.Plot(storedPlots);
+            GnuPlot.HoldOff();
+            //GnuPlot.Close();
+            //GnuPlot.KillProcess();
+
+        }
+
+        public static void PlotFinalGeometry(IAssembly assembly)
+        {
+            GnuPlot.Set("terminal png size 500, 300");
+            GnuPlot.Set("output 'gnuplot2.png'");
+            GnuPlot.HoldOn();
+            GnuPlot.Unset("key");
+            double[] X, Y;
+            List<StoredPlot> storedPlots = new List<StoredPlot>();
+            
+            foreach (var element in assembly.ElementsAssembly)
+            {
+                //int numberOfNodes = element.Value.Nodes.Count;
+                Dictionary<int, INode> nodesAtFinalState = element.Value.NodesAtFinalState();
+                int numberOfNodes = nodesAtFinalState.Count;
+                for (int i = 1; i <= numberOfNodes; i++)
+                {
+                    if (i != numberOfNodes)
+                    {
+                        X = new double[] { nodesAtFinalState[i].XCoordinate, nodesAtFinalState[i + 1].XCoordinate };
+                        Y = new double[] { nodesAtFinalState[i].YCoordinate, nodesAtFinalState[i + 1].YCoordinate };
+                    }
+                    else
+                    {
+                        X = new double[] { nodesAtFinalState[i].XCoordinate, nodesAtFinalState[1].XCoordinate };
+                        Y = new double[] { nodesAtFinalState[i].YCoordinate, nodesAtFinalState[1].YCoordinate };
+                    }
+
+                    if (element.Value is ContactNtN2D)
+                    {
+                        storedPlots.Add(new StoredPlot(X, Y, "with linespoints pt " + (int)PointStyles.SolidCircle + " lt rgb \"red\""));
+                    }
+                    else
+                    {
+                        storedPlots.Add(new StoredPlot(X, Y, "with linespoints pt " + (int)PointStyles.SolidCircle + " lt rgb \"blue\""));
+                    }
+
 
                 }
             }
