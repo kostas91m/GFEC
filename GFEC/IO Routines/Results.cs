@@ -10,5 +10,9 @@ namespace GFEC
     {
         public Dictionary<int, double[]> DynamicSolution { get; set; }
         public Dictionary<int, double> TimeSteps { get; set; }
+        public List<double[]> NonlinearSolution { get; set; }
+        public int SelectedInterval { get; set; }
+        public int SelectedDOF { get; set; }
+        public string SolutionType { get; set; }
     }
 }

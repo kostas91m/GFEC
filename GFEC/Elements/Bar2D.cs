@@ -23,6 +23,11 @@ namespace GFEC
             ElementFreedomSignature[2] = new bool[] { true, true, false, false, false, false };
         }
 
+        public Dictionary<int, INode> NodesAtFinalState()
+        {
+            throw new Exception("Method not implemenented");
+        }
+
         public double CalculateElementLength()
         {
             double X1 = Nodes[1].XCoordinate;

@@ -30,6 +30,11 @@ namespace GFEC
             ElementFreedomSignature[8] = new bool[] { true, true, true, false, false, false };
         }
 
+        public Dictionary<int, INode> NodesAtFinalState()
+        {
+            throw new Exception("Method not implemenented");
+        }
+
         private double[] UpdateNodalCoordinates(double[] displacementVector)
         {
             double[] updatedCoor = new double[24];

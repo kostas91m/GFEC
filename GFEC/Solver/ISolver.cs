@@ -15,5 +15,6 @@ namespace GFEC
         void PrintSolution();
         double[,] CustomStiffnessMatrix { get; set; }
         double[] GetSolution();
+        Dictionary<int, double[]> GetInternalForces();
     }
 }

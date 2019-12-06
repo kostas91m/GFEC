@@ -24,7 +24,7 @@ namespace GFEC
                 //    break;
                 //}
             }
-            File.WriteAllLines(@"D:\WriteLines2.txt", lines);
+            //File.WriteAllLines(@"D:\WriteLines2.txt", lines);
         }
     }
 }

@@ -38,6 +38,11 @@ namespace GFEC
         //    return normalUnitVec;
         //}
 
+        public Dictionary<int, INode> NodesAtFinalState()
+        {
+            throw new Exception("Method not implemenented");
+        }
+
         private double ClosestPointProjection()
         {
             double Xm1 = Nodes[1].XCoordinate + DisplacementVector[0];

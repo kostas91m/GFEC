@@ -25,6 +25,14 @@ namespace GFEC
             PenaltyFactor = properties.YoungMod * 100.0;
         }
 
+        public Dictionary<int, INode> NodesAtFinalState()
+        {
+            Dictionary<int, INode> finalNodes = new Dictionary<int, INode>();
+            finalNodes[1] = new Node(Nodes[1].XCoordinate + DisplacementVector[0], Nodes[1].YCoordinate + DisplacementVector[1]);
+            finalNodes[2] = new Node(Nodes[2].XCoordinate + DisplacementVector[2], Nodes[2].YCoordinate + DisplacementVector[3]);
+            return finalNodes;
+        }
+
         private double[] CalculateNormalUnitVector()
         {
             double X1 = Nodes[1].XCoordinate;

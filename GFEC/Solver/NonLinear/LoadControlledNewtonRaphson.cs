@@ -7,10 +7,20 @@ namespace GFEC
 {
     class LoadControlledNewtonRaphson : NonLinearSolution
     {
+        private double[] localSolutionVector;
+        
+        public LoadControlledNewtonRaphson()
+        {
+
+        }
+        public LoadControlledNewtonRaphson(double[] exSolution)
+        {
+            localSolutionVector = exSolution;
+        }
         private double[] LoadControlledNR(double[] forceVector)
         {
             double[] incrementDf = VectorOperations.VectorScalarProductNew(forceVector, lambda);
-            double[] solutionVector = new double[forceVector.Length];
+            double[] solutionVector = localSolutionVector;
             double[] incrementalExternalForcesVector = new double[forceVector.Length];
             double[] tempSolutionVector = new double[solutionVector.Length];
             double[] deltaU = new double[solutionVector.Length];
@@ -41,6 +51,7 @@ namespace GFEC
                     residualNorm = VectorOperations.VectorNorm2(residual);
                     iteration = iteration + 1;
                 }
+                InternalForces.Add(i + 1, internalForcesTotalVector);
                 solutionVector = VectorOperations.VectorVectorAddition(solutionVector, deltaU);
                 if (iteration >= maxIterations) Console.WriteLine("Newton-Raphson: Solution not converged at current iterations");
             }
@@ -50,6 +61,11 @@ namespace GFEC
 
         public override double[] Solve(IAssembly assembly, ILinearSolution linearScheme, double[] forceVector)
         {
+            InternalForces = new Dictionary<int, double[]>();
+            if (localSolutionVector == null)
+            {
+                localSolutionVector = new double[forceVector.Length];
+            }
             discretization = assembly;
             linearSolver = linearScheme;
             lambda = 1.0 / numberOfLoadSteps;

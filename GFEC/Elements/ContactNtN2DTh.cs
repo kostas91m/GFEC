@@ -23,7 +23,12 @@ namespace GFEC
             ElementFreedomSignature[1] = new bool[] { true, false, false, false, false, false };
             ElementFreedomSignature[2] = new bool[] { true, false, false, false, false, false };
             DisplacementVector = new double[2];
-            properties.SectionArea = ContactArea;
+            ContactArea = properties.SectionArea;
+        }
+
+        public Dictionary<int, INode> NodesAtFinalState()
+        {
+            throw new Exception("Method not implemenented");
         }
 
         private double CalculateConductivity()

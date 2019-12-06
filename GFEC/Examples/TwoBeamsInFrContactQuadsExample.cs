@@ -130,7 +130,7 @@ namespace GFEC
             newSolver.ActivateNonLinearSolution = true;
             newSolver.SolveNewmark();
             //newSolver.PrintExplicitSolution();
-            Results finalResults = new Results() { DynamicSolution = newSolver.explicitSolution, TimeSteps = newSolver.TimeAtEachStep };
+            Results finalResults = new Results() { DynamicSolution = newSolver.explicitSolution, TimeSteps = newSolver.TimeAtEachStep, SelectedDOF = 1, SelectedInterval = 1, SolutionType="Dynamic" };
             return finalResults;
         }
 

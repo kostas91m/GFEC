@@ -27,6 +27,11 @@ namespace GFEC
             DisplacementVector = new double[6];
         }
 
+        public Dictionary<int, INode> NodesAtFinalState()
+        {
+            throw new Exception("Method not implemenented");
+        }
+
         public double CalculateElementLength() //Initial length
         {
             double X1 = Nodes[1].XCoordinate;
