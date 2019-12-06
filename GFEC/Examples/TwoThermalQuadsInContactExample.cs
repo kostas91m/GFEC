@@ -103,30 +103,5 @@ namespace GFEC
             double[] tempSolution = newSolu.GetSolution();
             return new Results();
         }
-
-        public static void RunDynamicExample()
-        {
-            IAssembly elementsAssembly = CreateAssembly();
-            elementsAssembly.CreateElementsAssembly();
-            elementsAssembly.ActivateBoundaryConditions = true;
-
-            InitialConditions initialValues = new InitialConditions();
-            initialValues.InitialAccelerationVector = new double[6];
-            initialValues.InitialDisplacementVector = new double[6];
-            //initialValues.InitialDisplacementVector[7] = -0.02146;
-            initialValues.InitialVelocityVector = new double[6];
-            initialValues.InitialTime = 0.0;
-
-            ExplicitSolver newSolver = new ExplicitSolver(1.0, 10000);
-            newSolver.Assembler = elementsAssembly;
-
-            newSolver.InitialValues = initialValues;
-            newSolver.ExternalForcesVector = new double[] { 0, 0, 0, 0, -50000, -50000 };
-            newSolver.LinearSolver = new CholeskyFactorization();
-            newSolver.ActivateNonLinearSolution = true;
-            newSolver.SolveNewmark();
-            newSolver.PrintExplicitSolution();//
-        }
-
     }
 }
