@@ -151,6 +151,7 @@ namespace GFEC
             {
                 elementProperties[i] = new ElementProperties();
                 elementProperties[i].ElementType = type;
+                elementProperties[i].ThermalConductivity = thermalCond;
             }
             for (int i = 113; i <= 120; i++)
             {
@@ -180,7 +181,7 @@ namespace GFEC
             assembly.ElementsConnectivity = CreateConnectivity();
             assembly.ElementsProperties = CreateThermalElementProperties();
             assembly.NodeFreedomAllocationList = CreateThermalNodeFAT();
-            assembly.BoundedDOFsVector = new int[] { 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165 };
+            assembly.BoundedDOFsVector = new int[] { 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90 };
             return assembly;
         }
 
@@ -193,58 +194,58 @@ namespace GFEC
                 double[,] globalStiffnessMatrix = elementsAssembly.CreateTotalStiffnessMatrix();
 
                 //Gnuplot graphs
-                ShowToGUI.PlotInitialGeometry(elementsAssembly);
+                //ShowToGUI.PlotInitialGeometry(elementsAssembly);
 
 
-                ISolver structuralSolution = new StaticSolver();
-                structuralSolution.LinearScheme = new LUFactorization();
-                structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
-                structuralSolution.ActivateNonLinearSolver = true;
-                structuralSolution.NonLinearScheme.numberOfLoadSteps = 10;
-                int[] BoundedDOFsVector2 = new int[] { 1, 2, 31, 32, 61, 62, 91, 92, 121, 122, 179, 180, 209, 210, 239, 240, 269, 270, 299, 300 };
-                double[] externalForces3 = new double[300];
-            externalForces3[135] = -100000000.0;
-            externalForces3[137] = -100000000.0;
-            externalForces3[139] = -100000000.0;
-            externalForces3[141] = -100000000.0;
-            externalForces3[143] = -100000000.0;
-            externalForces3[145] = -100000000.0;
-            externalForces3[147] = -100000000.0;
-            externalForces3[149] = -100000000.0;
-            double[] reducedExternalForces3 = BoundaryConditionsImposition.ReducedVector(externalForces3, BoundedDOFsVector2);
-                structuralSolution.AssemblyData = elementsAssembly;
-                structuralSolution.Solve(reducedExternalForces3);
-            double[] solvector3 = structuralSolution.GetSolution();
-            elementsAssembly.UpdateDisplacements(solvector3);
-            ShowToGUI.PlotFinalGeometry(elementsAssembly);
+            //    ISolver structuralSolution = new StaticSolver();
+            //    structuralSolution.LinearScheme = new LUFactorization();
+            //    structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+            //    structuralSolution.ActivateNonLinearSolver = true;
+            //    structuralSolution.NonLinearScheme.numberOfLoadSteps = 10;
+            //    int[] BoundedDOFsVector2 = new int[] { 1, 2, 31, 32, 61, 62, 91, 92, 121, 122, 179, 180, 209, 210, 239, 240, 269, 270, 299, 300 };
+            //    double[] externalForces3 = new double[300];
+            //externalForces3[135] = -100000000.0;
+            //externalForces3[137] = -100000000.0;
+            //externalForces3[139] = -100000000.0;
+            //externalForces3[141] = -100000000.0;
+            //externalForces3[143] = -100000000.0;
+            //externalForces3[145] = -100000000.0;
+            //externalForces3[147] = -100000000.0;
+            //externalForces3[149] = -100000000.0;
+            //double[] reducedExternalForces3 = BoundaryConditionsImposition.ReducedVector(externalForces3, BoundedDOFsVector2);
+            //    structuralSolution.AssemblyData = elementsAssembly;
+            //    structuralSolution.Solve(reducedExternalForces3);
+            //double[] solvector3 = structuralSolution.GetSolution();
+            //elementsAssembly.UpdateDisplacements(solvector3);
+            //ShowToGUI.PlotFinalGeometry(elementsAssembly);
 
-                double[] solVector2 = new double[280];
+            //    double[] solVector2 = new double[280];
                 List<double[]> structuralSolutions = new List<double[]>();
-                int[] BoundedDOFsVector = new int[] { 1, 2, 31, 32, 61, 62, 91, 92, 121, 122, 179, 180, 209, 210, 239, 240, 269, 270, 299, 300 };
-                double[] externalForces2 = new double[300];
-                for (int i = 1; i <= 5; i++)
-                {
-                    structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson(solVector2);
-                    externalForces2[135] = -10000.0 * i;
-                    externalForces2[137] = -10000.0 * i;
-                    externalForces2[139] = -10000.0 * i;
-                    externalForces2[141] = -10000.0 * i;
-                    externalForces2[143] = -10000.0 * i;
-                    externalForces2[145] = -10000.0 * i;
-                    externalForces2[147] = -10000.0 * i;
-                    externalForces2[149] = -10000.0 * i;
-                    double[] reducedExternalForces2 = BoundaryConditionsImposition.ReducedVector(externalForces2, BoundedDOFsVector);
-                    structuralSolution.AssemblyData = elementsAssembly;
-                    structuralSolution.Solve(reducedExternalForces2);
-                    solVector2 = structuralSolution.GetSolution();
-                    structuralSolutions.Add(solVector2);
-                }
-                Dictionary<int, double[]> intForces = structuralSolution.GetInternalForces();
-                Dictionary<int, double[]> elementInternalForces = elementsAssembly.GetElementsInternalForces(structuralSolutions[0]);
-                List<string> elementTypes = elementsAssembly.GetElementsType();
-                double[] completeFinalSolutionVector = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(solVector2, BoundedDOFsVector);
-                Dictionary<int, INode> finalNodesList = new Dictionary<int, INode>();
-                finalNodesList = Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, completeFinalSolutionVector);
+            //    int[] BoundedDOFsVector = new int[] { 1, 2, 31, 32, 61, 62, 91, 92, 121, 122, 179, 180, 209, 210, 239, 240, 269, 270, 299, 300 };
+            //    double[] externalForces2 = new double[300];
+            //    for (int i = 1; i <= 5; i++)
+            //    {
+            //        structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson(solVector2);
+            //        externalForces2[135] = -10000.0 * i;
+            //        externalForces2[137] = -10000.0 * i;
+            //        externalForces2[139] = -10000.0 * i;
+            //        externalForces2[141] = -10000.0 * i;
+            //        externalForces2[143] = -10000.0 * i;
+            //        externalForces2[145] = -10000.0 * i;
+            //        externalForces2[147] = -10000.0 * i;
+            //        externalForces2[149] = -10000.0 * i;
+            //        double[] reducedExternalForces2 = BoundaryConditionsImposition.ReducedVector(externalForces2, BoundedDOFsVector);
+            //        structuralSolution.AssemblyData = elementsAssembly;
+            //        structuralSolution.Solve(reducedExternalForces2);
+            //        solVector2 = structuralSolution.GetSolution();
+            //        structuralSolutions.Add(solVector2);
+            //    }
+            //    Dictionary<int, double[]> intForces = structuralSolution.GetInternalForces();
+            //    Dictionary<int, double[]> elementInternalForces = elementsAssembly.GetElementsInternalForces(structuralSolutions[0]);
+            //    List<string> elementTypes = elementsAssembly.GetElementsType();
+            //    double[] completeFinalSolutionVector = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(solVector2, BoundedDOFsVector);
+            //    Dictionary<int, INode> finalNodesList = new Dictionary<int, INode>();
+            //    finalNodesList = Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, completeFinalSolutionVector);
             #endregion
 
 
@@ -260,27 +261,36 @@ namespace GFEC
             thermalSolution.ActivateNonLinearSolver = true;
             thermalSolution.NonLinearScheme.numberOfLoadSteps = 10;
 
-
-
-
-
-            double[] temperatures = new double[135];
-            List<double[]> thermalSolutions = new List<double[]>();
-            int[] BoundedDOFsVectorForHeat = new int[] { 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165 };
-            for (int i = 1; i <= 5; i++)
+            thermalSolution.AssemblyData = elementsAssembly2;
+            double[] externalHeatFlux = new double[150];
+            for (int i = 61; i <= 75; i++)
             {
-                thermalSolution.NonLinearScheme = new LoadControlledNewtonRaphson(temperatures);
-                double[] externalHeatFlux = new double[150];
-                double[] reducedExternalHeatFlux = BoundaryConditionsImposition.ReducedVector(externalHeatFlux, BoundedDOFsVectorForHeat);
-                thermalSolution.AssemblyData = elementsAssembly2;
-                thermalSolution.Solve(reducedExternalHeatFlux);
-                temperatures = thermalSolution.GetSolution();
-                thermalSolutions.Add(temperatures);
+                externalHeatFlux[61] = 250.0;
             }
+            double[] reducedExternalHeatFlux = BoundaryConditionsImposition.ReducedVector(externalHeatFlux, thermalSolution.AssemblyData.BoundedDOFsVector);
+            thermalSolution.Solve(reducedExternalHeatFlux);
+            double[] tempSol = thermalSolution.GetSolution();
+
+
+
+            //double[] temperatures = new double[135];
+            List<double[]> thermalSolutions = new List<double[]>();
+            //int[] BoundedDOFsVectorForHeat = new int[] { 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165 };
+            //for (int i = 1; i <= 5; i++)
+            //{
+            //    thermalSolution.NonLinearScheme = new LoadControlledNewtonRaphson(temperatures);
+            //    double[] externalHeatFlux = new double[150];
+            //    double[] reducedExternalHeatFlux = BoundaryConditionsImposition.ReducedVector(externalHeatFlux, BoundedDOFsVectorForHeat);
+            //    thermalSolution.AssemblyData = elementsAssembly2;
+            //    thermalSolution.Solve(reducedExternalHeatFlux);
+            //    temperatures = thermalSolution.GetSolution();
+            //    thermalSolutions.Add(temperatures);
+            //}
 
             List<double> X = new List<double>();
             List<double> Y = new List<double>();
-            double[] Z = thermalSolutions[4];
+            double[] fullTempSol = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(tempSol, thermalSolution.AssemblyData.BoundedDOFsVector);
+            double[] Z = fullTempSol;//thermalSolutions[4];
             foreach (var node in elementsAssembly2.Nodes)
             {
                 X.Add(node.Value.XCoordinate);
@@ -290,13 +300,34 @@ namespace GFEC
             double[] Xvec = X.ToArray();
             double[] Yvec = Y.ToArray();
 
-            GnuPlot.Set("terminal png size 500, 300");
-            GnuPlot.Set("output 'gnuplot.png'");
-            GnuPlot.Set("pm3d");
-            GnuPlot.Set("dgrid3d");
-            GnuPlot.Set("view map");
-            GnuPlot.SPlot(Xvec, Yvec, Z);
-            GnuPlot.Set("output");
+            double[] Xvec1 = new double[75];
+            double[] Yvec1 = new double[75];
+            double[] Zvec1 = new double[75];
+            double[] Xvec2 = new double[75];
+            double[] Yvec2 = new double[75];
+            double[] Zvec2 = new double[75];
+            Array.Copy(Xvec, 75, Xvec2, 0, 75);
+            Array.Copy(Yvec, 75, Yvec2, 0, 75);
+            Array.Copy(Z, 75, Zvec2, 0, 75);
+            Array.Copy(Xvec, 0, Xvec1, 0, 75);
+            Array.Copy(Yvec, 0, Yvec1, 0, 75);
+            Array.Copy(Z, 0, Zvec1, 0, 75);
+            //GnuPlot.Set("terminal png size 500, 300");
+            //GnuPlot.Set("output 'gnuplot.png'");
+
+            //GnuPlot.HoldOn();
+            //GnuPlot.Set("cbrange[0:20.0]");
+            //GnuPlot.Set("palette defined(0 \"blue\", 1 \"red\")");
+            //GnuPlot.Set("pm3d");
+            //GnuPlot.Set("dgrid3d");
+            //GnuPlot.Set("view map");
+            //GnuPlot.SPlot(Xvec1, Yvec1, Zvec1);
+            //GnuPlot.SPlot(Xvec2, Yvec2, Zvec2);
+            //GnuPlot.Set("output");
+            List<HeatMapData> plots = new List<HeatMapData>();
+            plots.Add(new HeatMapData() { Xcoordinates = Xvec1, Ycoordinates = Yvec1, Temperatures = Zvec1 });
+            plots.Add(new HeatMapData() { Xcoordinates = Xvec2, Ycoordinates = Yvec2, Temperatures = Zvec2 });
+            ShowToGUI.PlotHeatMap(plots);
 
             GnuPlot.Close();
 

@@ -32,6 +32,7 @@ namespace GFEC
             PlotBuffer = new List<StoredPlot>();
             SPlotBuffer = new List<StoredPlot>();
             Hold = false;
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
         }
 
         public static void WriteLine(string gnuplotcommands)
