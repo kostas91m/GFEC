@@ -26,5 +26,20 @@ namespace GFEC
             }
             //File.WriteAllLines(@"D:\WriteLines2.txt", lines);
         }
+
+        public static void ExportGeometryDataWithTemperatures(Dictionary<int, INode> nodesList, double[] temperatures)
+        {
+            if (nodesList.Count != temperatures.Length)
+            {
+                throw new Exception("Mismatch beetween total nodes and temperatures vector");
+            }
+
+            string[] lines = new string[nodesList.Count];
+            for (int i = 1; i <= nodesList.Count; i++)
+            {
+                lines[i - 1] = nodesList[i].XCoordinate.ToString() + " " + nodesList[i].YCoordinate.ToString() + " " + temperatures[i - 1];
+            }
+            File.WriteAllLines(@"C:\Results.dat", lines);
+        }
     }
 }
