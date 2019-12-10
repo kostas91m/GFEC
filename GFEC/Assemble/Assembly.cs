@@ -297,7 +297,7 @@ namespace GFEC
             Dictionary<int, INode> finalNodesList = new Dictionary<int, INode>();
             for (int i = 1; i <= nodesList.Count; i++)
             {
-                double x = nodesList[i].XCoordinate + diplacements[2*i - 2];
+                double x = nodesList[i].XCoordinate + diplacements[2 * i - 2];
                 double y = nodesList[i].YCoordinate + diplacements[2 * i - 1];
                 INode finalNode = new Node(x, y);
                 finalNodesList.Add(i, finalNode); 
@@ -326,6 +326,19 @@ namespace GFEC
                 elementTypes.Add(ElementsAssembly[element].GetType().ToString());
             }
             return elementTypes;
+        }
+
+        public static Tuple<double[], double[]> NodalCoordinatesToVectors(Dictionary<int, INode> nodesList)
+        {
+            int totalNodes = nodesList.Count;
+            double[] xCoorVector = new double[totalNodes];
+            double[] yCoorVector = new double[totalNodes];
+            for (int i = 1; i <= totalNodes; i++)
+            {
+                xCoorVector[i - 1] = nodesList[i].XCoordinate;
+                yCoorVector[i - 1] = nodesList[i].YCoordinate;
+            }
+            return new Tuple<double[], double[]>(xCoorVector, yCoorVector);
         }
     }
 }

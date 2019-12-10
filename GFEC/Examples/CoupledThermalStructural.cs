@@ -193,34 +193,38 @@ namespace GFEC
                 elementsAssembly.ActivateBoundaryConditions = true;
                 double[,] globalStiffnessMatrix = elementsAssembly.CreateTotalStiffnessMatrix();
 
-                //Gnuplot graphs
-                //ShowToGUI.PlotInitialGeometry(elementsAssembly);
+            //Gnuplot graphs
+            //ShowToGUI.PlotInitialGeometry(elementsAssembly);
 
 
-            //    ISolver structuralSolution = new StaticSolver();
-            //    structuralSolution.LinearScheme = new LUFactorization();
-            //    structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
-            //    structuralSolution.ActivateNonLinearSolver = true;
-            //    structuralSolution.NonLinearScheme.numberOfLoadSteps = 10;
-            //    int[] BoundedDOFsVector2 = new int[] { 1, 2, 31, 32, 61, 62, 91, 92, 121, 122, 179, 180, 209, 210, 239, 240, 269, 270, 299, 300 };
-            //    double[] externalForces3 = new double[300];
-            //externalForces3[135] = -100000000.0;
-            //externalForces3[137] = -100000000.0;
-            //externalForces3[139] = -100000000.0;
-            //externalForces3[141] = -100000000.0;
-            //externalForces3[143] = -100000000.0;
-            //externalForces3[145] = -100000000.0;
-            //externalForces3[147] = -100000000.0;
-            //externalForces3[149] = -100000000.0;
-            //double[] reducedExternalForces3 = BoundaryConditionsImposition.ReducedVector(externalForces3, BoundedDOFsVector2);
-            //    structuralSolution.AssemblyData = elementsAssembly;
-            //    structuralSolution.Solve(reducedExternalForces3);
-            //double[] solvector3 = structuralSolution.GetSolution();
-            //elementsAssembly.UpdateDisplacements(solvector3);
+            ISolver structuralSolution = new StaticSolver();
+            structuralSolution.LinearScheme = new LUFactorization();
+            structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+            structuralSolution.ActivateNonLinearSolver = true;
+            structuralSolution.NonLinearScheme.numberOfLoadSteps = 10;
+            int[] BoundedDOFsVector2 = new int[] { 1, 2, 31, 32, 61, 62, 91, 92, 121, 122, 179, 180, 209, 210, 239, 240, 269, 270, 299, 300 };
+            double[] externalForces3 = new double[300];
+            externalForces3[135] = -100000000.0;
+            externalForces3[137] = -100000000.0;
+            externalForces3[139] = -100000000.0;
+            externalForces3[141] = -100000000.0;
+            externalForces3[143] = -100000000.0;
+            externalForces3[145] = -100000000.0;
+            externalForces3[147] = -100000000.0;
+            externalForces3[149] = -100000000.0;
+            double[] reducedExternalForces3 = BoundaryConditionsImposition.ReducedVector(externalForces3, BoundedDOFsVector2);
+            structuralSolution.AssemblyData = elementsAssembly;
+            structuralSolution.Solve(reducedExternalForces3);
+            double[] solvector3 = structuralSolution.GetSolution();
+            elementsAssembly.UpdateDisplacements(solvector3);
             //ShowToGUI.PlotFinalGeometry(elementsAssembly);
+            double[] fullSolVector3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(solvector3, elementsAssembly.BoundedDOFsVector);
+            Dictionary<int, INode> finalNodes = Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullSolVector3);
+            double[] xFinalNodalCoor = Assembly.NodalCoordinatesToVectors(finalNodes).Item1;
+            double[] yFinalNodalCoor = Assembly.NodalCoordinatesToVectors(finalNodes).Item2;
 
             //    double[] solVector2 = new double[280];
-                List<double[]> structuralSolutions = new List<double[]>();
+            List<double[]> structuralSolutions = new List<double[]>();
             //    int[] BoundedDOFsVector = new int[] { 1, 2, 31, 32, 61, 62, 91, 92, 121, 122, 179, 180, 209, 210, 239, 240, 269, 270, 299, 300 };
             //    double[] externalForces2 = new double[300];
             //    for (int i = 1; i <= 5; i++)
@@ -300,6 +304,7 @@ namespace GFEC
             double[] Xvec = X.ToArray();
             double[] Yvec = Y.ToArray();
 
+
             double[] Xvec1 = new double[75];
             double[] Yvec1 = new double[75];
             double[] Zvec1 = new double[75];
@@ -327,8 +332,31 @@ namespace GFEC
             List<HeatMapData> plots = new List<HeatMapData>();
             plots.Add(new HeatMapData() { Xcoordinates = Xvec1, Ycoordinates = Yvec1, Temperatures = Zvec1 });
             plots.Add(new HeatMapData() { Xcoordinates = Xvec2, Ycoordinates = Yvec2, Temperatures = Zvec2 });
-            ShowToGUI.PlotHeatMap(plots);
+            //ShowToGUI.PlotHeatMap(plots);
 
+            double[] Xvec1Final = new double[75];
+            double[] Yvec1Final = new double[75];
+            double[] Xvec2Final = new double[75];
+            double[] Yvec2Final = new double[75];
+            
+            Array.Copy(xFinalNodalCoor, 0, Xvec1Final, 0, 75);
+            Array.Copy(yFinalNodalCoor, 0, Yvec1Final, 0, 75);
+            Array.Copy(xFinalNodalCoor, 75, Xvec2Final, 0, 75);
+            Array.Copy(yFinalNodalCoor, 75, Yvec2Final, 0, 75);
+
+            List<HeatMapData> plots2 = new List<HeatMapData>();
+            plots2.Add(new HeatMapData() { Xcoordinates = Xvec1Final, Ycoordinates = Yvec1Final, Temperatures = Zvec1 });
+            plots2.Add(new HeatMapData() { Xcoordinates = Xvec2Final, Ycoordinates = Yvec2Final, Temperatures = Zvec2 });
+            GnuPlot.HoldOn();
+            GnuPlot.Set("pm3d");
+            GnuPlot.Set("dgrid3d");
+            GnuPlot.Set("view map");
+            GnuPlot.SPlot(new double[] { -1.0, 2.0, 1.0, -1.0}, new double[] { 1.0, 2.0, -1.0, 1.0 }, new double[] { 2, 1, 3, 2 });
+            //GnuPlot.SPlot(new double[] { -1.0, 1.0, 3.0 }, new double[] { 2.0, 2.0, -1.0 }, new double[] { 5, 4, 9 });
+            //GnuPlot.Plot(Xvec2Final, Yvec2Final);
+            ShowToGUI.PlotHeatMap(plots2);
+
+            double kati = 1;
             GnuPlot.Close();
 
             while (true)
