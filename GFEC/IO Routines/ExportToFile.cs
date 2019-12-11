@@ -33,13 +33,14 @@ namespace GFEC
             {
                 throw new Exception("Mismatch beetween total nodes and temperatures vector");
             }
-
-            string[] lines = new string[nodesList.Count];
+            
+            string[] lines = new string[nodesList.Count+1];
+            lines[0] = "X\tY\tTemperature";
             for (int i = 1; i <= nodesList.Count; i++)
             {
-                lines[i - 1] = nodesList[i].XCoordinate.ToString() + " " + nodesList[i].YCoordinate.ToString() + " " + temperatures[i - 1];
+                lines[i] = nodesList[i].XCoordinate.ToString() + "\t" + nodesList[i].YCoordinate.ToString() + "\t" + temperatures[i - 1];
             }
-            File.WriteAllLines(@"C:\Results.dat", lines);
+            File.WriteAllLines(@"C:\Users\Public\Documents\Results.dat", lines);
         }
     }
 }

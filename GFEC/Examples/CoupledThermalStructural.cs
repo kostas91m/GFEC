@@ -194,7 +194,7 @@ namespace GFEC
                 double[,] globalStiffnessMatrix = elementsAssembly.CreateTotalStiffnessMatrix();
 
             //Gnuplot graphs
-            //ShowToGUI.PlotInitialGeometry(elementsAssembly);
+            ShowToGUI.PlotInitialGeometry(elementsAssembly);
 
 
             ISolver structuralSolution = new StaticSolver();
@@ -217,7 +217,7 @@ namespace GFEC
             structuralSolution.Solve(reducedExternalForces3);
             double[] solvector3 = structuralSolution.GetSolution();
             elementsAssembly.UpdateDisplacements(solvector3);
-            //ShowToGUI.PlotFinalGeometry(elementsAssembly);
+            ShowToGUI.PlotFinalGeometry(elementsAssembly);
             double[] fullSolVector3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(solvector3, elementsAssembly.BoundedDOFsVector);
             Dictionary<int, INode> finalNodes = Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullSolVector3);
             double[] xFinalNodalCoor = Assembly.NodalCoordinatesToVectors(finalNodes).Item1;
@@ -355,6 +355,8 @@ namespace GFEC
             //GnuPlot.SPlot(new double[] { -1.0, 1.0, 3.0 }, new double[] { 2.0, 2.0, -1.0 }, new double[] { 5, 4, 9 });
             //GnuPlot.Plot(Xvec2Final, Yvec2Final);
             ShowToGUI.PlotHeatMap(plots2);
+
+            ExportToFile.ExportGeometryDataWithTemperatures(finalNodes, fullTempSol);
 
             double kati = 1;
             GnuPlot.Close();
