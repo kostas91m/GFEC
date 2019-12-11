@@ -51,5 +51,10 @@ namespace GFEC
         {
             return NonLinearScheme.InternalForces;
         }
+
+        public Dictionary<int, double[]> GetAllStepsSolutions()
+        {
+            return NonLinearScheme.Solutions;
+        }
     }
 }

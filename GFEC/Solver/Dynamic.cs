@@ -56,5 +56,10 @@ namespace GFEC
             throw new Exception("Not implemented");
         }
 
+        public Dictionary<int, double[]> GetAllStepsSolutions()
+        {
+            throw new Exception("Not implemented");
+        }
+
     }
 }

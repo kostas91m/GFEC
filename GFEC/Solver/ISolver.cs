@@ -16,5 +16,6 @@ namespace GFEC
         double[,] CustomStiffnessMatrix { get; set; }
         double[] GetSolution();
         Dictionary<int, double[]> GetInternalForces();
+        Dictionary<int, double[]> GetAllStepsSolutions();
     }
 }

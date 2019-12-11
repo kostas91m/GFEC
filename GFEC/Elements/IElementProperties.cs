@@ -14,6 +14,7 @@ namespace GFEC
         double Density { get; set; }
         double Thickness { get; set; }
         double ThermalConductivity { get; set; }
+        double ContactForceValue { get; set; }
     }
 }
 

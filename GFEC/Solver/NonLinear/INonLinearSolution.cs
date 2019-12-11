@@ -10,6 +10,6 @@ namespace GFEC
         double[] Solve(IAssembly assembly, ILinearSolution linearScheme, double[] forceVector);
         int numberOfLoadSteps { get; set; }
         Dictionary<int, double[]> InternalForces { get; set; }
-        Dictionary<int, double[]> Solutions { get; }
+        Dictionary<int, double[]> Solutions { get; set; }
     }
 }

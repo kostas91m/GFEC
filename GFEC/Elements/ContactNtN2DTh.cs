@@ -15,6 +15,7 @@ namespace GFEC
         public double[] AccelerationVector { get; set; }
         private double PenaltyFactor { get; set; }
         private double ContactArea { get; set; }
+        private double ContactPressure { get; set; }
 
         public ContactNtN2DTh(IElementProperties properties, Dictionary<int, INode> nodes)
         {
@@ -24,6 +25,7 @@ namespace GFEC
             ElementFreedomSignature[2] = new bool[] { true, false, false, false, false, false };
             DisplacementVector = new double[2];
             ContactArea = properties.SectionArea;
+            ContactPressure = properties.ContactForceValue / properties.SectionArea;
         }
 
         public Dictionary<int, INode> NodesAtFinalState()
@@ -33,7 +35,7 @@ namespace GFEC
 
         private double CalculateConductivity()
         {
-            double cc = 19.2;
+            double cc = 1.25 * Math.Pow(ContactPressure / (3.0 * 250.0 * Math.Pow(10, 6)), 0.95);//19.2;
             double cH = cc * ContactArea;
             return cH;
         }
