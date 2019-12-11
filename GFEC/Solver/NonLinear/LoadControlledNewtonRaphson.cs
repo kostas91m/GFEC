@@ -53,6 +53,7 @@ namespace GFEC
                 }
                 InternalForces.Add(i + 1, internalForcesTotalVector);
                 solutionVector = VectorOperations.VectorVectorAddition(solutionVector, deltaU);
+                Solutions.Add(i + 1, solutionVector);
                 if (iteration >= maxIterations) Console.WriteLine("Newton-Raphson: Solution not converged at current iterations");
             }
 
