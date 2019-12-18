@@ -142,7 +142,7 @@ namespace GFEC
         private static Dictionary<int, IElementProperties> CreateThermalElementProperties()
         {
             double thermalCond = 60.5;
-            double A = 0.5;
+            double A = 0.01;
             string type = "Quad4Th";
             string type2 = "ContactNtN2DTh";
 
@@ -194,7 +194,7 @@ namespace GFEC
                 double[,] globalStiffnessMatrix = elementsAssembly.CreateTotalStiffnessMatrix();
 
             //Gnuplot graphs
-            ShowToGUI.PlotInitialGeometry(elementsAssembly);
+            //ShowToGUI.PlotInitialGeometry(elementsAssembly);
 
 
             ISolver structuralSolution = new StaticSolver();
@@ -217,7 +217,7 @@ namespace GFEC
             structuralSolution.Solve(reducedExternalForces3);
             double[] solvector3 = structuralSolution.GetSolution();
             elementsAssembly.UpdateDisplacements(solvector3);
-            ShowToGUI.PlotFinalGeometry(elementsAssembly);
+            //ShowToGUI.PlotFinalGeometry(elementsAssembly);
             double[] fullSolVector3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(solvector3, elementsAssembly.BoundedDOFsVector);
             Dictionary<int, INode> finalNodes = Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullSolVector3);
             double[] xFinalNodalCoor = Assembly.NodalCoordinatesToVectors(finalNodes).Item1;
@@ -378,19 +378,23 @@ namespace GFEC
             //plots.Add(new HeatMapData() { Xcoordinates = Xvec2, Ycoordinates = Yvec2, Temperatures = Zvec2 });
             ////ShowToGUI.PlotHeatMap(plots);
 
-            //double[] Xvec1Final = new double[75];
-            //double[] Yvec1Final = new double[75];
-            //double[] Xvec2Final = new double[75];
-            //double[] Yvec2Final = new double[75];
+            double[] Xvec1Final = new double[75];
+            double[] Yvec1Final = new double[75];
+            double[] Xvec2Final = new double[75];
+            double[] Yvec2Final = new double[75];
+            double[] Ζvec1Final = new double[75];
+            double[] Ζvec2Final = new double[75];
 
-            //Array.Copy(xFinalNodalCoor, 0, Xvec1Final, 0, 75);
-            //Array.Copy(yFinalNodalCoor, 0, Yvec1Final, 0, 75);
-            //Array.Copy(xFinalNodalCoor, 75, Xvec2Final, 0, 75);
-            //Array.Copy(yFinalNodalCoor, 75, Yvec2Final, 0, 75);
+            Array.Copy(xFinalNodalCoor, 0, Xvec1Final, 0, 75);
+            Array.Copy(yFinalNodalCoor, 0, Yvec1Final, 0, 75);
+            Array.Copy(fullThermalSol4, 0, Ζvec1Final, 0, 75);
+            Array.Copy(xFinalNodalCoor, 75, Xvec2Final, 0, 75);
+            Array.Copy(yFinalNodalCoor, 75, Yvec2Final, 0, 75);
+            Array.Copy(fullThermalSol4, 75, Ζvec2Final, 0, 75);
 
-            //List<HeatMapData> plots2 = new List<HeatMapData>();
-            //plots2.Add(new HeatMapData() { Xcoordinates = Xvec1Final, Ycoordinates = Yvec1Final, Temperatures = Zvec1 });
-            //plots2.Add(new HeatMapData() { Xcoordinates = Xvec2Final, Ycoordinates = Yvec2Final, Temperatures = Zvec2 });
+            List<HeatMapData> plots2 = new List<HeatMapData>();
+            plots2.Add(new HeatMapData() { Xcoordinates = Xvec1Final, Ycoordinates = Yvec1Final, Temperatures = Ζvec1Final });
+            plots2.Add(new HeatMapData() { Xcoordinates = Xvec2Final, Ycoordinates = Yvec2Final, Temperatures = Ζvec2Final });
             //GnuPlot.HoldOn();
             //GnuPlot.Set("pm3d");
             //GnuPlot.Set("dgrid3d");
@@ -398,7 +402,7 @@ namespace GFEC
             //GnuPlot.SPlot(new double[] { -1.0, 2.0, 1.0, -1.0}, new double[] { 1.0, 2.0, -1.0, 1.0 }, new double[] { 2, 1, 3, 2 });
             ////GnuPlot.SPlot(new double[] { -1.0, 1.0, 3.0 }, new double[] { 2.0, 2.0, -1.0 }, new double[] { 5, 4, 9 });
             ////GnuPlot.Plot(Xvec2Final, Yvec2Final);
-            //ShowToGUI.PlotHeatMap(plots2);
+            ShowToGUI.PlotHeatMap(plots2);
 
             //ExportToFile.ExportGeometryDataWithTemperatures(finalNodes, fullTempSol);
 

@@ -202,7 +202,7 @@ namespace GFEC
         public static void PlotHeatMap(List<HeatMapData> plots)
         {
             GnuPlot.HoldOn();
-            GnuPlot.Set("cbrange[0:15.0]");
+            GnuPlot.Set("cbrange[0:7.0]");
             GnuPlot.Set("palette defined(0 \"blue\", 0.25\"green\", 0.75\"yellow\", 1 \"red\")");
             GnuPlot.Set("pm3d");
             GnuPlot.Set("dgrid3d");
