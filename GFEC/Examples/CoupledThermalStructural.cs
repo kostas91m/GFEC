@@ -142,7 +142,7 @@ namespace GFEC
         private static Dictionary<int, IElementProperties> CreateThermalElementProperties()
         {
             double thermalCond = 60.5;
-            double A = 0.01;
+            double A = 0.5;
             string type = "Quad4Th";
             string type2 = "ContactNtN2DTh";
 
