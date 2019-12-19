@@ -84,7 +84,22 @@ namespace GFEC
             exampleList.Add("TwoQuadsInContactNewExample");
             exampleList.Add("CoupledPhysicsExample");
             exampleList.Add("CoupledThermalStructural");
-
+            exampleList.Add("CoupledThermalStructural_0001fy");
+            exampleList.Add("CoupledThermalStructural_0002fy");
+            exampleList.Add("CoupledThermalStructural_0005fy");
+            exampleList.Add("CoupledThermalStructural_001fy");
+            exampleList.Add("CoupledThermalStructural_029L_0001fy");
+            exampleList.Add("CoupledThermalStructural_029L_0002fy");
+            exampleList.Add("CoupledThermalStructural_029L_0005fy");
+            exampleList.Add("CoupledThermalStructural_029L_001fy");
+            exampleList.Add("CoupledThermalStructural_0143L_0001fy");
+            exampleList.Add("CoupledThermalStructural_0143L_0002fy");
+            exampleList.Add("CoupledThermalStructural_0143L_0005fy");
+            exampleList.Add("CoupledThermalStructural_0143L_001fy");
+            exampleList.Add("CoupledThermalStructural_0001fy_DenserMesh");
+            exampleList.Add("CoupledThermalStructural_0002fy_DenserMesh");
+            exampleList.Add("CoupledThermalStructural_0005fy_DenserMesh");
+            exampleList.Add("CoupledThermalStructural_001fy_DenserMesh");
             ComboBox1.ItemsSource = exampleList;
         }
 
@@ -121,6 +136,54 @@ namespace GFEC
                     break;
                 case "CoupledThermalStructural":
                     finalResults = CoupledThermalStructural.RunStaticExample();
+                    break;
+                case "CoupledThermalStructural_0001fy":
+                    finalResults = CoupledThermalStructural_0001fy.RunStaticExample();
+                    break;
+                case "CoupledThermalStructural_0002fy":
+                    finalResults = CoupledThermalStructural_0002fy.RunStaticExample();
+                    break;
+                case "CoupledThermalStructural_0005fy":
+                    finalResults = CoupledThermalStructural_0005fy.RunStaticExample();
+                    break;
+                case "CoupledThermalStructural_001fy":
+                    finalResults = CoupledThermalStructural_001fy.RunStaticExample();
+                    break;
+                case "CoupledThermalStructural_029L_0001fy":
+                    finalResults = CoupledThermalStructural_029L_0001fy.RunStaticExample();
+                    break;
+                case "CoupledThermalStructural_029L_0002fy":
+                    finalResults = CoupledThermalStructural_029L_0002fy.RunStaticExample();
+                    break;
+                case "CoupledThermalStructural_029L_0005fy":
+                    finalResults = CoupledThermalStructural_029L_0005fy.RunStaticExample();
+                    break;
+                case "CoupledThermalStructural_029L_001fy":
+                    finalResults = CoupledThermalStructural_029L_001fy.RunStaticExample();
+                    break;
+                case "CoupledThermalStructural_0143L_0001fy":
+                    finalResults = CoupledThermalStructural_0143L_0001fy.RunStaticExample();
+                    break;
+                case "CoupledThermalStructural_0143L_0002fy":
+                    finalResults = CoupledThermalStructural_0143L_0002fy.RunStaticExample();
+                    break;
+                case "CoupledThermalStructural_0143L_0005fy":
+                    finalResults = CoupledThermalStructural_0143L_0005fy.RunStaticExample();
+                    break;
+                case "CoupledThermalStructural_0143L_001fy":
+                    finalResults = CoupledThermalStructural_0143L_001fy.RunStaticExample();
+                    break;
+                case "CoupledThermalStructural_0001fy_DenserMesh":
+                    finalResults = CoupledThermalStructural_0001fy_DenserMesh.RunStaticExample();
+                    break;
+                case "CoupledThermalStructural_0002fy_DenserMesh":
+                    finalResults = CoupledThermalStructural_0002fy_DenserMesh.RunStaticExample();
+                    break;
+                case "CoupledThermalStructural_0005fy_DenserMesh":
+                    finalResults = CoupledThermalStructural_0005fy_DenserMesh.RunStaticExample();
+                    break;
+                case "CoupledThermalStructural_001fy_DenserMesh":
+                    finalResults = CoupledThermalStructural_001fy_DenserMesh.RunStaticExample();
                     break;
                 default:
                     finalResults = TwoQuadsExample.RunStaticExample();

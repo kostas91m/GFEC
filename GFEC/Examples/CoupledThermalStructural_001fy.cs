@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace GFEC
 {
-    public static class CoupledThermalStructural
+    public static class CoupledThermalStructural_001fy
     {
         private const int totalNodes = 150;
         private const int totalElements = 112;
@@ -126,14 +126,14 @@ namespace GFEC
 
             for (int i = 1; i <= totalElements; i++)
             {
-                elementProperties[i].Density = 8000.0;
+                elementProperties[i].Density = 7850.0;
                 elementProperties[i].Thickness = 0.1;
             }
 
             for (int i = 113; i <= 120; i++)
             {
                 elementProperties[i] = new ElementProperties(E / 1000.0, A, type2);
-                elementProperties[i].Density = 8000.0;
+                elementProperties[i].Density = 7850.0;
                 elementProperties[i].Thickness = 0.1;
             }
             return elementProperties;
@@ -141,7 +141,7 @@ namespace GFEC
 
         private static Dictionary<int, IElementProperties> CreateThermalElementProperties()
         {
-            double thermalCond = 60.5;
+            double thermalCond = 15.5;
             double A = 0.01;
             string type = "Quad4Th";
             string type2 = "ContactNtN2DTh";
@@ -158,7 +158,7 @@ namespace GFEC
                 elementProperties[i] = new ElementProperties();
                 elementProperties[i].ElementType = type2;
                 elementProperties[i].SectionArea = A;
-                elementProperties[i].ContactForceValue=0.0;
+                elementProperties[i].ContactForceValue = 0.0;
             }
             return elementProperties;
         }
@@ -188,10 +188,10 @@ namespace GFEC
         public static Results RunStaticExample()
         {
             #region Structural
-                IAssembly elementsAssembly = CreateAssembly();
-                elementsAssembly.CreateElementsAssembly();
-                elementsAssembly.ActivateBoundaryConditions = true;
-                double[,] globalStiffnessMatrix = elementsAssembly.CreateTotalStiffnessMatrix();
+            IAssembly elementsAssembly = CreateAssembly();
+            elementsAssembly.CreateElementsAssembly();
+            elementsAssembly.ActivateBoundaryConditions = true;
+            double[,] globalStiffnessMatrix = elementsAssembly.CreateTotalStiffnessMatrix();
 
             //Gnuplot graphs
             ShowToGUI.PlotInitialGeometry(elementsAssembly);
@@ -236,8 +236,8 @@ namespace GFEC
                 }
                 allStepsContactForces[i] = elementsInternalContactForcesVector;
             }
-            
-            
+
+
 
             //    double[] solVector2 = new double[280];
             List<double[]> structuralSolutions = new List<double[]>();
@@ -295,13 +295,13 @@ namespace GFEC
                 double[] externalHeatFlux = new double[150];
                 for (int i = 61; i <= 75; i++)
                 {
-                    if ( i == 61 | i == 75)
+                    if (i == 61 | i == 75)
                     {
-                        externalHeatFlux[i] = 250.0;
+                        externalHeatFlux[i] = 50.0;
                     }
                     else
                     {
-                        externalHeatFlux[i] = 500.0;
+                        externalHeatFlux[i] = 100.0;
                     }
 
                 }
@@ -322,11 +322,11 @@ namespace GFEC
             double[] fullThermalSol3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[5], thermalBoundCond);
             double[] fullThermalSol4 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[7], thermalBoundCond);
             double[] fullThermalSol5 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[9], thermalBoundCond);
-            ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol1), fullThermalSol1, @"C:\Users\Public\Documents\Results1.dat");
-            ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol2), fullThermalSol2, @"C:\Users\Public\Documents\Results2.dat");
-            ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol3), fullThermalSol3, @"C:\Users\Public\Documents\Results3.dat");
-            ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol4), fullThermalSol4, @"C:\Users\Public\Documents\Results4.dat");
-            ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol5), fullThermalSol5, @"C:\Users\Public\Documents\Results5.dat");
+            ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol1), fullThermalSol1, @"C:\Users\Public\Documents\Results1_0.01fy.dat");
+            ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol2), fullThermalSol2, @"C:\Users\Public\Documents\Results2_0.01fy.dat");
+            ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol3), fullThermalSol3, @"C:\Users\Public\Documents\Results3_0.01fy.dat");
+            ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol4), fullThermalSol4, @"C:\Users\Public\Documents\Results4_0.01fy.dat");
+            ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol5), fullThermalSol5, @"C:\Users\Public\Documents\Results5_0.01fy.dat");
 
 
 
@@ -410,7 +410,7 @@ namespace GFEC
 
             //ExportToFile.ExportGeometryDataWithTemperatures(finalNodes, fullTempSol);
 
-           
+
             GnuPlot.Close();
 
             while (true)

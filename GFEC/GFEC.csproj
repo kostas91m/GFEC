@@ -87,12 +87,29 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Elements\Quad4Th2.cs" />
     <Compile Include="Elements\ContactNtN2DTh.cs" />
     <Compile Include="Elements\Quad4Th.cs" />
     <Compile Include="Examples\BeamDynamicExample.cs" />
     <Compile Include="Examples\CantileverInContact.cs" />
     <Compile Include="Examples\CantileverQuadsExample.cs" />
     <Compile Include="Examples\CentralDifferencesTest.cs" />
+    <Compile Include="Examples\CoupledThermalStructural_001fy_DenserMesh.cs" />
+    <Compile Include="Examples\CoupledThermalStructural_0005fy_DenserMesh.cs" />
+    <Compile Include="Examples\CoupledThermalStructural_0002fy_DenserMesh.cs" />
+    <Compile Include="Examples\CoupledThermalStructural_0001fy_DenserMesh.cs" />
+    <Compile Include="Examples\CoupledThermalStructural_0143L_001fy.cs" />
+    <Compile Include="Examples\CoupledThermalStructural_0143L_0005fy.cs" />
+    <Compile Include="Examples\CoupledThermalStructural_0143L_0002fy.cs" />
+    <Compile Include="Examples\CoupledThermalStructural_0143L_0001fy.cs" />
+    <Compile Include="Examples\CoupledThermalStructural_029L_001fy.cs" />
+    <Compile Include="Examples\CoupledThermalStructural_029L_0005fy.cs" />
+    <Compile Include="Examples\CoupledThermalStructural_029L_0002fy.cs" />
+    <Compile Include="Examples\CoupledThermalStructural_029L_0001fy.cs" />
+    <Compile Include="Examples\CoupledThermalStructural_0005fy.cs" />
+    <Compile Include="Examples\CoupledThermalStructural_0002fy.cs" />
+    <Compile Include="Examples\CoupledThermalStructural_0001fy.cs" />
+    <Compile Include="Examples\CoupledThermalStructural_001fy.cs" />
     <Compile Include="Examples\CoupledPhysicsExample.cs" />
     <Compile Include="Examples\CoupledThermalStructural.cs" />
     <Compile Include="Examples\DynamicExample.cs" />
@@ -115,6 +132,7 @@
     <Compile Include="Examples\TwoThermalQuadsInContactExample.cs" />
     <Compile Include="IO Routines\Contour.cs" />
     <Compile Include="IO Routines\GnuPlot.cs" />
+    <Compile Include="IO Routines\HeatMapData.cs" />
     <Compile Include="IO Routines\IResults.cs" />
     <Compile Include="IO Routines\Results.cs" />
     <Compile Include="IO Routines\ShowToGUI.cs" />

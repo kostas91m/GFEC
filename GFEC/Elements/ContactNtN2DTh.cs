@@ -15,7 +15,7 @@ namespace GFEC
         public double[] AccelerationVector { get; set; }
         private double PenaltyFactor { get; set; }
         private double ContactArea { get; set; }
-
+        private double ContactPressure { get; set; }
         public ContactNtN2DTh(IElementProperties properties, Dictionary<int, INode> nodes)
         {
             Properties = properties;
@@ -24,6 +24,7 @@ namespace GFEC
             ElementFreedomSignature[2] = new bool[] { true, false, false, false, false, false };
             DisplacementVector = new double[2];
             ContactArea = properties.SectionArea;
+            ContactPressure = properties.ContactForceValue / properties.SectionArea;
         }
 
         public Dictionary<int, INode> NodesAtFinalState()
@@ -31,9 +32,14 @@ namespace GFEC
             throw new Exception("Method not implemenented");
         }
 
-        private double CalculateConductivity()
+        private double CalculateConductivity(double ContactPressure)
         {
-            double cc = 19.2;
+            double c1 = 6271.0 * Math.Pow(10, 6);
+            double c2 = -0.229;
+            double k = 15.5;
+            double S = 0.478 / Math.Pow(10, 6);
+            double m = 0.072;
+            double cc = 1.25 * (k * m / S) * Math.Pow((ContactPressure / c1) * Math.Pow((1.6177 * 1000000 * S / m), -c2), (0.95 / (1 + 0.0711 * c2)));
             double cH = cc * ContactArea;
             return cH;
         }
@@ -48,7 +54,7 @@ namespace GFEC
 
         public double[,] CreateGlobalStiffnessMatrix()
         {
-            double cH = CalculateConductivity();
+            double cH = CalculateConductivity(ContactPressure);
             double[,] stiffMatrix = new double[,]
             {
                 {1.0 * cH, -1.0 * cH },
@@ -59,7 +65,7 @@ namespace GFEC
 
         public double[] CreateInternalGlobalForcesVector()
         {
-            double cH = CalculateConductivity();
+            double cH = CalculateConductivity(ContactPressure);
             double gH = CalculateTemperatureJump();
             double[] heatFlux = new double[]
             {

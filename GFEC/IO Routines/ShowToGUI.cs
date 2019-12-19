@@ -199,6 +199,21 @@ namespace GFEC
 
         }
 
+        public static void PlotHeatMap(List<HeatMapData> plots)
+        {
+            GnuPlot.HoldOn();
+            GnuPlot.Set("cbrange[0:15.0]");
+            GnuPlot.Set("palette defined(0 \"blue\", 0.25\"green\", 0.75\"yellow\", 1 \"red\")");
+            GnuPlot.Set("pm3d");
+            GnuPlot.Set("dgrid3d");
+            GnuPlot.Set("view map");
+            foreach (var plot in plots)
+            {
+                GnuPlot.SPlot(plot.Xcoordinates, plot.Ycoordinates, plot.Temperatures);
+            }
+
+        }
+
         //public static SeriesCollection DrawMesh(Dictionary<int, INode> nodes, Dictionary<int, Dictionary<int, int>> connectivity)
         //{
         //    SeriesCollection mesh = new SeriesCollection();

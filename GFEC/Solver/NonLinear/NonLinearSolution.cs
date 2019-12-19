@@ -16,6 +16,7 @@ namespace GFEC
         public bool PrintResidual { get; set; } = false;
         protected ILinearSolution linearSolver;
         public Dictionary<int, double[]> InternalForces { get; set; }
+        public Dictionary<int, double[]> Solutions { get; set; }
 
         public virtual double[] Solve(IAssembly assembly, ILinearSolution linearScheme, double[] forceVector)
         {
