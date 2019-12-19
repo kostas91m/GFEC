@@ -35,7 +35,7 @@ namespace GFEC
 
         private double CalculateConductivity()
         {
-            double cc = 1.25 * Math.Pow(ContactPressure / (3.0 * 250.0 * Math.Pow(10, 6)), 0.95);//19.2;
+            double cc = 19.2;// 1.25 * Math.Pow(ContactPressure / (3.0 * 250.0 * Math.Pow(10, 6)), 0.95);
             double cH = cc * ContactArea;
             return cH;
         }
