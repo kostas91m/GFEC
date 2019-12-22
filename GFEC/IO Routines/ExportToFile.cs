@@ -43,13 +43,32 @@ namespace GFEC
             File.WriteAllLines(path, lines);
         }
 
-        public static void CreateContourDataForMatlab(double[] x, double[] y, double[] z, int lines, int rows)
+        public static void CreateContourDataForMatlab(double[] y, int rows, int columns)
         {
-            double[,] xContour;
-            double[,] yContour;
+            double[,] xContour = new double[rows, columns];
+            double[,] yContour = new double[rows, columns];
             double[,] zContour;
 
             int[] arr = Enumerable.Repeat(42, 10000).ToArray();
+
+            string[] yData = new string[rows];
+            string temp;
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    yContour[i, j] = y[i + j]; 
+                }
+            }
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    yData[i] = yData[i] + "\t" + yContour[i, j];
+                }
+            }
+            File.WriteAllLines(@"C:\Users\Public\Documents\ContourDataY.dat", yData);
            
         }
     }
