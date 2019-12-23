@@ -267,6 +267,20 @@ namespace GFEC
             gnuplotImage.Source = null;
             gnuplotImage.Source = new BitmapImage(new Uri("file://" + AppContext.BaseDirectory + "gnuplot.png"));
         }
+
+        private void Button_Test(object sender, RoutedEventArgs e)
+        {
+            double[] testVector = new double[75];
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 15; j++)
+                {
+                    testVector[i * 15 + j] = i;
+                }
+            }
+
+            ExportToFile.CreateContourDataForMatlab(testVector, testVector, testVector, 5, 15);
+        }
     }
 
 

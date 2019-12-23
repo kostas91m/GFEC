@@ -160,6 +160,19 @@ namespace GFEC
             return resultVector;
         }
 
+        public static double[,] ConvertVectorToMatrix(double[] vector, int rows, int columns)
+        {
+            double[,] matrix = new double[rows, columns];
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    matrix[i, j] = vector[i * columns + j];
+                }
+            }
+            return matrix;
+        }
+
     }
 }
 

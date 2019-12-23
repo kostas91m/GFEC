@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -174,7 +175,20 @@ namespace GFEC
             return matrix;
         }
 
-
+        public static void PrintMatrixToFile(double[,] matrix)
+        {
+            int rows = matrix.GetLength(0);
+            int columns = matrix.GetLength(1);
+            string[] dataToPrint = new string[rows];
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    dataToPrint[i] = dataToPrint[i] + "\t" + matrix[i, j];
+                }
+            }
+            File.WriteAllLines(@"C:\Users\Public\Documents\ContourDataY.dat", dataToPrint);
+        }
 
     }
 }

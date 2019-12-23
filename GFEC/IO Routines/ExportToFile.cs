@@ -43,32 +43,37 @@ namespace GFEC
             File.WriteAllLines(path, lines);
         }
 
-        public static void CreateContourDataForMatlab(double[] y, int rows, int columns)
+        public static void CreateContourDataForMatlab(double[] x, double[] y, double[] z, int rows, int columns)
         {
             double[,] xContour = new double[rows, columns];
             double[,] yContour = new double[rows, columns];
-            double[,] zContour;
+            double[,] zContour = new double[rows, columns];
 
             int[] arr = Enumerable.Repeat(42, 10000).ToArray();
 
             string[] yData = new string[rows];
             string temp;
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < columns; j++)
-                {
-                    yContour[i, j] = y[i + j]; 
-                }
-            }
+            //for (int i = 0; i < rows; i++)
+            //{
+            //    for (int j = 0; j < columns; j++)
+            //    {
+            //        yContour[i, j] = y[i *columns+ j]; 
+            //    }
+            //}
+            xContour = VectorOperations.ConvertVectorToMatrix(x, 5, 15);
+            yContour = VectorOperations.ConvertVectorToMatrix(y, 5, 15);
+            zContour = VectorOperations.ConvertVectorToMatrix(z, 5, 15);
 
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < columns; j++)
-                {
-                    yData[i] = yData[i] + "\t" + yContour[i, j];
-                }
-            }
-            File.WriteAllLines(@"C:\Users\Public\Documents\ContourDataY.dat", yData);
+            //for (int i = 0; i < rows; i++)
+            //{
+            //    for (int j = 0; j < columns; j++)
+            //    {
+            //        yData[i] = yData[i] + "\t" + yContour[i, j];
+            //    }
+            //}
+            //File.WriteAllLines(@"C:\Users\Public\Documents\ContourDataY.dat", yData);
+
+            MatrixOperations.PrintMatrixToFile(xContour);
            
         }
     }

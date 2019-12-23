@@ -17,6 +17,7 @@
         <Button Content="GraphicsGL" HorizontalAlignment="Left" Margin="792,104,0,0" VerticalAlignment="Top" Width="126" Click="Button_Click" Height="32"/>
         <Button Content="GraphicsPlot" HorizontalAlignment="Left" Margin="792,67,0,0" VerticalAlignment="Top" Width="126" Height="32" Click="Button_Click_Gnuplot"/>
         <Image Name="gnuplotImage"  HorizontalAlignment="Left" Height="283" Margin="10,248,0,0" VerticalAlignment="Top" Width="523"/>
+        <Button Content="Test" HorizontalAlignment="Left" Margin="661,67,0,0" VerticalAlignment="Top" Width="126" Height="32" Click="Button_Test"/>
 
     </Grid>
 </Window>
