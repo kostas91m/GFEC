@@ -175,7 +175,7 @@ namespace GFEC
             return matrix;
         }
 
-        public static void PrintMatrixToFile(double[,] matrix)
+        public static void PrintMatrixToFile(double[,] matrix, string path)
         {
             int rows = matrix.GetLength(0);
             int columns = matrix.GetLength(1);
@@ -187,7 +187,7 @@ namespace GFEC
                     dataToPrint[i] = dataToPrint[i] + "\t" + matrix[i, j];
                 }
             }
-            File.WriteAllLines(@"C:\Users\Public\Documents\ContourDataY.dat", dataToPrint);
+            File.WriteAllLines(path, dataToPrint);
         }
 
     }

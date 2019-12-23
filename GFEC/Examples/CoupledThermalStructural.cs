@@ -404,7 +404,8 @@ namespace GFEC
             ////GnuPlot.Plot(Xvec2Final, Yvec2Final);
             ShowToGUI.PlotHeatMap(plots2);
 
-            //ExportToFile.CreateContourDataForMatlab(Yvec1Final, 5, 15);
+            string path = @"C:\Users\Public\Documents\";
+            ExportToFile.CreateContourDataForMatlab(Xvec2Final, Yvec2Final, Ζvec2Final, 5, 15, path);
 
             //ExportToFile.ExportGeometryDataWithTemperatures(finalNodes, fullTempSol);
 

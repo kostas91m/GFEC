@@ -278,8 +278,8 @@ namespace GFEC
                     testVector[i * 15 + j] = i;
                 }
             }
-
-            ExportToFile.CreateContourDataForMatlab(testVector, testVector, testVector, 5, 15);
+            string path = @"C:\Users\Public\Documents\ContourDataY.dat";
+            ExportToFile.CreateContourDataForMatlab(testVector, testVector, testVector, 5, 15, path);
         }
     }
 

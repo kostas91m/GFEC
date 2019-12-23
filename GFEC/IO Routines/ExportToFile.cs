@@ -43,7 +43,7 @@ namespace GFEC
             File.WriteAllLines(path, lines);
         }
 
-        public static void CreateContourDataForMatlab(double[] x, double[] y, double[] z, int rows, int columns)
+        public static void CreateContourDataForMatlab(double[] x, double[] y, double[] z, int rows, int columns, string path)
         {
             double[,] xContour = new double[rows, columns];
             double[,] yContour = new double[rows, columns];
@@ -73,8 +73,10 @@ namespace GFEC
             //}
             //File.WriteAllLines(@"C:\Users\Public\Documents\ContourDataY.dat", yData);
 
-            MatrixOperations.PrintMatrixToFile(xContour);
-           
+            MatrixOperations.PrintMatrixToFile(xContour, path + "xData.dat");
+            MatrixOperations.PrintMatrixToFile(yContour, path + "yData.dat");
+            MatrixOperations.PrintMatrixToFile(zContour, path + "zData.dat");
+
         }
     }
 }
