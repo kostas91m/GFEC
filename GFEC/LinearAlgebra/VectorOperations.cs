@@ -173,6 +173,19 @@ namespace GFEC
             return matrix;
         }
 
+        public static double[,] ConvertVectorToOppositeMatrix(double[] vector, int rows, int columns)
+        {
+            double[,] matrix = new double[rows, columns];
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    matrix[rows-i-1, j] = vector[i * columns + j];
+                }
+            }
+            return matrix;
+        }
+
     }
 }
 
