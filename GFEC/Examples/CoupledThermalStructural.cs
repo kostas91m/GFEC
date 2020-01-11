@@ -170,7 +170,8 @@ namespace GFEC
             assembly.ElementsConnectivity = CreateConnectivity();
             assembly.ElementsProperties = CreateElementProperties();
             assembly.NodeFreedomAllocationList = CreateNodeFAT();
-            assembly.BoundedDOFsVector = new int[] { 1, 2, 31, 32, 61, 62, 91, 92, 121, 122, 152, 179, 180, 209, 210, 239, 240, 269, 270, 299, 300 };
+            //assembly.BoundedDOFsVector = new int[] { 1, 2, 31, 32, 61, 62, 91, 92, 121, 122, 152, 179, 180, 209, 210, 239, 240, 269, 270, 299, 300 };
+            assembly.BoundedDOFsVector = new int[] { 1, 31, 61, 91, 121, 152, 154, 156, 158, 160, 162, 164, 166, 179, 209, 239, 269, 299 };
             return assembly;
         }
 
@@ -181,7 +182,10 @@ namespace GFEC
             assembly.ElementsConnectivity = CreateConnectivity();
             assembly.ElementsProperties = CreateThermalElementProperties();
             assembly.NodeFreedomAllocationList = CreateThermalNodeFAT();
-            assembly.BoundedDOFsVector = new int[] { 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90 };
+            //assembly.BoundedDOFsVector = new int[] { 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90 };
+            int[] thermalBoundCond = new int[] { 90, 105, 120, 135, 150 };
+            assembly.BoundedDOFsVector = thermalBoundCond;
+            
             return assembly;
         }
 
@@ -204,14 +208,14 @@ namespace GFEC
             structuralSolution.NonLinearScheme.numberOfLoadSteps = 10;
             //int[] BoundedDOFsVector2 = new int[] { 1, 2, 31, 32, 61, 62, 91, 92, 121, 122, 179, 180, 209, 210, 239, 240, 269, 270, 299, 300 };
             double[] externalForces3 = new double[300];
-            externalForces3[135] = -100000000.0;
-            externalForces3[137] = -100000000.0;
-            externalForces3[139] = -100000000.0;
-            externalForces3[141] = -100000000.0;
-            externalForces3[143] = -100000000.0;
-            externalForces3[145] = -100000000.0;
-            externalForces3[147] = -100000000.0;
-            externalForces3[149] = -100000000.0;
+            externalForces3[135] = -1000000000.0;
+            externalForces3[137] = -1000000000.0;
+            externalForces3[139] = -1000000000.0;
+            externalForces3[141] = -1000000000.0;
+            externalForces3[143] = -1000000000.0;
+            externalForces3[145] = -1000000000.0;
+            externalForces3[147] = -1000000000.0;
+            externalForces3[149] = -1000000000.0;
             double[] reducedExternalForces3 = BoundaryConditionsImposition.ReducedVector(externalForces3, elementsAssembly.BoundedDOFsVector);
             structuralSolution.AssemblyData = elementsAssembly;
             structuralSolution.Solve(reducedExternalForces3);
@@ -271,6 +275,8 @@ namespace GFEC
 
             #region Thermal
             List<double[]> thermalSolutions = new List<double[]>();
+            
+            
             for (int k = 1; k <= allStepsSolutions.Count; k++)
             {
                 IAssembly elementsAssembly2 = CreateThermalAssembly();
@@ -292,18 +298,25 @@ namespace GFEC
                 thermalSolution.NonLinearScheme.numberOfLoadSteps = 10;
 
                 thermalSolution.AssemblyData = elementsAssembly2;
+                
                 double[] externalHeatFlux = new double[150];
-                for (int i = 61; i <= 75; i++)
-                {
-                    externalHeatFlux[61] = 250.0;
-                }
+                //for (int i = 61; i <= 75; i++)
+                //{
+                //    externalHeatFlux[61] = 250.0;
+                //}
+                externalHeatFlux[0] = 250.0;
+                externalHeatFlux[15] = 250.0;
+                externalHeatFlux[30] = 250.0;
+                externalHeatFlux[45] = 250.0;
+                externalHeatFlux[60] = 250.0;
                 double[] reducedExternalHeatFlux = BoundaryConditionsImposition.ReducedVector(externalHeatFlux, thermalSolution.AssemblyData.BoundedDOFsVector);
                 thermalSolution.Solve(reducedExternalHeatFlux);
                 double[] tempSol = thermalSolution.GetSolution();
                 thermalSolutions.Add(tempSol);
             }
 
-            int[] thermalBoundCond = new int[] { 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90 };
+            //int[] thermalBoundCond = new int[] { 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90 };
+            int[] thermalBoundCond = new int[] { 90, 105, 120, 135, 150 };
             double[] fullStructuralSol1 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[2], elementsAssembly.BoundedDOFsVector);
             double[] fullStructuralSol2 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[4], elementsAssembly.BoundedDOFsVector);
             double[] fullStructuralSol3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[6], elementsAssembly.BoundedDOFsVector);
