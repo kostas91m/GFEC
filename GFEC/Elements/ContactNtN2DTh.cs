@@ -40,8 +40,8 @@ namespace GFEC
             double c1 = 6271.0 * Math.Pow(10, 6);
             double c2 = -0.229;
             double sigma = 0.478 * Math.Pow(10, -6);
-            double cc = (1.25 * k * m / sigma) * Math.Pow((ContactPressure / c1) * Math.Pow(1.6177 * 1000000 * sigma / m, -c2), 0.95 / (1 + 0.0711 * c2));
-            //double cc = 1.25 * Math.Pow(ContactPressure / (3.0 * 250.0 * Math.Pow(10, 6)), 0.95);
+            //double cc = (1.25 * k * m / sigma) * Math.Pow((ContactPressure / c1) * Math.Pow(1.6177 * 1000000 * sigma / m, -c2), 0.95 / (1 + 0.0711 * c2));
+            double cc =(1000000.0/100.0) * 19.2 * 1.25 * Math.Pow(ContactPressure / (3.0 * 250.0 * Math.Pow(10, 6)), 0.95);
             double cH = cc * ContactArea;
             return cH;
         }
