@@ -19,6 +19,16 @@ namespace GFEC
         private const double offset = 0.7;
         private const double gap = 0.01;
 
+
+        //Metal values
+        const double YoungMod = 200.0e9;
+        const double density = 8000.0;
+        const double area = 0.01;
+        const double thickness = 0.1;
+        const double solidThermalCond = 60.5;
+        const double roughness = (1000000.0 / 100.0);
+        const double contactCond = 19.2;
+
         private static Dictionary<int, INode> CreateNodes()
         {
             Dictionary<int, INode> nodes = new Dictionary<int, INode>();
@@ -113,8 +123,8 @@ namespace GFEC
 
         private static Dictionary<int, IElementProperties> CreateElementProperties()
         {
-            double E = 200.0e9;
-            double A = 0.01;
+            double E = YoungMod;
+            double A = area;
             string type = "Quad4";
             string type2 = "ContactNtN2D";
 
@@ -126,22 +136,22 @@ namespace GFEC
 
             for (int i = 1; i <= totalElements; i++)
             {
-                elementProperties[i].Density = 8000.0;
-                elementProperties[i].Thickness = 0.1;
+                elementProperties[i].Density = density;
+                elementProperties[i].Thickness = thickness;
             }
 
             for (int i = 113; i <= 120; i++)
             {
                 elementProperties[i] = new ElementProperties(E, A, type2);
-                elementProperties[i].Density = 8000.0;
-                elementProperties[i].Thickness = 0.1;
+                elementProperties[i].Density = density;
+                elementProperties[i].Thickness = thickness;
             }
             return elementProperties;
         }
 
         private static Dictionary<int, IElementProperties> CreateThermalElementProperties()
         {
-            double thermalCond = 60.5;
+            double thermalCond = solidThermalCond;
             double A = 0.5;
             string type = "Quad4Th";
             string type2 = "ContactNtN2DTh";
@@ -159,6 +169,8 @@ namespace GFEC
                 elementProperties[i].ElementType = type2;
                 elementProperties[i].ThermalConductivity = thermalCond;
                 elementProperties[i].SectionArea = A;
+                elementProperties[i].SurfaceRoughness = roughness;
+                elementProperties[i].ContactThermalConductivity = contactCond;
             }
             return elementProperties;
         }
@@ -170,8 +182,7 @@ namespace GFEC
             assembly.ElementsConnectivity = CreateConnectivity();
             assembly.ElementsProperties = CreateElementProperties();
             assembly.NodeFreedomAllocationList = CreateNodeFAT();
-            //assembly.BoundedDOFsVector = new int[] { 1, 2, 31, 32, 61, 62, 91, 92, 121, 122, 152, 179, 180, 209, 210, 239, 240, 269, 270, 299, 300 };
-            assembly.BoundedDOFsVector = new int[] { 1, 31, 61, 91, 121, 152, 154, 156, 158, 160, 162, 164, 166, 179, 209, 239, 269, 299 };
+            assembly.BoundedDOFsVector = new int[] { 1, 2, 31, 32, 61, 62, 91, 92, 121, 122, 152, 179, 180, 209, 210, 239, 240, 269, 270, 299, 300 };
             return assembly;
         }
 
@@ -182,20 +193,17 @@ namespace GFEC
             assembly.ElementsConnectivity = CreateConnectivity();
             assembly.ElementsProperties = CreateThermalElementProperties();
             assembly.NodeFreedomAllocationList = CreateThermalNodeFAT();
-            //assembly.BoundedDOFsVector = new int[] { 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90 };
-            int[] thermalBoundCond = new int[] { 90, 105, 120, 135, 150 };
-            assembly.BoundedDOFsVector = thermalBoundCond;
-            
+            assembly.BoundedDOFsVector = new int[] { 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90 };
             return assembly;
         }
 
         public static Results RunStaticExample()
         {
             #region Structural
-                IAssembly elementsAssembly = CreateAssembly();
-                elementsAssembly.CreateElementsAssembly();
-                elementsAssembly.ActivateBoundaryConditions = true;
-                double[,] globalStiffnessMatrix = elementsAssembly.CreateTotalStiffnessMatrix();
+            IAssembly elementsAssembly = CreateAssembly();
+            elementsAssembly.CreateElementsAssembly();
+            elementsAssembly.ActivateBoundaryConditions = true;
+            double[,] globalStiffnessMatrix = elementsAssembly.CreateTotalStiffnessMatrix();
 
             //Gnuplot graphs
             //ShowToGUI.PlotInitialGeometry(elementsAssembly);
@@ -208,14 +216,14 @@ namespace GFEC
             structuralSolution.NonLinearScheme.numberOfLoadSteps = 10;
             //int[] BoundedDOFsVector2 = new int[] { 1, 2, 31, 32, 61, 62, 91, 92, 121, 122, 179, 180, 209, 210, 239, 240, 269, 270, 299, 300 };
             double[] externalForces3 = new double[300];
-            externalForces3[135] = -1000000000.0;
-            externalForces3[137] = -1000000000.0;
-            externalForces3[139] = -1000000000.0;
-            externalForces3[141] = -1000000000.0;
-            externalForces3[143] = -1000000000.0;
-            externalForces3[145] = -1000000000.0;
-            externalForces3[147] = -1000000000.0;
-            externalForces3[149] = -1000000000.0;
+            externalForces3[135] = -100000000.0;
+            externalForces3[137] = -100000000.0;
+            externalForces3[139] = -100000000.0;
+            externalForces3[141] = -100000000.0;
+            externalForces3[143] = -100000000.0;
+            externalForces3[145] = -100000000.0;
+            externalForces3[147] = -100000000.0;
+            externalForces3[149] = -100000000.0;
             double[] reducedExternalForces3 = BoundaryConditionsImposition.ReducedVector(externalForces3, elementsAssembly.BoundedDOFsVector);
             structuralSolution.AssemblyData = elementsAssembly;
             structuralSolution.Solve(reducedExternalForces3);
@@ -240,8 +248,8 @@ namespace GFEC
                 }
                 allStepsContactForces[i] = elementsInternalContactForcesVector;
             }
-            
-            
+
+
 
             //    double[] solVector2 = new double[280];
             List<double[]> structuralSolutions = new List<double[]>();
@@ -275,8 +283,6 @@ namespace GFEC
 
             #region Thermal
             List<double[]> thermalSolutions = new List<double[]>();
-            
-            
             for (int k = 1; k <= allStepsSolutions.Count; k++)
             {
                 IAssembly elementsAssembly2 = CreateThermalAssembly();
@@ -298,25 +304,18 @@ namespace GFEC
                 thermalSolution.NonLinearScheme.numberOfLoadSteps = 10;
 
                 thermalSolution.AssemblyData = elementsAssembly2;
-                
                 double[] externalHeatFlux = new double[150];
-                //for (int i = 61; i <= 75; i++)
-                //{
-                //    externalHeatFlux[61] = 250.0;
-                //}
-                externalHeatFlux[0] = 250.0;
-                externalHeatFlux[15] = 250.0;
-                externalHeatFlux[30] = 250.0;
-                externalHeatFlux[45] = 250.0;
-                externalHeatFlux[60] = 250.0;
+                for (int i = 61; i <= 75; i++)
+                {
+                    externalHeatFlux[61] = 250.0;
+                }
                 double[] reducedExternalHeatFlux = BoundaryConditionsImposition.ReducedVector(externalHeatFlux, thermalSolution.AssemblyData.BoundedDOFsVector);
                 thermalSolution.Solve(reducedExternalHeatFlux);
                 double[] tempSol = thermalSolution.GetSolution();
                 thermalSolutions.Add(tempSol);
             }
 
-            //int[] thermalBoundCond = new int[] { 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90 };
-            int[] thermalBoundCond = new int[] { 90, 105, 120, 135, 150 };
+            int[] thermalBoundCond = new int[] { 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90 };
             double[] fullStructuralSol1 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[2], elementsAssembly.BoundedDOFsVector);
             double[] fullStructuralSol2 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[4], elementsAssembly.BoundedDOFsVector);
             double[] fullStructuralSol3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[6], elementsAssembly.BoundedDOFsVector);
@@ -332,8 +331,8 @@ namespace GFEC
             ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol3), fullThermalSol3, @"C:\Users\Public\Documents\Results3.dat");
             ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol4), fullThermalSol4, @"C:\Users\Public\Documents\Results4.dat");
             ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol5), fullThermalSol5, @"C:\Users\Public\Documents\Results5.dat");
-            
-            
+
+
 
             //double[] temperatures = new double[135];
 
