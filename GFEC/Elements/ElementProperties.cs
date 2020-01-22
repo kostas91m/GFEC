@@ -18,6 +18,7 @@ namespace GFEC
 
         public double ContactThermalConductivity { get; set; }
         public double SurfaceRoughness { get; set; }
+        public double YieldStrength { get; set; }
 
         public ElementProperties(double youngMod, double sectionArea, string elementType)
         {

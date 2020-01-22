@@ -18,6 +18,7 @@ namespace GFEC
         private double ContactPressure { get; set; }
         private double ContactThermalConductivity { get; set; }
         private double SurfaceRoughness { get; set; }
+        private double YieldStrength { get; set; }
 
         public ContactNtN2DTh(IElementProperties properties, Dictionary<int, INode> nodes)
         {
@@ -30,6 +31,7 @@ namespace GFEC
             ContactPressure = properties.ContactForceValue / properties.SectionArea;
             SurfaceRoughness = properties.SurfaceRoughness;
             ContactThermalConductivity = properties.ContactThermalConductivity;
+            YieldStrength = properties.YieldStrength;
         }
 
         public Dictionary<int, INode> NodesAtFinalState()
@@ -45,7 +47,7 @@ namespace GFEC
             double c2 = -0.229;
             double sigma = 0.478 * Math.Pow(10, -6);
             //double cc = (1.25 * k * m / sigma) * Math.Pow((ContactPressure / c1) * Math.Pow(1.6177 * 1000000 * sigma / m, -c2), 0.95 / (1 + 0.0711 * c2));
-            double cc = SurfaceRoughness * ContactThermalConductivity * 1.25 * Math.Pow(ContactPressure / (3.0 * 250.0 * Math.Pow(10, 6)), 0.95);
+            double cc = SurfaceRoughness * ContactThermalConductivity * 1.25 * Math.Pow(ContactPressure / (3.0 * YieldStrength), 0.95);
             double cH = cc * ContactArea;
             return cH;
         }
