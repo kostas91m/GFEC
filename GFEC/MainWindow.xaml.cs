@@ -84,6 +84,7 @@ namespace GFEC
             exampleList.Add("TwoQuadsInContactNewExample");
             exampleList.Add("CoupledPhysicsExample");
             exampleList.Add("CoupledThermalStructural");
+            exampleList.Add("CoupledThermalStructuralCNTs");
 
             ComboBox1.ItemsSource = exampleList;
         }
@@ -121,6 +122,9 @@ namespace GFEC
                     break;
                 case "CoupledThermalStructural":
                     finalResults = CoupledThermalStructural.RunStaticExample();
+                    break;
+                case "CoupledThermalStructuralCNTs":
+                    finalResults = CoupledThermalStructuralCNTs.RunStaticExample();
                     break;
                 default:
                     finalResults = TwoQuadsExample.RunStaticExample();

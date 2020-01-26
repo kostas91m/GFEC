@@ -7,16 +7,17 @@ using System.Threading;
 
 namespace GFEC
 {
-    public static class CoupledThermalStructural
+    public static class CoupledThermalStructuralCNTs
     {
-        private const int totalNodes = 150;
-        private const int totalElements = 112;
-        private const int nodesInXCoor = 15;
+        private const int totalNodes = 1010;
+        private const int totalContactElements = 8;
+        private const int totalElements = 800;
+        private const int nodesInXCoor = 101;
         private const int nodesInYCoor = 5;
         private const double scaleFactor = 1.0;
         private const double xIntervals = 0.1;
         private const double yIntervals = 0.1;
-        private const double offset = 0.7;
+        private const double offset = 9.3;
         private const double gap = 0.01;
 
         //Boundary conditions
@@ -25,19 +26,19 @@ namespace GFEC
         //static readonly int[] thermalBoundaryConditions = new int[] { 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90 };
 
         //Model2
-        static readonly int[] structuralBoundaryConditions = new int[] { 1, 31, 61, 91, 121, 152, 154, 156, 158, 160, 162, 164, 166, 179, 209, 239, 269, 299 };
-        static readonly int[] thermalBoundaryConditions = new int[] { 90, 105, 120, 135, 150 };
+        static readonly int[] structuralBoundaryConditions = new int[] { 1, 203, 505, 707, 909, 1012, 1014, 1016, 1018, 1020, 1022, 1024, 1026, 1211, 1413, 1615, 1817, 2019 };
+        static readonly int[] thermalBoundaryConditions = new int[] { 606, 707, 808, 909, 1010 };
 
         //External loads
-        const double externalStructuralLoad = -5*100000000.0*1e-18*0.3;
-        const double externalHeatLoad = 2500.0*1e-9;
+        const double externalStructuralLoad = -5 * 100000000.0 * 1e-18 * 0.3;
+        const double externalHeatLoad = 2500.0 * 1e-9;
 
-        static readonly List<int> loadedStructuralDOFs = new List<int>(new int[] { 135, 137, 139, 141, 143, 145, 147, 149 });
-        static readonly double[] externalForcesStructuralVector = new double[300];
+        static readonly List<int> loadedStructuralDOFs = new List<int>(new int[] { 995, 997, 999, 1001, 1003, 1005, 1007, 1009 }); //zero indexed
+        static readonly double[] externalForcesStructuralVector = new double[2020];
 
-        static readonly double[] externalHeatLoafVector = new double[150];
+        static readonly double[] externalHeatLoafVector = new double[1010];
         //static readonly List<int> loadedThermalDOFs = new List<int>(new int[] { 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75 });
-        static readonly List<int> loadedThermalDOFs = new List<int>(new int[] { 0, 15, 30, 45, 60 });
+        static readonly List<int> loadedThermalDOFs = new List<int>(new int[] { 0, 101, 202, 303, 404 }); //zero indexed
 
 
         //Metal values
@@ -65,10 +66,10 @@ namespace GFEC
         const double density = 8000.0;
         const double area = 0.01;
         const double thickness = 0.1;
-        const double solidThermalCond = 3300*1.0e-9;
+        const double solidThermalCond = 3300 * 1.0e-9;
         const double roughness = (1.0 / 2.81);
         const double contactCond = 3300 * 1.0e-9;
-        const double yieldStrength = 60.0*1e-9;
+        const double yieldStrength = 60.0 * 1e-9;
 
         private static Dictionary<int, INode> CreateNodes()
         {
@@ -131,14 +132,20 @@ namespace GFEC
             //{
 
             //}
-            connectivity[113] = new Dictionary<int, int>() { { 1, 136 }, { 2, 8 } };
-            connectivity[114] = new Dictionary<int, int>() { { 1, 137 }, { 2, 9 } };
-            connectivity[115] = new Dictionary<int, int>() { { 1, 138 }, { 2, 10 } };
-            connectivity[116] = new Dictionary<int, int>() { { 1, 139 }, { 2, 11 } };
-            connectivity[117] = new Dictionary<int, int>() { { 1, 140 }, { 2, 12 } };
-            connectivity[118] = new Dictionary<int, int>() { { 1, 141 }, { 2, 13 } };
-            connectivity[119] = new Dictionary<int, int>() { { 1, 142 }, { 2, 14 } };
-            connectivity[120] = new Dictionary<int, int>() { { 1, 143 }, { 2, 15 } };
+            for (int i = 1; i <= totalContactElements; i++)
+            {
+                int lowerNode = 2 * nodesInXCoor * nodesInYCoor - nodesInXCoor + i;
+                int upperNode = nodesInXCoor - totalContactElements + i;
+                connectivity[totalElements + i] = new Dictionary<int, int>() { { 1, lowerNode }, { 2, upperNode } };
+            }
+            //connectivity[113] = new Dictionary<int, int>() { { 1, 136 }, { 2, 8 } };
+            //connectivity[114] = new Dictionary<int, int>() { { 1, 137 }, { 2, 9 } };
+            //connectivity[115] = new Dictionary<int, int>() { { 1, 138 }, { 2, 10 } };
+            //connectivity[116] = new Dictionary<int, int>() { { 1, 139 }, { 2, 11 } };
+            //connectivity[117] = new Dictionary<int, int>() { { 1, 140 }, { 2, 12 } };
+            //connectivity[118] = new Dictionary<int, int>() { { 1, 141 }, { 2, 13 } };
+            //connectivity[119] = new Dictionary<int, int>() { { 1, 142 }, { 2, 14 } };
+            //connectivity[120] = new Dictionary<int, int>() { { 1, 143 }, { 2, 15 } };
             return connectivity;
         }
 
@@ -181,7 +188,7 @@ namespace GFEC
                 elementProperties[i].Thickness = thickness;
             }
 
-            for (int i = 113; i <= 120; i++)
+            for (int i = totalElements+1; i <= totalElements+totalContactElements; i++)
             {
                 elementProperties[i] = new ElementProperties(E, A, type2);
                 elementProperties[i].Density = density;
@@ -204,7 +211,7 @@ namespace GFEC
                 elementProperties[i].ElementType = type;
                 elementProperties[i].ThermalConductivity = thermalCond;
             }
-            for (int i = 113; i <= 120; i++)
+            for (int i = totalElements + 1; i <= totalElements + totalContactElements; i++)
             {
                 elementProperties[i] = new ElementProperties();
                 elementProperties[i].ElementType = type2;
@@ -482,7 +489,7 @@ namespace GFEC
 
             //ExportToFile.ExportGeometryDataWithTemperatures(finalNodes, fullTempSol);
 
-                GnuPlot.Close();
+            GnuPlot.Close();
 
             while (true)
             {
