@@ -26,30 +26,24 @@ namespace GFEC
         //static readonly int[] thermalBoundaryConditions = new int[] { 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90 };
 
         //Model2
-        static readonly int[] structuralBoundaryConditions = new int[] { 1, 203, 505, 707, 909, 1012, 1014, 1016, 1018, 1020, 1022, 1024, 1026, 1211, 1413, 1615, 1817, 2019 };
-        static readonly int[] thermalBoundaryConditions = new int[] { 606, 707, 808, 909, 1010 };
+        static int[] structuralBoundaryConditions; // = new int[] { 1, 203, 505, 707, 909, 1012, 1014, 1016, 1018, 1020, 1022, 1024, 1026, 1211, 1413, 1615, 1817, 2019 };
+        static int[] thermalBoundaryConditions; //= new int[] { 606, 707, 808, 909, 1010 };
+
+        
+
 
         //External loads
         const double externalStructuralLoad = -5 * 100000000.0 * 1e-18 * 0.3;
         const double externalHeatLoad = 2500.0 * 1e-9;
 
-        static readonly List<int> loadedStructuralDOFs = new List<int>(new int[] { 995, 997, 999, 1001, 1003, 1005, 1007, 1009 }); //zero indexed
-        static readonly double[] externalForcesStructuralVector = new double[2020];
+        static List<int> loadedStructuralDOFs; // = new List<int>(new int[] { 995, 997, 999, 1001, 1003, 1005, 1007, 1009 });
+        static double[] externalForcesStructuralVector; // = new double[2020];
 
-        static readonly double[] externalHeatLoafVector = new double[1010];
+        
+
+        static double[] externalHeatLoafVector; // = new double[1010];
         //static readonly List<int> loadedThermalDOFs = new List<int>(new int[] { 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75 });
-        static readonly List<int> loadedThermalDOFs = new List<int>(new int[] { 0, 101, 202, 303, 404 }); //zero indexed
-
-
-        //Metal values
-        //const double YoungMod = 200.0e9;
-        //const double density = 8000.0;
-        //const double area = 0.01;
-        //const double thickness = 0.1;
-        //const double solidThermalCond = 60.5;
-        //const double roughness = (1000000.0 / 100.0);
-        //const double contactCond = 19.2;
-        //const double yieldStrength = 250000000.0;
+        static List<int> loadedThermalDOFs; // = new List<int>(new int[] { 0, 101, 202, 303, 404 }); //zero indexed
 
         //CNT values
         //const double YoungMod = 1.0e12;
@@ -70,6 +64,55 @@ namespace GFEC
         const double roughness = (1.0 / 2.81);
         const double contactCond = 3300 * 1.0e-9;
         const double yieldStrength = 60.0 * 1e-9;
+
+        private static void CreateStructuralBoundaryConditions()
+        {
+            List<int> boundedDofs = new List<int>();
+            for (int i = 0; i < nodesInYCoor; i++)
+            {
+                boundedDofs.Add(i * 2 * nodesInXCoor + 1); //upper beam left side support
+            }
+            for (int i = 1; i <= totalContactElements; i++)
+            {
+                boundedDofs.Add(nodesInXCoor * nodesInYCoor * 2 + 2 * i); //lower beam lower side support
+            }
+            for (int i = 0; i < nodesInYCoor; i++)
+            {
+                boundedDofs.Add(nodesInYCoor * nodesInXCoor * 2 + nodesInXCoor * 2 * i - 1); //lower beam right side support
+            }
+            structuralBoundaryConditions = boundedDofs.ToArray<int>();
+        }
+
+        private static void CreateThermalBoundaryConditions()
+        {
+            List<int> boundedDofs = new List<int>();
+
+            for (int i = 0; i < nodesInYCoor; i++)
+            {
+                boundedDofs.Add(nodesInYCoor * nodesInXCoor + nodesInXCoor * i - 1); //lower beam right side support
+            }
+            thermalBoundaryConditions = boundedDofs.ToArray<int>();
+        }
+
+        private static void CreateStructuralLoadVector()
+        {
+            loadedStructuralDOFs = new List<int>();
+            for (int i = 0; i < totalContactElements; i++)
+            {
+                loadedStructuralDOFs.Add(nodesInXCoor * nodesInYCoor * 2 - i);
+            }
+            externalForcesStructuralVector = new double[totalNodes * 2];
+        }
+
+        private static void CreateThermalLoadVector()
+        {
+            loadedThermalDOFs = new List<int>();
+            for (int i = 0; i < totalContactElements; i++)
+            {
+                loadedThermalDOFs.Add(nodesInXCoor * nodesInYCoor - i);
+            }
+            externalHeatLoafVector = new double[totalNodes];
+        }
 
         private static Dictionary<int, INode> CreateNodes()
         {
@@ -231,6 +274,8 @@ namespace GFEC
             assembly.ElementsConnectivity = CreateConnectivity();
             assembly.ElementsProperties = CreateElementProperties();
             assembly.NodeFreedomAllocationList = CreateNodeFAT();
+            CreateStructuralBoundaryConditions();
+            CreateStructuralLoadVector();
             assembly.BoundedDOFsVector = structuralBoundaryConditions;
             return assembly;
         }
@@ -242,6 +287,8 @@ namespace GFEC
             assembly.ElementsConnectivity = CreateConnectivity();
             assembly.ElementsProperties = CreateThermalElementProperties();
             assembly.NodeFreedomAllocationList = CreateThermalNodeFAT();
+            CreateThermalBoundaryConditions();
+            CreateThermalLoadVector();
             assembly.BoundedDOFsVector = thermalBoundaryConditions;
             return assembly;
         }
@@ -257,6 +304,29 @@ namespace GFEC
             //Gnuplot graphs
             ShowToGUI.PlotInitialGeometry(elementsAssembly);
 
+            Dictionary<int, INode> initialNodes = elementsAssembly.Nodes;
+            double[] initialXCoord = Assembly.NodalCoordinatesToVectors(initialNodes).Item1;
+            double[] initialYCoord = Assembly.NodalCoordinatesToVectors(initialNodes).Item2;
+
+            double[] Xvec1Initial = new double[totalNodes/2];
+            double[] Yvec1Initial = new double[totalNodes/2];
+            double[] Xvec2Initial = new double[totalNodes/2];
+            double[] Yvec2Initial = new double[totalNodes/2];
+            double[] Ζvec1Initial = Enumerable.Repeat(1.0, totalNodes / 2).ToArray();
+            double[] Ζvec2Initial = Enumerable.Repeat(1.0, totalNodes / 2).ToArray();
+
+            Array.Copy(initialXCoord, 0, Xvec1Initial, 0, totalNodes / 2);
+            Array.Copy(initialYCoord, 0, Yvec1Initial, 0, totalNodes / 2);
+
+            Array.Copy(initialXCoord, totalNodes / 2, Xvec2Initial, 0, totalNodes / 2);
+            Array.Copy(initialYCoord, totalNodes / 2, Yvec2Initial, 0, totalNodes / 2);
+            string pathForContour1 = @"C:\Users\Public\Documents\Total\1";
+            string pathForContour2 = @"C:\Users\Public\Documents\Total\2";
+            ExportToFile.CreateContourDataForMatlab(Xvec1Initial, Yvec1Initial, Ζvec1Initial, nodesInYCoor, nodesInXCoor, pathForContour1);
+            ExportToFile.CreateContourDataForMatlab(Xvec2Initial, Yvec2Initial, Ζvec2Initial, nodesInYCoor, nodesInXCoor, pathForContour2);
+
+
+
 
             ISolver structuralSolution = new StaticSolver();
             structuralSolution.LinearScheme = new LUFactorization();
@@ -268,7 +338,7 @@ namespace GFEC
             double[] externalForces3 = externalForcesStructuralVector;
             foreach (var dof in loadedStructuralDOFs)
             {
-                externalForces3[dof] = externalStructuralLoad;
+                externalForces3[dof-1] = externalStructuralLoad;
             }
             //externalForces3[135] = externalStructuralLoad;
             //externalForces3[137] = externalStructuralLoad;
@@ -369,7 +439,7 @@ namespace GFEC
 
                 foreach (var dof in loadedThermalDOFs)
                 {
-                    externalHeatFlux[dof] = externalHeatLoad;
+                    externalHeatFlux[dof-1] = externalHeatLoad;
                 }
                 //for (int i = 61; i <= 75; i++)
                 //{

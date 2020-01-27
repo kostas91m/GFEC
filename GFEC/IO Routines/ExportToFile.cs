@@ -49,10 +49,10 @@ namespace GFEC
             double[,] yContour = new double[rows, columns];
             double[,] zContour = new double[rows, columns];
 
-            int[] arr = Enumerable.Repeat(42, 10000).ToArray();
+            //int[] arr = Enumerable.Repeat(42, 10000).ToArray();
 
-            string[] yData = new string[rows];
-            string temp;
+            //string[] yData = new string[rows];
+            //string temp;
             //for (int i = 0; i < rows; i++)
             //{
             //    for (int j = 0; j < columns; j++)
@@ -60,9 +60,9 @@ namespace GFEC
             //        yContour[i, j] = y[i *columns+ j]; 
             //    }
             //}
-            xContour = VectorOperations.ConvertVectorToMatrix(x, 5, 15);
-            yContour = VectorOperations.ConvertVectorToMatrix(y, 5, 15);
-            zContour = VectorOperations.ConvertVectorToMatrix(z, 5, 15);
+            xContour = VectorOperations.ConvertVectorToMatrix(x, rows, columns);
+            yContour = VectorOperations.ConvertVectorToMatrix(y, rows, columns);
+            zContour = VectorOperations.ConvertVectorToMatrix(z, rows, columns);
 
             //for (int i = 0; i < rows; i++)
             //{
