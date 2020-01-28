@@ -100,9 +100,10 @@ namespace GFEC
 
         public static void PlotInitialGeometry(IAssembly assembly)
         {
-            GnuPlot.Set("terminal png size 500, 300");
+            GnuPlot.Set("terminal png size 1920, 1080");
             GnuPlot.Set("output 'gnuplot.png'");
             GnuPlot.HoldOn();
+            GnuPlot.Set("size ratio -1");
             GnuPlot.Unset("key");
             double[] X,Y;
             List<StoredPlot> storedPlots = new List<StoredPlot>();
@@ -155,9 +156,10 @@ namespace GFEC
 
         public static void PlotFinalGeometry(IAssembly assembly)
         {
-            GnuPlot.Set("terminal png size 500, 300");
+            GnuPlot.Set("terminal png size 1920, 1080");
             GnuPlot.Set("output 'gnuplot2.png'");
             GnuPlot.HoldOn();
+            GnuPlot.Set("size ratio -1");
             GnuPlot.Unset("key");
             double[] X, Y;
             List<StoredPlot> storedPlots = new List<StoredPlot>();

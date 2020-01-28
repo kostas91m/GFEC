@@ -33,7 +33,7 @@ namespace GFEC
 
 
         //External loads
-        const double externalStructuralLoad = -5 * 100000000.0 * 1e-18 * 0.3;
+        const double externalStructuralLoad = -5 * 100000000.0 * 1e-18 * 0.1;
         const double externalHeatLoad = 2500.0 * 1e-9;
 
         static List<int> loadedStructuralDOFs; // = new List<int>(new int[] { 995, 997, 999, 1001, 1003, 1005, 1007, 1009 });
@@ -78,7 +78,7 @@ namespace GFEC
             }
             for (int i = 0; i < nodesInYCoor; i++)
             {
-                boundedDofs.Add(nodesInYCoor * nodesInXCoor * 2 + nodesInXCoor * 2 * i - 1); //lower beam right side support
+                boundedDofs.Add(nodesInYCoor * nodesInXCoor * 2 + nodesInXCoor * 2 * (i+1) - 1); //lower beam right side support
             }
             structuralBoundaryConditions = boundedDofs.ToArray<int>();
         }
@@ -99,7 +99,7 @@ namespace GFEC
             loadedStructuralDOFs = new List<int>();
             for (int i = 0; i < totalContactElements; i++)
             {
-                loadedStructuralDOFs.Add(nodesInXCoor * nodesInYCoor * 2 - i);
+                loadedStructuralDOFs.Add(nodesInXCoor * nodesInYCoor * 2 - 2*i);
             }
             externalForcesStructuralVector = new double[totalNodes * 2];
         }
@@ -552,8 +552,8 @@ namespace GFEC
             ////GnuPlot.Plot(Xvec2Final, Yvec2Final);
             ShowToGUI.PlotHeatMap(plots2);
 
-            string path = @"C:\Users\Public\Documents\";
-            string path2 = @"C:\Users\Public\Documents\Total\";
+            string path = @"C:\Users\Public\Documents\Total\1final";
+            string path2 = @"C:\Users\Public\Documents\Total\2final";
             ExportToFile.CreateContourDataForMatlab(Xvec1Final, Yvec1Final, Ζvec1Final, 5, 15, path);
             ExportToFile.CreateContourDataForMatlab(Xvec2Final, Yvec2Final, Ζvec2Final, 5, 15, path2);
 
