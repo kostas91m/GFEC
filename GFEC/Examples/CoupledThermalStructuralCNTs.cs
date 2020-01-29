@@ -33,7 +33,7 @@ namespace GFEC
 
 
         //External loads
-        const double externalStructuralLoad = -5 * 100000000.0 * 1e-18 * 0.1;
+        const double externalStructuralLoad = -5 * 100000000.0 * 1e-18 * 0.2;
         const double externalHeatLoad = 2500.0 * 1e-9;
 
         static List<int> loadedStructuralDOFs; // = new List<int>(new int[] { 995, 997, 999, 1001, 1003, 1005, 1007, 1009 });
@@ -329,7 +329,7 @@ namespace GFEC
 
 
             ISolver structuralSolution = new StaticSolver();
-            structuralSolution.LinearScheme = new LUFactorization();
+            structuralSolution.LinearScheme = new PCGSolver();
             structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
             structuralSolution.ActivateNonLinearSolver = true;
             structuralSolution.NonLinearScheme.numberOfLoadSteps = 10;
@@ -526,19 +526,19 @@ namespace GFEC
             //plots.Add(new HeatMapData() { Xcoordinates = Xvec2, Ycoordinates = Yvec2, Temperatures = Zvec2 });
             ////ShowToGUI.PlotHeatMap(plots);
 
-            double[] Xvec1Final = new double[75];
-            double[] Yvec1Final = new double[75];
-            double[] Xvec2Final = new double[75];
-            double[] Yvec2Final = new double[75];
-            double[] Ζvec1Final = new double[75];
-            double[] Ζvec2Final = new double[75];
+            double[] Xvec1Final = new double[totalNodes/2];
+            double[] Yvec1Final = new double[totalNodes/2];
+            double[] Xvec2Final = new double[totalNodes/2];
+            double[] Yvec2Final = new double[totalNodes/2];
+            double[] Ζvec1Final = new double[totalNodes/2];
+            double[] Ζvec2Final = new double[totalNodes/2];
 
-            Array.Copy(xFinalNodalCoor, 0, Xvec1Final, 0, 75);
-            Array.Copy(yFinalNodalCoor, 0, Yvec1Final, 0, 75);
-            Array.Copy(fullThermalSol4, 0, Ζvec1Final, 0, 75);
-            Array.Copy(xFinalNodalCoor, 75, Xvec2Final, 0, 75);
-            Array.Copy(yFinalNodalCoor, 75, Yvec2Final, 0, 75);
-            Array.Copy(fullThermalSol4, 75, Ζvec2Final, 0, 75);
+            Array.Copy(xFinalNodalCoor, 0, Xvec1Final, 0, totalNodes/2);
+            Array.Copy(yFinalNodalCoor, 0, Yvec1Final, 0, totalNodes/2);
+            Array.Copy(fullThermalSol4, 0, Ζvec1Final, 0, totalNodes/2);
+            Array.Copy(xFinalNodalCoor, totalNodes/2, Xvec2Final, 0, totalNodes/2);
+            Array.Copy(yFinalNodalCoor, totalNodes/2, Yvec2Final, 0, totalNodes/2);
+            Array.Copy(fullThermalSol4, totalNodes/2, Ζvec2Final, 0, totalNodes/2);
 
             List<HeatMapData> plots2 = new List<HeatMapData>();
             plots2.Add(new HeatMapData() { Xcoordinates = Xvec1Final, Ycoordinates = Yvec1Final, Temperatures = Ζvec1Final });
@@ -554,8 +554,8 @@ namespace GFEC
 
             string path = @"C:\Users\Public\Documents\Total\1final";
             string path2 = @"C:\Users\Public\Documents\Total\2final";
-            ExportToFile.CreateContourDataForMatlab(Xvec1Final, Yvec1Final, Ζvec1Final, 5, 15, path);
-            ExportToFile.CreateContourDataForMatlab(Xvec2Final, Yvec2Final, Ζvec2Final, 5, 15, path2);
+            ExportToFile.CreateContourDataForMatlab(Xvec1Final, Yvec1Final, Ζvec1Final, nodesInYCoor, nodesInXCoor, path);
+            ExportToFile.CreateContourDataForMatlab(Xvec2Final, Yvec2Final, Ζvec2Final, nodesInYCoor, nodesInXCoor, path2);
 
             //ExportToFile.ExportGeometryDataWithTemperatures(finalNodes, fullTempSol);
 
