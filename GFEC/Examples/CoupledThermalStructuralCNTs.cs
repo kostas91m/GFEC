@@ -20,6 +20,9 @@ namespace GFEC
         private const double offset = 9.3;
         private const double gap = 0.01;
 
+
+
+
         //Boundary conditions
         //Model1
         //static readonly int[] structuralBoundaryConditions = new int[] { 1, 2, 31, 32, 61, 62, 91, 92, 121, 122, 152, 179, 180, 209, 210, 239, 240, 269, 270, 299, 300 };
@@ -29,12 +32,17 @@ namespace GFEC
         static int[] structuralBoundaryConditions; // = new int[] { 1, 203, 505, 707, 909, 1012, 1014, 1016, 1018, 1020, 1022, 1024, 1026, 1211, 1413, 1615, 1817, 2019 };
         static int[] thermalBoundaryConditions; //= new int[] { 606, 707, 808, 909, 1010 };
 
-        
+
 
 
         //External loads
         const double externalStructuralLoad = -5 * 100000000.0 * 1e-18 * 0.2;
         const double externalHeatLoad = 2500.0 * 1e-9;
+
+
+
+
+
 
         static List<int> loadedStructuralDOFs; // = new List<int>(new int[] { 995, 997, 999, 1001, 1003, 1005, 1007, 1009 });
         static double[] externalForcesStructuralVector; // = new double[2020];
@@ -65,6 +73,7 @@ namespace GFEC
         const double contactCond = 3300 * 1.0e-9;
         const double yieldStrength = 60.0 * 1e-9;
 
+
         private static void CreateStructuralBoundaryConditions()
         {
             List<int> boundedDofs = new List<int>();
@@ -72,6 +81,12 @@ namespace GFEC
             {
                 boundedDofs.Add(i * 2 * nodesInXCoor + 1); //upper beam left side support
             }
+
+            for (int i = 0; i < nodesInYCoor; i++)
+            {
+                boundedDofs.Add(i * 2 * nodesInXCoor + 2 * nodesInXCoor - 1); //upper beam right side support
+            }
+
             for (int i = 1; i <= totalContactElements; i++)
             {
                 boundedDofs.Add(nodesInXCoor * nodesInYCoor * 2 + 2 * i); //lower beam lower side support
@@ -329,7 +344,7 @@ namespace GFEC
 
 
             ISolver structuralSolution = new StaticSolver();
-            structuralSolution.LinearScheme = new PCGSolver();
+            structuralSolution.LinearScheme = new LUFactorization();
             structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
             structuralSolution.ActivateNonLinearSolver = true;
             structuralSolution.NonLinearScheme.numberOfLoadSteps = 10;
