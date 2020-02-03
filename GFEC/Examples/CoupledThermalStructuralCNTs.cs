@@ -47,7 +47,7 @@ namespace GFEC
 
 
         //External loads
-        const double externalStructuralLoad = -5 * 100000000.0 * 1e-18 * 0.2;
+        const double externalStructuralLoad = -5 * 100000000.0 * 1e-18 * 60;
         const double externalHeatLoad = 2500.0 * 1e-9;
         //-----------------------------------------------------------------------------------
         //const double externalStructuralLoad = -5 * 100000000.0 * 1e-18 * 0.3;
@@ -355,6 +355,7 @@ namespace GFEC
             ISolver structuralSolution = new StaticSolver();
             structuralSolution.LinearScheme = new LUFactorization();
             structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+            structuralSolution.NonLinearScheme.Tolerance = 1e-8;
             structuralSolution.ActivateNonLinearSolver = true;
             structuralSolution.NonLinearScheme.numberOfLoadSteps = 10;
 

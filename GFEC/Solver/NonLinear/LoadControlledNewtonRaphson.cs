@@ -40,7 +40,7 @@ namespace GFEC
                 residualNorm = VectorOperations.VectorNorm2(residual);
                 int iteration = 0;
                 Array.Clear(deltaU, 0, deltaU.Length);
-                while (residualNorm > tolerance && iteration < maxIterations)
+                while (residualNorm > Tolerance && iteration < MaxIterations)
                 {
                     stiffnessMatrix = discretization.CreateTotalStiffnessMatrix();
                     deltaU = VectorOperations.VectorVectorSubtraction(deltaU, linearSolver.Solve(stiffnessMatrix, residual));
@@ -54,7 +54,7 @@ namespace GFEC
                 InternalForces.Add(i + 1, internalForcesTotalVector);
                 solutionVector = VectorOperations.VectorVectorAddition(solutionVector, deltaU);
                 Solutions.Add(i + 1, solutionVector);
-                if (iteration >= maxIterations) Console.WriteLine("Newton-Raphson: Solution not converged at current iterations");
+                if (iteration >= MaxIterations) Console.WriteLine("Newton-Raphson: Solution not converged at current iterations");
             }
 
             return solutionVector;
