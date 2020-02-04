@@ -353,7 +353,7 @@ namespace GFEC
 
 
             ISolver structuralSolution = new StaticSolver();
-            structuralSolution.LinearScheme = new LUFactorization();
+            structuralSolution.LinearScheme = new PCGSolver();
             structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
             structuralSolution.NonLinearScheme.Tolerance = 1e-8;
             structuralSolution.ActivateNonLinearSolver = true;
