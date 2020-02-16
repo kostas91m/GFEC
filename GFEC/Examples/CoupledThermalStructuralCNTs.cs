@@ -47,7 +47,7 @@ namespace GFEC
 
 
         //External loads
-        const double externalStructuralLoad = -5 * 100000000.0 * 1e-18 * 60;
+        const double externalStructuralLoad = -1000000.0;
         const double externalHeatLoad = 2500.0 * 1e-9;
         //-----------------------------------------------------------------------------------
         //const double externalStructuralLoad = -5 * 100000000.0 * 1e-18 * 0.3;
@@ -78,7 +78,7 @@ namespace GFEC
         //const double yieldStrength = 60000000000.0;
 
         //CNT values scaled
-        const double YoungMod = 1.0e-6;
+        const double YoungMod = 1.0*1e9;
         const double density = 8000.0;
         const double area = 0.01;
         const double thickness = 0.1;
@@ -355,7 +355,7 @@ namespace GFEC
             ISolver structuralSolution = new StaticSolver();
             structuralSolution.LinearScheme = new PCGSolver();
             structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
-            structuralSolution.NonLinearScheme.Tolerance = 1e-8;
+            structuralSolution.NonLinearScheme.Tolerance = 1e-6;
             structuralSolution.ActivateNonLinearSolver = true;
             structuralSolution.NonLinearScheme.numberOfLoadSteps = 10;
 
@@ -385,7 +385,7 @@ namespace GFEC
             {
                 elementsInternalContactForcesVector = new Dictionary<int, double[]>();
                 elementsAssembly.UpdateDisplacements(allStepsSolutions[i]);
-                for (int j = 113; j <= 120; j++)
+                for (int j = totalElements+1; j <= totalElements+totalContactElements; j++)
                 {
                     elementsInternalContactForcesVector[j] = elementsAssembly.ElementsAssembly[j].CreateInternalGlobalForcesVector();
                 }
@@ -405,7 +405,7 @@ namespace GFEC
             {
                 IAssembly elementsAssembly2 = CreateThermalAssembly();
 
-                for (int j = 113; j < 120; j++)
+                for (int j = totalElements+1; j < totalElements+totalContactElements; j++)
                 {
                     double[] contactForce = allStepsContactForces[k][j];
                     elementsAssembly2.ElementsProperties[j].ContactForceValue = VectorOperations.VectorNorm2(new double[] { contactForce[2], contactForce[3] });
