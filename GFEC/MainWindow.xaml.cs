@@ -31,6 +31,7 @@ namespace GFEC
         private Dictionary<int, INode> nodes = new Dictionary<int, INode>();
         private Dictionary<int, Dictionary<int, int>> elementsConnectivity = new Dictionary<int, Dictionary<int, int>>();
 
+
         public MainWindow()
         {
             InitializeComponent();
@@ -44,7 +45,7 @@ namespace GFEC
         {
             SolveSelectedExample();
             Graph = ShowToGUI.ShowResults(solverResults);
-
+            
 
             //Dictionary<int, INode> nodes = new Dictionary<int, INode>();
             //nodes[1] = new Node(0.0, 0.01);
@@ -66,7 +67,7 @@ namespace GFEC
             //connectivity[4] = new Dictionary<int, int>() { { 1, 8 }, { 2, 9 }, { 3, 12 }, { 4, 11 } };
             //connectivity[5] = new Dictionary<int, int>() { { 1, 10 }, { 2, 11 }, { 3, 3 } };
             //Mesh = ShowToGUI.DrawMesh(nodes, connectivity);
-
+            
             DataContext = this;
 
             return;
@@ -124,6 +125,9 @@ namespace GFEC
                     finalResults = CoupledThermalStructural.RunStaticExample();
                     break;
                 case "CoupledThermalStructuralCNTs":
+                    CoupledThermalStructuralCNTs.structuralSolution = new StaticSolver(); 
+                    CoupledThermalStructuralCNTs.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+                    CoupledThermalStructuralCNTs.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
                     finalResults = CoupledThermalStructuralCNTs.RunStaticExample();
                     break;
                 default:
@@ -133,6 +137,14 @@ namespace GFEC
             //Results.Text = solution[0].ToString();
 
             solverResults = finalResults;
+        }
+
+        private void NonLinearScheme_convergenceResult(object sender, string e)
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() =>
+            {
+                LogTool.Text = e;
+            }));
         }
 
         private async void Import_Nodes_Button_Click(object sender, RoutedEventArgs args)

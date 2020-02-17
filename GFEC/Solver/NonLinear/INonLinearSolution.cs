@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GFEC
 {
-    interface INonLinearSolution
+    public interface INonLinearSolution
     {
         double[] Solve(IAssembly assembly, ILinearSolution linearScheme, double[] forceVector);
         int numberOfLoadSteps { get; set; }
@@ -13,5 +13,6 @@ namespace GFEC
         Dictionary<int, double[]> Solutions { get; set; }
         double Tolerance { get; set; }
         int MaxIterations { get; set; }
+        event EventHandler<string> convergenceResult;
     }
 }

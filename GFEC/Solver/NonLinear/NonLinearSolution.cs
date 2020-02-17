@@ -17,12 +17,16 @@ namespace GFEC
         protected ILinearSolution linearSolver;
         public Dictionary<int, double[]> InternalForces { get; set; }
         public Dictionary<int, double[]> Solutions { get; set; }
+        public event EventHandler<string> convergenceResult;
 
         public virtual double[] Solve(IAssembly assembly, ILinearSolution linearScheme, double[] forceVector)
         {
             throw new Exception("LinearSolution.Solve not implemented");
         }
 
-
+        protected void OnConvergenceResult(string message)
+        {
+            convergenceResult.Invoke(this, message);
+        }
     }
 }

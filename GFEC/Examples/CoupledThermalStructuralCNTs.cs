@@ -19,6 +19,7 @@ namespace GFEC
         private const double yIntervals = 0.1;
         private const double offset = 8.1;//9.3;
         private const double gap = 0.01;
+        public static ISolver structuralSolution;
 
         //--------------------------------------------
         //private const int totalNodes = 150;
@@ -326,7 +327,7 @@ namespace GFEC
             double[,] globalStiffnessMatrix = elementsAssembly.CreateTotalStiffnessMatrix();
 
             //Gnuplot graphs
-            ShowToGUI.PlotInitialGeometry(elementsAssembly);
+            //ShowToGUI.PlotInitialGeometry(elementsAssembly);
 
             Dictionary<int, INode> initialNodes = elementsAssembly.Nodes;
             double[] initialXCoord = Assembly.NodalCoordinatesToVectors(initialNodes).Item1;
@@ -352,9 +353,9 @@ namespace GFEC
 
 
 
-            ISolver structuralSolution = new StaticSolver();
+            ///structuralSolution = new StaticSolver();
             structuralSolution.LinearScheme = new PCGSolver();
-            structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+            //structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
             structuralSolution.NonLinearScheme.Tolerance = 1e-6;
             structuralSolution.ActivateNonLinearSolver = true;
             structuralSolution.NonLinearScheme.numberOfLoadSteps = 10;
@@ -372,7 +373,7 @@ namespace GFEC
             structuralSolution.Solve(reducedExternalForces3);
             double[] solvector3 = structuralSolution.GetSolution();
             elementsAssembly.UpdateDisplacements(solvector3);
-            ShowToGUI.PlotFinalGeometry(elementsAssembly);
+            //ShowToGUI.PlotFinalGeometry(elementsAssembly);
             double[] fullSolVector3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(solvector3, elementsAssembly.BoundedDOFsVector);
             Dictionary<int, INode> finalNodes = Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullSolVector3);
             double[] xFinalNodalCoor = Assembly.NodalCoordinatesToVectors(finalNodes).Item1;

@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace GFEC
 {
-    class LoadControlledNewtonRaphson : NonLinearSolution
+    public class LoadControlledNewtonRaphson : NonLinearSolution
     {
         private double[] localSolutionVector;
-        
+
         public LoadControlledNewtonRaphson()
         {
 
@@ -34,6 +32,7 @@ namespace GFEC
                 discretization.UpdateDisplacements(solutionVector);
                 internalForcesTotalVector = discretization.CreateTotalInternalForcesVector();
                 double[,] stiffnessMatrix = discretization.CreateTotalStiffnessMatrix();
+                OnConvergenceResult("Newton-Raphson: Solution not converged at current iterations"); 
                 dU = linearSolver.Solve(stiffnessMatrix, incrementDf);
                 solutionVector = VectorOperations.VectorVectorAddition(solutionVector, dU);
                 residual = VectorOperations.VectorVectorSubtraction(internalForcesTotalVector, incrementalExternalForcesVector);
@@ -50,16 +49,18 @@ namespace GFEC
                     residual = VectorOperations.VectorVectorSubtraction(internalForcesTotalVector, incrementalExternalForcesVector);
                     residualNorm = VectorOperations.VectorNorm2(residual);
                     iteration = iteration + 1;
+                    //(Application.Current.Windows[0] as MainWindow).LogTool.Text = "ok"; 
+
                 }
                 InternalForces.Add(i + 1, internalForcesTotalVector);
                 solutionVector = VectorOperations.VectorVectorAddition(solutionVector, deltaU);
                 Solutions.Add(i + 1, solutionVector);
                 if (iteration >= MaxIterations) Console.WriteLine("Newton-Raphson: Solution not converged at current iterations");
-            }
 
+            }
             return solutionVector;
         }
-
+        
         public override double[] Solve(IAssembly assembly, ILinearSolution linearScheme, double[] forceVector)
         {
             InternalForces = new Dictionary<int, double[]>();
