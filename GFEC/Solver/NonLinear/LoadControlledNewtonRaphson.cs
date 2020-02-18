@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace GFEC
 {
@@ -72,7 +73,11 @@ namespace GFEC
             discretization = assembly;
             linearSolver = linearScheme;
             lambda = 1.0 / numberOfLoadSteps;
-            double[] solution = LoadControlledNR(forceVector);
+            double[] solution = null;
+
+            Thread tcore1 = new Thread(() => LoadControlledNR(forceVector));
+            tcore1.Start();
+            //= LoadControlledNR(forceVector);
             return solution;
         }
 
