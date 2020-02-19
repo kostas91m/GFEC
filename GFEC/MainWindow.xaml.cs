@@ -30,6 +30,7 @@ namespace GFEC
         private Results solverResults;
         private Dictionary<int, INode> nodes = new Dictionary<int, INode>();
         private Dictionary<int, Dictionary<int, int>> elementsConnectivity = new Dictionary<int, Dictionary<int, int>>();
+        public string selectedExample;
 
 
         public MainWindow()
@@ -43,8 +44,12 @@ namespace GFEC
 
         private void RunButton(object sender, RoutedEventArgs args)
         {
-            SolveSelectedExample();
-            Graph = ShowToGUI.ShowResults(solverResults);
+            //SolveSelectedExample();
+            selectedExample = ComboBox1.SelectedItem.ToString();
+            Thread thread1 = new Thread(SolveSelectedExample);
+            thread1.Start();
+            //thread1.Join();
+            //Graph = ShowToGUI.ShowResults(solverResults);
             
 
             //Dictionary<int, INode> nodes = new Dictionary<int, INode>();
@@ -94,7 +99,7 @@ namespace GFEC
         {
             Results finalResults;
             Tuple<Dictionary<int, double[]>, Dictionary<int, double>> results;
-            string selectedExample = ComboBox1.SelectedItem.ToString();
+            //string selectedExample = ComboBox1.SelectedItem.ToString();
             switch (selectedExample)
             {
                 case "TwoQuadsExample":

@@ -33,7 +33,7 @@ namespace GFEC
                 discretization.UpdateDisplacements(solutionVector);
                 internalForcesTotalVector = discretization.CreateTotalInternalForcesVector();
                 double[,] stiffnessMatrix = discretization.CreateTotalStiffnessMatrix();
-                OnConvergenceResult("Newton-Raphson: Solution not converged at current iterations"); 
+                //OnConvergenceResult("Newton-Raphson: Solution not converged at load step" + i); 
                 dU = linearSolver.Solve(stiffnessMatrix, incrementDf);
                 solutionVector = VectorOperations.VectorVectorAddition(solutionVector, dU);
                 residual = VectorOperations.VectorVectorSubtraction(internalForcesTotalVector, incrementalExternalForcesVector);
@@ -49,14 +49,22 @@ namespace GFEC
                     internalForcesTotalVector = discretization.CreateTotalInternalForcesVector();
                     residual = VectorOperations.VectorVectorSubtraction(internalForcesTotalVector, incrementalExternalForcesVector);
                     residualNorm = VectorOperations.VectorNorm2(residual);
+                    if (residualNorm <= Tolerance)
+                    {
+                        OnConvergenceResult("Newton-Raphson: Load Step "+i+ " - Solution converged at iteration " + iteration + " - Residual Norm = " +residualNorm);
+                    }
+                    else
+                    {
+                        OnConvergenceResult("Newton-Raphson: Load Step " + i + " - Solution not converged at iteration " + iteration + " - Residual Norm = " + residualNorm);
+                    }
                     iteration = iteration + 1;
                     //(Application.Current.Windows[0] as MainWindow).LogTool.Text = "ok"; 
-
+                    //OnConvergenceResult("Newton-Raphson: Solution not converged at load step" + iteration);
                 }
                 InternalForces.Add(i + 1, internalForcesTotalVector);
                 solutionVector = VectorOperations.VectorVectorAddition(solutionVector, deltaU);
                 Solutions.Add(i + 1, solutionVector);
-                if (iteration >= MaxIterations) Console.WriteLine("Newton-Raphson: Solution not converged at current iterations");
+                if (iteration >= MaxIterations) Console.WriteLine("Newton-Raphson: Solution not converged at load step {0}",i);
 
             }
             return solutionVector;
@@ -73,11 +81,12 @@ namespace GFEC
             discretization = assembly;
             linearSolver = linearScheme;
             lambda = 1.0 / numberOfLoadSteps;
-            double[] solution = null;
+            //double[] solution = null;
 
-            Thread tcore1 = new Thread(() => LoadControlledNR(forceVector));
-            tcore1.Start();
-            //= LoadControlledNR(forceVector);
+            //Thread tcore1 = new Thread(() => LoadControlledNR(forceVector));
+            //tcore1.Start();
+            //tcore1.Join();
+            double[] solution = LoadControlledNR(forceVector);
             return solution;
         }
 

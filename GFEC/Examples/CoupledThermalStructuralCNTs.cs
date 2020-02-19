@@ -48,7 +48,7 @@ namespace GFEC
 
 
         //External loads
-        const double externalStructuralLoad = -1000000.0;
+        const double externalStructuralLoad = -100000.0;
         const double externalHeatLoad = 2500.0 * 1e-9;
         //-----------------------------------------------------------------------------------
         //const double externalStructuralLoad = -5 * 100000000.0 * 1e-18 * 0.3;
@@ -102,15 +102,21 @@ namespace GFEC
         private static void CreateStructuralBoundaryConditions()
         {
             List<int> boundedDofs = new List<int>();
-            for (int i = 0; i < nodesInYCoor; i++)
-            {
-                boundedDofs.Add(i * 2 * nodesInXCoor + 1); //upper beam left side support
-            }
+            //for (int i = 0; i < nodesInYCoor; i++)
+            //{
+            //    boundedDofs.Add(i * 2 * nodesInXCoor + 1); //upper beam left side support
+            //}
 
             //for (int i = 0; i < nodesInYCoor; i++)
             //{
             //    boundedDofs.Add(i * 2 * nodesInXCoor + 2 * nodesInXCoor - 1); //upper beam right side support
             //}
+
+            for (int i = 0; i < nodesInYCoor; i++) //upper beam left side support
+            {
+                boundedDofs.Add(i * nodesInXCoor * 2 + 1);
+                boundedDofs.Add(i * nodesInXCoor * 2 + 2);
+            }
 
             for (int i = 1; i <= totalContactElements; i++)
             {
@@ -354,7 +360,7 @@ namespace GFEC
 
 
             ///structuralSolution = new StaticSolver();
-            structuralSolution.LinearScheme = new PCGSolver();
+            structuralSolution.LinearScheme = new LUFactorization();
             //structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
             structuralSolution.NonLinearScheme.Tolerance = 1e-6;
             structuralSolution.ActivateNonLinearSolver = true;
