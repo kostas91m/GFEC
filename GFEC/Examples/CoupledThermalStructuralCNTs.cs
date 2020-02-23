@@ -10,14 +10,14 @@ namespace GFEC
     public static class CoupledThermalStructuralCNTs
     {
         private const int totalNodes = 1010;
-        private const int totalContactElements = 20;//8;
+        private const int totalContactElements = 51;//20;//8;
         private const int totalElements = 800;
         private const int nodesInXCoor = 101;
         private const int nodesInYCoor = 5;
         private const double scaleFactor = 1.0;
         private const double xIntervals = 0.1;
         private const double yIntervals = 0.1;
-        private const double offset = 8.1;//9.3;
+        private const double offset = 5.0;//8.1;//9.3;
         private const double gap = 0.01;
         public static ISolver structuralSolution;
 
@@ -112,20 +112,26 @@ namespace GFEC
             //    boundedDofs.Add(i * 2 * nodesInXCoor + 2 * nodesInXCoor - 1); //upper beam right side support
             //}
 
-            for (int i = 0; i < nodesInYCoor; i++) //upper beam left side support
-            {
-                boundedDofs.Add(i * nodesInXCoor * 2 + 1);
-                boundedDofs.Add(i * nodesInXCoor * 2 + 2);
-            }
+            //for (int i = 0; i < nodesInYCoor; i++) //upper beam left side support
+            //{
+            //    boundedDofs.Add(i * nodesInXCoor * 2 + 1);
+            //    boundedDofs.Add(i * nodesInXCoor * 2 + 2);
+            //}
 
             for (int i = 1; i <= totalContactElements; i++)
             {
                 boundedDofs.Add(nodesInXCoor * nodesInYCoor * 2 + 2 * i); //lower beam lower side support
             }
-            for (int i = 0; i < nodesInYCoor; i++)
+            //for (int i = 0; i < nodesInYCoor; i++)
+            //{
+            //    boundedDofs.Add(nodesInYCoor * nodesInXCoor * 2 + nodesInXCoor * 2 * (i+1) - 1); //lower beam right side support
+            //}
+
+            for (int i = 0; i < totalNodes; i++)
             {
-                boundedDofs.Add(nodesInYCoor * nodesInXCoor * 2 + nodesInXCoor * 2 * (i+1) - 1); //lower beam right side support
+                boundedDofs.Add(i * 2 + 1); //support for all nodes at X direction
             }
+
             structuralBoundaryConditions = boundedDofs.ToArray<int>();
         }
 
@@ -333,7 +339,7 @@ namespace GFEC
             double[,] globalStiffnessMatrix = elementsAssembly.CreateTotalStiffnessMatrix();
 
             //Gnuplot graphs
-            //ShowToGUI.PlotInitialGeometry(elementsAssembly);
+            ShowToGUI.PlotInitialGeometry(elementsAssembly);
 
             Dictionary<int, INode> initialNodes = elementsAssembly.Nodes;
             double[] initialXCoord = Assembly.NodalCoordinatesToVectors(initialNodes).Item1;
@@ -360,11 +366,11 @@ namespace GFEC
 
 
             ///structuralSolution = new StaticSolver();
-            structuralSolution.LinearScheme = new LUFactorization();
+            structuralSolution.LinearScheme = new PCGSolver();
             //structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
-            structuralSolution.NonLinearScheme.Tolerance = 1e-6;
+            structuralSolution.NonLinearScheme.Tolerance = 1e-5;
             structuralSolution.ActivateNonLinearSolver = true;
-            structuralSolution.NonLinearScheme.numberOfLoadSteps = 10;
+            structuralSolution.NonLinearScheme.numberOfLoadSteps = 20;
 
             double[] externalForces3 = externalForcesStructuralVector;
             foreach (var dof in loadedStructuralDOFs)
@@ -379,7 +385,7 @@ namespace GFEC
             structuralSolution.Solve(reducedExternalForces3);
             double[] solvector3 = structuralSolution.GetSolution();
             elementsAssembly.UpdateDisplacements(solvector3);
-            //ShowToGUI.PlotFinalGeometry(elementsAssembly);
+            ShowToGUI.PlotFinalGeometry(elementsAssembly);
             double[] fullSolVector3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(solvector3, elementsAssembly.BoundedDOFsVector);
             Dictionary<int, INode> finalNodes = Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullSolVector3);
             double[] xFinalNodalCoor = Assembly.NodalCoordinatesToVectors(finalNodes).Item1;
