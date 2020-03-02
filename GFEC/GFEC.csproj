@@ -87,6 +87,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Assemble\AssemblyHelpMethods.cs" />
     <Compile Include="Elements\ContactNtN2DTh.cs" />
     <Compile Include="Elements\Quad4Th.cs" />
     <Compile Include="Examples\BeamDynamicExample.cs" />

@@ -39,7 +39,7 @@ namespace GFEC
             throw new Exception("Method not implemenented");
         }
 
-        private double CalculateConductivity()
+        public double CalculateConductivity()
         {
             double k = 19.2;
             double m = 0.072;
