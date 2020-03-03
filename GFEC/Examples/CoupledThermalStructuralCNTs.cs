@@ -414,6 +414,7 @@ namespace GFEC
 
             #region Thermal
             List<double[]> thermalSolutions = new List<double[]>();
+            List<Dictionary<int, double>> contactContactivityForEachStep = new List<Dictionary<int, double>>();
             for (int k = 1; k <= allStepsSolutions.Count; k++)
             {
                 IAssembly elementsAssembly2 = CreateThermalAssembly();
@@ -454,6 +455,9 @@ namespace GFEC
                 thermalSolution.Solve(reducedExternalHeatFlux);
                 double[] tempSol = thermalSolution.GetSolution();
                 thermalSolutions.Add(tempSol);
+
+                Dictionary<int, double> contactContactivity = AssemblyHelpMethods.RetrieveContactContactivity(thermalSolution.AssemblyData);
+                contactContactivityForEachStep.Add(contactContactivity);
             }
 
             int[] thermalBoundCond = thermalBoundaryConditions;

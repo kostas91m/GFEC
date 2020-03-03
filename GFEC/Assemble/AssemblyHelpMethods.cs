@@ -8,15 +8,16 @@ namespace GFEC
 {
     public static class AssemblyHelpMethods
     {
-        public static List<double> RetrieveContactContactivity(IAssembly assembly)
+        public static Dictionary<int,double> RetrieveContactContactivity(IAssembly assembly)
         {
-            List<double> contactElementContactivity = new List<double>();
+            Dictionary<int, double> contactElementContactivity = new Dictionary<int, double>();
             foreach (KeyValuePair<int, IElement> element in assembly.ElementsAssembly)
             {
                 if (element.Value.GetType() == typeof(ContactNtN2DTh))
                 {
                     double contactivity = ((ContactNtN2DTh)element.Value).CalculateConductivity();
-                    contactElementContactivity.Add(contactivity);
+                    int elementID = element.Key;
+                    contactElementContactivity.Add(elementID, contactivity);
                 }
             }
             return contactElementContactivity;
