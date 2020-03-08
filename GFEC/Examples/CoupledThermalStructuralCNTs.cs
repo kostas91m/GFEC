@@ -477,9 +477,13 @@ namespace GFEC
             ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol4), fullThermalSol4, @"C:\Users\Public\Documents\Results4.dat");
             ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol5), fullThermalSol5, @"C:\Users\Public\Documents\Results5.dat");
 
+            structuralSolutions.Add(fullStructuralSol1);
+            structuralSolutions.Add(fullStructuralSol2);
+            structuralSolutions.Add(fullStructuralSol3);
+            structuralSolutions.Add(fullStructuralSol4);
+            structuralSolutions.Add(fullStructuralSol5);
 
 
-            
 
             double[] Xvec1Final = new double[totalNodes/2];
             double[] Yvec1Final = new double[totalNodes/2];
@@ -522,23 +526,7 @@ namespace GFEC
             GnuPlot.KillProcess();
             #endregion
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            
 
 
             return new Results() { NonlinearSolution = structuralSolutions, SelectedDOF = 2, SolutionType = "Nonlinear" };

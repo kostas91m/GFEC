@@ -28,7 +28,7 @@ namespace GFEC
                     return ShowStaticNonLinearResults(analysisResults);
                     break;
                 default:
-                    return ShowDynamicLinearResults(analysisResults);
+                    return ShowStaticNonLinearResults(analysisResults);
                     break;
             }
         }
