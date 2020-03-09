@@ -15,9 +15,20 @@ using System.Windows;
 
 namespace GFEC
 {
-    public static class ShowToGUI
+    public class ShowToGUI
     {
-        public static SeriesCollection ShowResults(Results analysisResults)
+        public event EventHandler<ShowDiagramInGUIArgs> ShowDiagramInGUI;
+
+        protected virtual void OnShowDiagramInGUI(ShowDiagramInGUIArgs e)
+        {
+            EventHandler<ShowDiagramInGUIArgs> handler = ShowDiagramInGUI;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        public SeriesCollection ShowResults(Results analysisResults)
         {
             switch (analysisResults.SolutionType)
             {
@@ -33,7 +44,7 @@ namespace GFEC
             }
         }
 
-        private static SeriesCollection ShowDynamicLinearResults(Results analysisResults)
+        private SeriesCollection ShowDynamicLinearResults(Results analysisResults)
         {
             int countVector = analysisResults.DynamicSolution.Count;
             int step = 0;
@@ -72,7 +83,7 @@ namespace GFEC
             return graph;
         }
 
-        private static SeriesCollection ShowStaticNonLinearResults(Results analysisResults)
+        private SeriesCollection ShowStaticNonLinearResults(Results analysisResults)
         {
             var points = new ObservablePoint[analysisResults.NonlinearSolution.Count];
 
@@ -95,6 +106,8 @@ namespace GFEC
                     Values = new ChartValues<ObservablePoint>(points)
                 }
             };
+
+            OnShowDiagramInGUI(new ShowDiagramInGUIArgs(){ DiagramData = graph});
             return graph;
         }
 

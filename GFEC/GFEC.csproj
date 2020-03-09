@@ -120,6 +120,7 @@
     <Compile Include="IO Routines\HeatMapData.cs" />
     <Compile Include="IO Routines\IResults.cs" />
     <Compile Include="IO Routines\Results.cs" />
+    <Compile Include="IO Routines\ShowDiagramInGUIArgs.cs" />
     <Compile Include="IO Routines\ShowToGUI.cs" />
     <Compile Include="Solver\Dynamic.cs" />
     <Compile Include="Solver\Dynamic\CentralDifferences.cs" />

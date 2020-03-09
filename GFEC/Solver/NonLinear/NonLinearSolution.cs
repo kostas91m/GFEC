@@ -26,7 +26,11 @@ namespace GFEC
 
         protected void OnConvergenceResult(string message)
         {
-            convergenceResult.Invoke(this, message);
+            if (convergenceResult != null)
+            {
+                convergenceResult.Invoke(this, message);
+            }
+            
         }
     }
 }

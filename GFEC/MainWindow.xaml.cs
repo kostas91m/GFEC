@@ -47,6 +47,7 @@ namespace GFEC
             //SolveSelectedExample();
             selectedExample = ComboBox1.SelectedItem.ToString();
             Thread thread1 = new Thread(SolveSelectedExample);
+            thread1.SetApartmentState(ApartmentState.STA);
             thread1.Start();
             //thread1.Join();
             //Graph = ShowToGUI.ShowResults(solverResults);
@@ -127,6 +128,11 @@ namespace GFEC
                     finalResults = CoupledPhysicsExample.RunStaticExample();
                     break;
                 case "CoupledThermalStructural":
+                    CoupledThermalStructural.structuralSolution = new StaticSolver();
+                    CoupledThermalStructural.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+                    CoupledThermalStructural.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
+                    CoupledThermalStructural.diagramData = new ShowToGUI();
+                    CoupledThermalStructural.diagramData.ShowDiagramInGUI += c_ShowDiagramInGUI;
                     finalResults = CoupledThermalStructural.RunStaticExample();
                     break;
                 case "CoupledThermalStructuralCNTs":
@@ -150,6 +156,18 @@ namespace GFEC
             {
                 LogTool.Text = e;
             }));
+        }
+
+        private void c_ShowDiagramInGUI(object sender, ShowDiagramInGUIArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() =>
+            {
+                Graph = e.DiagramData;
+                Results.Text = "Test succeded";
+            }));
+            //Graph = e.DiagramData;
+            //Results.Text = "Test succeded";
+            //Environment.Exit(0);
         }
 
         private async void Import_Nodes_Button_Click(object sender, RoutedEventArgs args)

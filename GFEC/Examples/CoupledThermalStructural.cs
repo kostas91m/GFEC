@@ -18,6 +18,8 @@ namespace GFEC
         private const double yIntervals = 0.1;
         private const double offset = 0.7;
         private const double gap = 0.01;
+        public static ISolver structuralSolution;
+        public static ShowToGUI diagramData;
 
         //Boundary conditions
         //Model1
@@ -251,9 +253,9 @@ namespace GFEC
             ShowToGUI.PlotInitialGeometry(elementsAssembly);
 
 
-            ISolver structuralSolution = new StaticSolver();
+            //ISolver structuralSolution = new StaticSolver();
             structuralSolution.LinearScheme = new LUFactorization();
-            structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+            //structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
             structuralSolution.ActivateNonLinearSolver = true;
             structuralSolution.NonLinearScheme.numberOfLoadSteps = 10;
             //int[] BoundedDOFsVector2 = new int[] { 1, 2, 31, 32, 61, 62, 91, 92, 121, 122, 179, 180, 209, 210, 239, 240, 269, 270, 299, 300 };
@@ -498,8 +500,13 @@ namespace GFEC
 
 
 
-
-
+            
+            structuralSolutions.Add(fullStructuralSol1);
+            structuralSolutions.Add(fullStructuralSol2);
+            structuralSolutions.Add(fullStructuralSol3);
+            structuralSolutions.Add(fullStructuralSol4);
+            structuralSolutions.Add(fullStructuralSol5);
+            diagramData.ShowResults(new Results() { NonlinearSolution = structuralSolutions, SelectedDOF = 2, SolutionType = "Nonlinear" });
 
 
 
