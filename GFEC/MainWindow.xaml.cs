@@ -31,7 +31,7 @@ namespace GFEC
         private Dictionary<int, INode> nodes = new Dictionary<int, INode>();
         private Dictionary<int, Dictionary<int, int>> elementsConnectivity = new Dictionary<int, Dictionary<int, int>>();
         public string selectedExample;
-
+        public SeriesCollection Something { get; set; }
 
         public MainWindow()
         {
@@ -49,9 +49,21 @@ namespace GFEC
             Thread thread1 = new Thread(SolveSelectedExample);
             thread1.SetApartmentState(ApartmentState.STA);
             thread1.Start();
+            
+            Something = new SeriesCollection
+            {
+                new LineSeries
+                {
+                    Values = new ChartValues<double> { 3, 5, 7, 4 }
+                },
+                new ColumnSeries
+                {
+                    Values = new ChartValues<decimal> { 5, 6, 2, 7 }
+                }
+            };
             //thread1.Join();
             //Graph = ShowToGUI.ShowResults(solverResults);
-            
+
 
             //Dictionary<int, INode> nodes = new Dictionary<int, INode>();
             //nodes[1] = new Node(0.0, 0.01);
@@ -73,7 +85,7 @@ namespace GFEC
             //connectivity[4] = new Dictionary<int, int>() { { 1, 8 }, { 2, 9 }, { 3, 12 }, { 4, 11 } };
             //connectivity[5] = new Dictionary<int, int>() { { 1, 10 }, { 2, 11 }, { 3, 3 } };
             //Mesh = ShowToGUI.DrawMesh(nodes, connectivity);
-            
+
             DataContext = this;
 
             return;
