@@ -18,6 +18,7 @@ namespace GFEC
     public class ShowToGUI
     {
         public event EventHandler<ShowDiagramInGUIArgs> ShowDiagramInGUI;
+        public event EventHandler<SeriesCollection> TestEvent;
 
         protected virtual void OnShowDiagramInGUI(ShowDiagramInGUIArgs e)
         {
@@ -26,6 +27,32 @@ namespace GFEC
             {
                 handler(this, e);
             }
+        }
+
+        protected virtual void OnTestEvent(SeriesCollection e)
+        {
+            EventHandler<SeriesCollection> handler = TestEvent;
+            if (handler!=null)
+            {
+                handler(this, e);
+            }
+        }
+
+        public void TestEventMethod()
+        {
+            SeriesCollection Something = new SeriesCollection
+            {
+                new LineSeries
+                {
+                    Values = new ChartValues<double> { 3, 5, 7, 4 }
+                },
+                new ColumnSeries
+                {
+                    Values = new ChartValues<decimal> { 5, 6, 2, 7 }
+                }
+            };
+
+            OnTestEvent(Something);
         }
 
         public SeriesCollection ShowResults(Results analysisResults)

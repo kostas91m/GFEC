@@ -33,6 +33,8 @@ namespace GFEC
         public string selectedExample;
         public SeriesCollection Something { get; set; }
 
+        
+
         public MainWindow()
         {
             InitializeComponent();
@@ -45,22 +47,15 @@ namespace GFEC
         private void RunButton(object sender, RoutedEventArgs args)
         {
             //SolveSelectedExample();
+            CoupledThermalStructural.diagramData = new ShowToGUI();
+            CoupledThermalStructural.diagramData.TestEvent += TestEventMethod;
+            CoupledThermalStructural.diagramData.TestEventMethod();
             selectedExample = ComboBox1.SelectedItem.ToString();
             Thread thread1 = new Thread(SolveSelectedExample);
             thread1.SetApartmentState(ApartmentState.STA);
             thread1.Start();
             
-            Something = new SeriesCollection
-            {
-                new LineSeries
-                {
-                    Values = new ChartValues<double> { 3, 5, 7, 4 }
-                },
-                new ColumnSeries
-                {
-                    Values = new ChartValues<decimal> { 5, 6, 2, 7 }
-                }
-            };
+            
             //thread1.Join();
             //Graph = ShowToGUI.ShowResults(solverResults);
 
@@ -167,6 +162,14 @@ namespace GFEC
             Application.Current.Dispatcher.Invoke(new Action(() =>
             {
                 LogTool.Text = e;
+            }));
+        }
+
+        private void TestEventMethod(object sender, SeriesCollection e)
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() =>
+            {
+                Something = e;
             }));
         }
 
