@@ -97,6 +97,7 @@
     <Compile Include="Examples\CoupledPhysicsExample.cs" />
     <Compile Include="Examples\CoupledThermalStructural.cs" />
     <Compile Include="Examples\CoupledThermalStructuralCNTs.cs" />
+    <Compile Include="Examples\CoupledThermalStructuralCNTsInAngle.cs" />
     <Compile Include="Examples\DynamicExample.cs" />
     <Compile Include="Examples\ExplicitLinearExample.cs" />
     <Compile Include="Examples\LinearFrameExample.cs" />
