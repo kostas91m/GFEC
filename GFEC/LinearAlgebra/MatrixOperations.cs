@@ -9,6 +9,7 @@ namespace GFEC
 {
     static class MatrixOperations
     {
+        public static double[,] TempVariable;
         public static void PrintMatrix(double[,] matrix)
         {
             int matrixRows = matrix.GetLength(0);
@@ -90,6 +91,29 @@ namespace GFEC
             return sumMatrix;
         }
 
+        private static void DoAdditionCalculations(int row, double[,] matrix1, double[,] matrix2)
+        {
+            if (matrix1.GetLength(0) != matrix2.GetLength(0) || matrix1.GetLength(1) != matrix2.GetLength(1))
+            {
+                throw new Exception("Not equally sized matrices");
+            }
+            int matrixrows = matrix1.GetLength(0);
+            int matrixcols = matrix1.GetLength(1);
+            double[,] sumMatrix = new double[matrixrows, matrixcols];
+
+            for (int col = 0; col < matrixcols; col++)
+            {
+                sumMatrix[row, col] = matrix1[row, col] + matrix2[row, col];
+            }
+
+            TempVariable = sumMatrix;
+        }
+
+        public static void MatrixAdditionParallel(double[,] matrix1, double[,] matrix2)
+        {
+            Parallel.For(0, 2000, row => DoAdditionCalculations(row, matrix1, matrix2));
+        }
+
         public static double[,] MatrixSubtraction(double[,] matrix1, double[,] matrix2)
         {
             int matrixrows = matrix1.GetLength(0);
@@ -104,6 +128,37 @@ namespace GFEC
                 }
             }
             return sumMatrix;
+        }
+
+        public static double[,] MatrixAdditionParallel2(double[,] matrix1, double[,] matrix2)
+        {
+            int totalRows = 2000;
+            TempVariable = matrix1;
+            Task first = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, 0, 500));
+            Task second = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, 500, 1000));
+            Task third= Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, 1000, 1500));
+            Task fourth = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, 1500, 2000));
+            Task.WaitAll(first, second, third, fourth);
+            return TempVariable;
+        }
+        private static void MatrixAdditionParallel2Calculations(double[,] matrix2, int min, int max)
+        {
+            //if (matrix1.GetLength(0) != matrix2.GetLength(0) || matrix1.GetLength(1) != matrix2.GetLength(1))
+            //{
+            //    throw new Exception("Not equally sized matrices");
+            //}
+            //int matrixrows = matrix1.GetLength(0);
+            int matrixcols = matrix2.GetLength(1);
+            //double[,] sumMatrix = new double[matrixrows, matrixcols];
+
+            for (int row = min; row < max; row++)
+            {
+                for (int col = 0; col < matrixcols; col++)
+                {
+                    TempVariable[row, col] = TempVariable[row, col] + matrix2[row, col];
+                }
+            }
+
         }
 
         public static double[,] ScalarMatrixProduct(double scalar, double[,] matrix)

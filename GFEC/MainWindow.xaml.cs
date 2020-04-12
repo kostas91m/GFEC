@@ -99,6 +99,7 @@ namespace GFEC
             exampleList.Add("CoupledPhysicsExample");
             exampleList.Add("CoupledThermalStructural");
             exampleList.Add("CoupledThermalStructuralCNTs");
+            exampleList.Add("CoupledThermalStructuralCNTs2");
             exampleList.Add("CoupledThermalStructuralCNTsInAngle");
 
             ComboBox1.ItemsSource = exampleList;
@@ -148,6 +149,12 @@ namespace GFEC
                     CoupledThermalStructuralCNTs.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
                     CoupledThermalStructuralCNTs.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
                     finalResults = CoupledThermalStructuralCNTs.RunStaticExample();
+                    break;
+                case "CoupledThermalStructuralCNTs2":
+                    CoupledThermalStructuralCNTs2.structuralSolution = new StaticSolver();
+                    CoupledThermalStructuralCNTs2.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+                    CoupledThermalStructuralCNTs2.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
+                    finalResults = CoupledThermalStructuralCNTs2.RunStaticExample();
                     break;
                 case "CoupledThermalStructuralCNTsInAngle":
                     CoupledThermalStructuralCNTsInAngle.structuralSolution = new StaticSolver();
@@ -341,6 +348,11 @@ namespace GFEC
             }
             string path = @"C:\Users\Public\Documents\ContourDataY.dat";
             ExportToFile.CreateContourDataForMatlab(testVector, testVector, testVector, 5, 15, path);
+        }
+
+        private void Button_ParallelTest(object sender, RoutedEventArgs e)
+        {
+            MultiThreadingExample.RunStaticExample();
         }
     }
 

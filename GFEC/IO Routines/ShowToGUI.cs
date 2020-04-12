@@ -178,6 +178,10 @@ namespace GFEC
                         storedPlots.Add(new StoredPlot(X, Y, "with linespoints pt " + (int)PointStyles.SolidCircle + " lt rgb \"red\""));
                         //GnuPlot.Plot(X, Y, "with linespoints pt " + (int)PointStyles.SolidCircle + " lt rgb \"blue\"");
                     }
+                    else if (element.Value is ContactNtS2D)
+                    {
+                        storedPlots.Add(new StoredPlot(X, Y, "with linespoints pt " + (int)PointStyles.SolidCircle + " lt rgb \"red\""));
+                    }
                     else
                     {
                         storedPlots.Add(new StoredPlot(X, Y, "with linespoints pt " + (int)PointStyles.SolidCircle + " lt rgb \"blue\""));

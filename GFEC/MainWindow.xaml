@@ -21,6 +21,7 @@
         <TextBox x:Name="LogTool" x:FieldModifier="public" HorizontalAlignment="Right" Height="166" Margin="0,311,33,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="375"/>
         <Label Content="Convergence Results" HorizontalAlignment="Right" Margin="0,276,33,0" Width="375" Height="30" VerticalAlignment="Top"/>
         <lvc:CartesianChart Series="{Binding Something}" Margin="279,311,441,64" />
+        <Button Content="ParallelTest" HorizontalAlignment="Left" Margin="543,67,0,0" VerticalAlignment="Top" Width="123" Height="32" Click="Button_ParallelTest"/>
 
     </Grid>
 </Window>
