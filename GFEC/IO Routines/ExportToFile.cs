@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Xml.Schema;
 
 namespace GFEC
 {
@@ -77,6 +78,30 @@ namespace GFEC
             MatrixOperations.PrintMatrixToFile(yContour, path + "yData.dat");
             MatrixOperations.PrintMatrixToFile(zContour, path + "zData.dat");
 
+        }
+
+        public static void ExportMatlabInitialGeometry(IAssembly assembly)
+        {
+            List<string> coordinateData = new List<string>();
+            List<string> connectivityData = new List<string>();
+
+            foreach (var node in assembly.Nodes)
+            {
+                coordinateData.Add(node.Key.ToString() + " " + node.Value.XCoordinate.ToString() + " " + node.Value.YCoordinate.ToString());
+            }
+
+            foreach (var element in assembly.ElementsConnectivity)
+            {
+                string line = element.Key.ToString();
+                foreach (var elementNodes in element.Value)
+                {
+                    line = line + " " + elementNodes.Value.ToString();
+                }
+                connectivityData.Add(line);
+            }
+
+            File.WriteAllLines("C:/Users/Public/Documents", coordinateData);
+            File.WriteAllLines("C:/Users/Public/Documents", connectivityData);
         }
     }
 }
