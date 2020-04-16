@@ -84,24 +84,38 @@ namespace GFEC
         {
             List<string> coordinateData = new List<string>();
             List<string> connectivityData = new List<string>();
+            List<string> contactConnectivityData = new List<string>();
 
             foreach (var node in assembly.Nodes)
             {
-                coordinateData.Add(node.Key.ToString() + " " + node.Value.XCoordinate.ToString() + " " + node.Value.YCoordinate.ToString());
+                coordinateData.Add(node.Key.ToString() + "\t" + node.Value.XCoordinate.ToString() + "\t" + node.Value.YCoordinate.ToString());
             }
 
-            foreach (var element in assembly.ElementsConnectivity)
+            foreach (var element in assembly.ElementsAssembly)
             {
                 string line = element.Key.ToString();
-                foreach (var elementNodes in element.Value)
+
+                if (element.Value is ContactNtN2D)
                 {
-                    line = line + " " + elementNodes.Value.ToString();
+                    foreach (var elementNode in assembly.ElementsConnectivity[element.Key])
+                    {
+                        line = line + "\t" + elementNode.Value.ToString();
+                    }
+                    contactConnectivityData.Add(line);
                 }
-                connectivityData.Add(line);
+                else
+                {
+                    foreach (var elementNode in assembly.ElementsConnectivity[element.Key])
+                    {
+                        line = line + "\t" + elementNode.Value.ToString();
+                    }
+                    connectivityData.Add(line);
+                }
             }
 
-            File.WriteAllLines("C:/Users/Public/Documents", coordinateData);
-            File.WriteAllLines("C:/Users/Public/Documents", connectivityData);
+            File.WriteAllLines(@"C:\Users\Public\Documents\coordinateData.dat", coordinateData);
+            File.WriteAllLines(@"C:\Users\Public\Documents\connectivityData.dat", connectivityData);
+            File.WriteAllLines(@"C:\Users\Public\Documents\contactConnectivityData.dat", contactConnectivityData);
         }
     }
 }

@@ -252,6 +252,8 @@ namespace GFEC
             //Gnuplot graphs
             ShowToGUI.PlotInitialGeometry(elementsAssembly);
 
+            ExportToFile.ExportMatlabInitialGeometry(elementsAssembly);
+
 
             //ISolver structuralSolution = new StaticSolver();
             structuralSolution.LinearScheme = new LUFactorization();
