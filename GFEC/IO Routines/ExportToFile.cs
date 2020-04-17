@@ -117,5 +117,18 @@ namespace GFEC
             File.WriteAllLines(@"C:\Users\Public\Documents\connectivityData.dat", connectivityData);
             File.WriteAllLines(@"C:\Users\Public\Documents\contactConnectivityData.dat", contactConnectivityData);
         }
+
+        public static void ExportMatlabFinalGeometry(IAssembly assembly, double[] displacements)
+        {
+            List<string> finalCoordinateData = new List<string>();
+
+            Dictionary<int, INode> nodesAtFinalState = Assembly.CalculateFinalNodalCoordinates(assembly.Nodes, displacements);
+
+            foreach (var node in nodesAtFinalState)
+            {
+                finalCoordinateData.Add(node.Key.ToString() + "\t" + node.Value.XCoordinate.ToString() + "\t" + node.Value.YCoordinate.ToString());
+            }
+            File.WriteAllLines(@"C:\Users\Public\Documents\finalCoordinateData.dat", finalCoordinateData);
+        }
     }
 }

@@ -282,8 +282,11 @@ namespace GFEC
             structuralSolution.Solve(reducedExternalForces3);
             double[] solvector3 = structuralSolution.GetSolution();
             elementsAssembly.UpdateDisplacements(solvector3);
-            ShowToGUI.PlotFinalGeometry(elementsAssembly);
+            //ShowToGUI.PlotFinalGeometry(elementsAssembly);
+            
             double[] fullSolVector3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(solvector3, elementsAssembly.BoundedDOFsVector);
+
+            ExportToFile.ExportMatlabFinalGeometry(elementsAssembly, fullSolVector3);
             Dictionary<int, INode> finalNodes = Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullSolVector3);
             double[] xFinalNodalCoor = Assembly.NodalCoordinatesToVectors(finalNodes).Item1;
             double[] yFinalNodalCoor = Assembly.NodalCoordinatesToVectors(finalNodes).Item2;
