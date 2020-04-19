@@ -179,6 +179,14 @@ namespace GFEC
             }));
         }
 
+        private void PrintResultOnUI(object sender, string e)
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() =>
+            {
+                LogTool.Text = e;
+            }));
+        }
+
         private void TestEventMethod(object sender, SeriesCollection e)
         {
             Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -352,7 +360,9 @@ namespace GFEC
 
         private void Button_ParallelTest(object sender, RoutedEventArgs e)
         {
-            MultiThreadingExample.RunStaticExample();
+            MultiThreadingExample test1 = new MultiThreadingExample();
+            test1.timeElapsed += PrintResultOnUI;
+            test1.RunExample();
         }
     }
 

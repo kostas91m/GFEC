@@ -1,8 +1,10 @@
-﻿using System;
+﻿using OpenTK.Graphics.OpenGL;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace GFEC
@@ -10,6 +12,7 @@ namespace GFEC
     static class MatrixOperations
     {
         public static double[,] TempVariable;
+        public static bool ParallelCalculations { get; set; } = false;
         public static void PrintMatrix(double[,] matrix)
         {
             int matrixRows = matrix.GetLength(0);
@@ -24,6 +27,19 @@ namespace GFEC
                 Console.WriteLine();
             }
 
+        }
+
+        public static double[,] CreateRandomMatrix(int rows, int columns)
+        {
+            double[,] randomMatrix = new double[rows, columns];
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    randomMatrix[i, j] = new Random().NextDouble();
+                }
+            }
+            return randomMatrix;
         }
 
         public static double[,] CreateDiagonalMatrix(int dimension, double diagonalNumber)
@@ -73,22 +89,50 @@ namespace GFEC
 
         public static double[,] MatrixAddition(double[,] matrix1, double[,] matrix2)
         {
+            int threads, threadsAsync;
+            threads = 4;
+            //ThreadPool.GetAvailableThreads(out threads, out threadsAsync);
             if (matrix1.GetLength(0) != matrix2.GetLength(0) || matrix1.GetLength(1) != matrix2.GetLength(1))
             {
                 throw new Exception("Not equally sized matrices");
             }
-            int matrixrows = matrix1.GetLength(0);
-            int matrixcols = matrix1.GetLength(1);
-            double[,] sumMatrix = new double[matrixrows, matrixcols];
-
-            for (int row = 0; row < matrixrows; row++)
+            if (ParallelCalculations == true)
             {
-                for (int col = 0; col < matrixcols; col++)
-                {
-                    sumMatrix[row, col] = matrix1[row, col] + matrix2[row, col];
-                }
+                TempVariable = matrix1;
+                int totalRows = matrix1.GetLength(0);
+                int rowsForEachThread = 500;//totalRows / threads;
+                List<Task> tasks = new List<Task>(threads);
+                int k = 0;
+                //foreach (var task in tasks)
+                //{
+                //    Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, k, k+rowsForEachThread));
+                //    k = k + rowsForEachThread;
+                //}
+
+                Task first = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, 0, 500));
+                Task second = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, 500, 1000));
+                Task third = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, 1000, 1500));
+                Task fourth = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, 1500, 2000));
+                Task.WaitAll(first, second, third, fourth);
+                //Task.WaitAll(tasks.ToArray());
+                return TempVariable;
             }
-            return sumMatrix;
+            else
+            {
+                int matrixrows = matrix1.GetLength(0);
+                int matrixcols = matrix1.GetLength(1);
+                double[,] sumMatrix = new double[matrixrows, matrixcols];
+
+                for (int row = 0; row < matrixrows; row++)
+                {
+                    for (int col = 0; col < matrixcols; col++)
+                    {
+                        sumMatrix[row, col] = matrix1[row, col] + matrix2[row, col];
+                    }
+                }
+                return sumMatrix;
+            }
+            
         }
 
         private static void DoAdditionCalculations(int row, double[,] matrix1, double[,] matrix2)

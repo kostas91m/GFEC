@@ -17,6 +17,17 @@ namespace GFEC
             }
         }
 
+        public static double[] CreateRandomVector(int rows)
+        {
+            double[] randomVector = new double[rows];
+
+            for (int i = 0; i < rows; i++)
+            {
+                randomVector[i] = new Random().NextDouble();
+            }
+            return randomVector;
+        }
+
         public static double CalculateVectorLengthFromEndPoints(double X1, double X2, double Y1, double Y2)
         {
             double vectorLength = Math.Sqrt(Math.Pow((X2 - X1), 2) + Math.Pow((Y2 - Y1), 2));
