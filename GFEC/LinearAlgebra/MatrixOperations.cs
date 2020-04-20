@@ -12,6 +12,8 @@ namespace GFEC
     static class MatrixOperations
     {
         public static double[,] TempVariable;
+        public static double[,] TempVariable2;
+        public static double[,] TempVariable3;
         public static bool ParallelCalculations { get; set; } = false;
         public static void PrintMatrix(double[,] matrix)
         {
@@ -69,22 +71,57 @@ namespace GFEC
 
         public static double[,] MatrixProduct(double[,] matrix1, double[,] matrix2)
         {
-            int matrix1rows = matrix1.GetLength(0);
-            int matrix2cols = matrix2.GetLength(1);
-            double[,] productMatrix = new double[matrix1rows, matrix2cols];
-            for (int i = 0; i < matrix1rows; i++)
+            
+            if (ParallelCalculations == true)
             {
-                for (int j = 0; j < matrix2cols; j++)
+                TempVariable = matrix1;
+                TempVariable2 = matrix2;
+                TempVariable3 = new double[matrix1.GetLength(0), matrix2.GetLength(1)];
+                int rowsForEachThread = 400;
+                Task first = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, 0, rowsForEachThread));
+                Task second = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, 0, rowsForEachThread));
+                Task third = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, 0, rowsForEachThread));
+                Task fourth = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, 0, rowsForEachThread));
+                Task fifth = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, 0, rowsForEachThread));
+                Task.WaitAll(first, second, third, fourth, fifth);
+                return TempVariable3;
+            }
+            else
+            {
+                int matrix1rows = matrix1.GetLength(0);
+                int matrix2cols = matrix2.GetLength(1);
+                double[,] productMatrix = new double[matrix1rows, matrix2cols];
+                for (int i = 0; i < matrix1rows; i++)
+                {
+                    for (int j = 0; j < matrix2cols; j++)
+                    {
+                        double sum = 0;
+                        for (int k = 0; k < matrix2.GetLength(0); k++)
+                        {
+                            sum = sum + matrix1[i, k] * matrix2[k, j];
+                        }
+                        productMatrix[i, j] = sum;
+                    }
+                }
+                return productMatrix;
+            }
+            
+        }
+
+        private static void ParallelMatrixProductCalculations(int min, int max)
+        {
+            for (int i = min; i < max; i++)
+            {
+                for (int j = 0; j < TempVariable2.GetLength(1); j++)
                 {
                     double sum = 0;
-                    for (int k = 0; k < matrix2.GetLength(0); k++)
+                    for (int k = 0; k < TempVariable2.GetLength(0); k++)
                     {
-                        sum = sum + matrix1[i, k] * matrix2[k, j];
+                        sum = sum + TempVariable[i, k] * TempVariable2[k, j];
                     }
-                    productMatrix[i, j] = sum;
+                    TempVariable3[i, j] = sum;
                 }
             }
-            return productMatrix;
         }
 
         public static double[,] MatrixAddition(double[,] matrix1, double[,] matrix2)
@@ -100,21 +137,22 @@ namespace GFEC
             {
                 TempVariable = matrix1;
                 int totalRows = matrix1.GetLength(0);
-                int rowsForEachThread = 500;//totalRows / threads;
-                List<Task> tasks = new List<Task>(threads);
+                int rowsForEachThread = 400;//totalRows / threads;
+                Task[] tasks = new Task[threads];
                 int k = 0;
-                //foreach (var task in tasks)
+                //for (int i = 0; i < threads; i++)
                 //{
-                //    Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, k, k+rowsForEachThread));
-                //    k = k + rowsForEachThread;
+                //    tasks[i] = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, i * rowsForEachThread, i * rowsForEachThread + rowsForEachThread));
+                //    //k = k + rowsForEachThread;
                 //}
 
-                Task first = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, 0, 500));
-                Task second = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, 500, 1000));
-                Task third = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, 1000, 1500));
-                Task fourth = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, 1500, 2000));
-                Task.WaitAll(first, second, third, fourth);
-                //Task.WaitAll(tasks.ToArray());
+                Task first = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, 0, rowsForEachThread));
+                Task second = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, rowsForEachThread, rowsForEachThread*2));
+                Task third = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, rowsForEachThread*2, rowsForEachThread*3));
+                Task fourth = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, rowsForEachThread*3, rowsForEachThread*4));
+                Task fifth = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, rowsForEachThread * 4, rowsForEachThread * 5));
+                Task.WaitAll(first, second, third, fourth, fifth);
+                //Task.WaitAll(tasks);
                 return TempVariable;
             }
             else
