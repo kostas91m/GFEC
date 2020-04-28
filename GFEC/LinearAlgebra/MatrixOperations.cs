@@ -78,11 +78,11 @@ namespace GFEC
                 TempVariable2 = matrix2;
                 TempVariable3 = new double[matrix1.GetLength(0), matrix2.GetLength(1)];
                 int rowsForEachThread = 400;
-                Task first = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, 0, rowsForEachThread));
-                Task second = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, 0, rowsForEachThread));
-                Task third = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, 0, rowsForEachThread));
-                Task fourth = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, 0, rowsForEachThread));
-                Task fifth = Task.Run(() => MatrixAdditionParallel2Calculations(matrix2, 0, rowsForEachThread));
+                Task first = Task.Run(() => ParallelMatrixProductCalculations(0, rowsForEachThread));
+                Task second = Task.Run(() => ParallelMatrixProductCalculations(rowsForEachThread, rowsForEachThread * 2));
+                Task third = Task.Run(() => ParallelMatrixProductCalculations(rowsForEachThread * 2, rowsForEachThread * 3));
+                Task fourth = Task.Run(() => ParallelMatrixProductCalculations(rowsForEachThread * 3, rowsForEachThread * 4));
+                Task fifth = Task.Run(() => ParallelMatrixProductCalculations(rowsForEachThread * 4, rowsForEachThread * 5));
                 Task.WaitAll(first, second, third, fourth, fifth);
                 return TempVariable3;
             }
@@ -105,7 +105,6 @@ namespace GFEC
                 }
                 return productMatrix;
             }
-            
         }
 
         private static void ParallelMatrixProductCalculations(int min, int max)
