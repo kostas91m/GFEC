@@ -1,6 +1,7 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,7 @@ namespace GFEC
         public static double[,] TempVariable;
         public static double[,] TempVariable2;
         public static double[,] TempVariable3;
+        public static double[,] TempVariable4;
         public static bool ParallelCalculations { get; set; } = false;
         public static void PrintMatrix(double[,] matrix)
         {
@@ -74,9 +76,9 @@ namespace GFEC
             
             if (ParallelCalculations == true)
             {
-                TempVariable = matrix1;
-                TempVariable2 = matrix2;
-                TempVariable3 = new double[matrix1.GetLength(0), matrix2.GetLength(1)];
+                TempVariable2 = matrix1;
+                TempVariable3 = matrix2;
+                TempVariable4 = new double[matrix1.GetLength(0), matrix2.GetLength(1)];
                 int rowsForEachThread = 400;
                 Task first = Task.Run(() => ParallelMatrixProductCalculations(0, rowsForEachThread));
                 Task second = Task.Run(() => ParallelMatrixProductCalculations(rowsForEachThread, rowsForEachThread * 2));
@@ -84,7 +86,8 @@ namespace GFEC
                 Task fourth = Task.Run(() => ParallelMatrixProductCalculations(rowsForEachThread * 3, rowsForEachThread * 4));
                 Task fifth = Task.Run(() => ParallelMatrixProductCalculations(rowsForEachThread * 4, rowsForEachThread * 5));
                 Task.WaitAll(first, second, third, fourth, fifth);
-                return TempVariable3;
+                //Task.WaitAll(first);
+                return TempVariable4;
             }
             else
             {
@@ -111,14 +114,14 @@ namespace GFEC
         {
             for (int i = min; i < max; i++)
             {
-                for (int j = 0; j < TempVariable2.GetLength(1); j++)
+                for (int j = 0; j < TempVariable3.GetLength(1); j++)
                 {
                     double sum = 0;
-                    for (int k = 0; k < TempVariable2.GetLength(0); k++)
+                    for (int k = 0; k < TempVariable3.GetLength(0); k++)
                     {
-                        sum = sum + TempVariable[i, k] * TempVariable2[k, j];
+                        sum = sum + TempVariable2[i, k] * TempVariable3[k, j];
                     }
-                    TempVariable3[i, j] = sum;
+                    TempVariable4[i, j] = sum;
                 }
             }
         }
@@ -134,7 +137,8 @@ namespace GFEC
             }
             if (ParallelCalculations == true)
             {
-                TempVariable = matrix1;
+                TempVariable = (double[,])matrix1.Clone();
+
                 int totalRows = matrix1.GetLength(0);
                 int rowsForEachThread = 400;//totalRows / threads;
                 Task[] tasks = new Task[threads];

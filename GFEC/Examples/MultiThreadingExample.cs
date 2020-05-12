@@ -31,7 +31,7 @@ namespace GFEC
             MatrixOperations.ParallelCalculations = false;
             Stopwatch watch1 = Stopwatch.StartNew();
             result1 = MatrixOperations.MatrixAddition(matrix1, matrix2);
-            result1b = MatrixOperations.MatrixProduct(matrix1, result1);
+            result1b = MatrixOperations.MatrixProduct(matrix1, matrix2);
             result1c = VectorOperations.MatrixVectorProduct(result1b, vector1);
             result1d = VectorOperations.VectorNorm2(result1c);
             long first = watch1.ElapsedMilliseconds;
@@ -39,7 +39,7 @@ namespace GFEC
             MatrixOperations.ParallelCalculations = true;
             Stopwatch watch2= Stopwatch.StartNew();
             result2 = MatrixOperations.MatrixAddition(matrix1, matrix2);
-            result2b = MatrixOperations.MatrixProduct(matrix1, result2);
+            result2b = MatrixOperations.MatrixProduct(matrix1, matrix2);
             //result2 = MatrixOperations.TempVariable;
             result2c = VectorOperations.MatrixVectorProduct(result2b, vector1);
             result2d = VectorOperations.VectorNorm2(result2c);
