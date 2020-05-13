@@ -101,6 +101,7 @@ namespace GFEC
             exampleList.Add("CoupledThermalStructuralCNTs");
             exampleList.Add("CoupledThermalStructuralCNTs2");
             exampleList.Add("CoupledThermalStructuralCNTsInAngle");
+            exampleList.Add("CoupledThermalStructuralCNTsInAngle2");
             exampleList.Add("CoupledThermalStructural2");
 
             ComboBox1.ItemsSource = exampleList;
@@ -170,6 +171,12 @@ namespace GFEC
                     CoupledThermalStructuralCNTsInAngle.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
                     CoupledThermalStructuralCNTsInAngle.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
                     finalResults = CoupledThermalStructuralCNTsInAngle.RunStaticExample();
+                    break;
+                case "CoupledThermalStructuralCNTsInAngle2":
+                    CoupledThermalStructuralCNTsInAngle2.structuralSolution = new StaticSolver();
+                    CoupledThermalStructuralCNTsInAngle2.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+                    CoupledThermalStructuralCNTsInAngle2.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
+                    finalResults = CoupledThermalStructuralCNTsInAngle2.RunStaticExample();
                     break;
                 default:
                     finalResults = TwoQuadsExample.RunStaticExample();
