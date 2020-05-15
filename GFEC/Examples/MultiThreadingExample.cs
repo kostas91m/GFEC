@@ -45,7 +45,7 @@ namespace GFEC
             result2d = VectorOperations.VectorNorm2(result2c);
             long second = watch2.ElapsedMilliseconds;
 
-            string timeForCalculations = "Elapsed time for single threaded operation: " + first.ToString() + " -Result is:" + result1d + "\n" + "Elapsed time for multithreaded operation (Parallel for): " + second.ToString() + " -Result is:" + result2d;
+            string timeForCalculations = "Elapsed time for single threaded operation: " + first.ToString() + " -Result is:" + result1d + "\n" + "Elapsed time for multithreaded operation: " + second.ToString() + " -Result is:" + result2d;
             OnTimeElapsed(timeForCalculations);
         }
     }

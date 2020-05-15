@@ -49,7 +49,7 @@ namespace GFEC
 
 
         //External loads
-        const double externalStructuralLoad = -100000.0;
+        const double externalStructuralLoad = -10000.0;
         const double externalHeatLoad = 2500.0 * 1e-9;
         //-----------------------------------------------------------------------------------
         //const double externalStructuralLoad = -5 * 100000000.0 * 1e-18 * 0.3;
@@ -113,24 +113,30 @@ namespace GFEC
             //    boundedDofs.Add(i * 2 * nodesInXCoor + 2 * nodesInXCoor - 1); //upper beam right side support
             //}
 
-            //for (int i = 0; i < nodesInYCoor; i++) //upper beam left side support
-            //{
-            //    boundedDofs.Add(i * nodesInXCoor * 2 + 1);
-            //    boundedDofs.Add(i * nodesInXCoor * 2 + 2);
-            //}
-
-            for (int i = 1; i <= totalContactElements; i++)
+            for (int i = 0; i < nodesInYCoor; i++) //upper beam left side support
             {
-                boundedDofs.Add(nodesInXCoor * nodesInYCoor * 2 + 2 * i); //lower beam lower side support
+                boundedDofs.Add(i * nodesInXCoor * 2 + 1);
+                boundedDofs.Add(i * nodesInXCoor * 2 + 2);
             }
+
+            //for (int i = 1; i <= totalContactElements; i++)
+            //{
+            //    boundedDofs.Add(nodesInXCoor * nodesInYCoor * 2 + 2 * i); //lower beam lower side support
+            //}
             //for (int i = 0; i < nodesInYCoor; i++)
             //{
             //    boundedDofs.Add(nodesInYCoor * nodesInXCoor * 2 + nodesInXCoor * 2 * (i+1) - 1); //lower beam right side support
             //}
 
-            for (int i = 0; i < totalNodes; i++)
+            //for (int i = 0; i < totalNodes; i++)
+            //{
+            //    boundedDofs.Add(i * 2 + 1); //support for all nodes at X direction
+            //}
+
+            for (int i = totalNodes/2 + 1; i < totalNodes; i++)
             {
-                boundedDofs.Add(i * 2 + 1); //support for all nodes at X direction
+                boundedDofs.Add(i * 2 + 0);
+                boundedDofs.Add(i * 2 + 1); //lower beam support for all nodes
             }
 
             structuralBoundaryConditions = boundedDofs.ToArray<int>();
