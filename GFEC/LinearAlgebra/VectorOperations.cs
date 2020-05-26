@@ -17,6 +17,17 @@ namespace GFEC
             }
         }
 
+        public static double[] CreateRandomVector(int rows)
+        {
+            double[] randomVector = new double[rows];
+
+            for (int i = 0; i < rows; i++)
+            {
+                randomVector[i] = new Random().NextDouble();
+            }
+            return randomVector;
+        }
+
         public static double CalculateVectorLengthFromEndPoints(double X1, double X2, double Y1, double Y2)
         {
             double vectorLength = Math.Sqrt(Math.Pow((X2 - X1), 2) + Math.Pow((Y2 - Y1), 2));
@@ -158,6 +169,32 @@ namespace GFEC
                 resultVector[row] = scalar * vector[row];
             }
             return resultVector;
+        }
+
+        public static double[,] ConvertVectorToMatrix(double[] vector, int rows, int columns)
+        {
+            double[,] matrix = new double[rows, columns];
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    matrix[i, j] = vector[i * columns + j];
+                }
+            }
+            return matrix;
+        }
+
+        public static double[,] ConvertVectorToOppositeMatrix(double[] vector, int rows, int columns)
+        {
+            double[,] matrix = new double[rows, columns];
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    matrix[rows-i-1, j] = vector[i * columns + j];
+                }
+            }
+            return matrix;
         }
 
     }

@@ -112,6 +112,9 @@ namespace GFEC
                     case "Quad4Th2":
                         ElementsAssembly[elem] = new Quad4Th2(ElementsProperties[elem], elementNodes);
                         break;
+                    case "ContactNtS2DTh":
+                        ElementsAssembly[elem] = new ContactNtS2DTh(ElementsProperties[elem], elementNodes);
+                        break;
                     case "ContactNtN2DTh":
                         ElementsAssembly[elem] = new ContactNtN2DTh(ElementsProperties[elem], elementNodes);
                         break;

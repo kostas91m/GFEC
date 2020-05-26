@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GFEC
 {
-    interface ISolver
+    public interface ISolver
     {
         ILinearSolution LinearScheme { get; set; }
         IAssembly AssemblyData { get; set; }

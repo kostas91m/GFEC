@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading;
 
 namespace GFEC
 {
-    class LoadControlledNewtonRaphson : NonLinearSolution
+    public class LoadControlledNewtonRaphson : NonLinearSolution
     {
         private double[] localSolutionVector;
-        
+
         public LoadControlledNewtonRaphson()
         {
 
@@ -34,13 +33,14 @@ namespace GFEC
                 discretization.UpdateDisplacements(solutionVector);
                 internalForcesTotalVector = discretization.CreateTotalInternalForcesVector();
                 double[,] stiffnessMatrix = discretization.CreateTotalStiffnessMatrix();
+                //OnConvergenceResult("Newton-Raphson: Solution not converged at load step" + i); 
                 dU = linearSolver.Solve(stiffnessMatrix, incrementDf);
                 solutionVector = VectorOperations.VectorVectorAddition(solutionVector, dU);
                 residual = VectorOperations.VectorVectorSubtraction(internalForcesTotalVector, incrementalExternalForcesVector);
                 residualNorm = VectorOperations.VectorNorm2(residual);
                 int iteration = 0;
                 Array.Clear(deltaU, 0, deltaU.Length);
-                while (residualNorm > tolerance && iteration < maxIterations)
+                while (residualNorm > Tolerance && iteration < MaxIterations)
                 {
                     stiffnessMatrix = discretization.CreateTotalStiffnessMatrix();
                     deltaU = VectorOperations.VectorVectorSubtraction(deltaU, linearSolver.Solve(stiffnessMatrix, residual));
@@ -49,17 +49,31 @@ namespace GFEC
                     internalForcesTotalVector = discretization.CreateTotalInternalForcesVector();
                     residual = VectorOperations.VectorVectorSubtraction(internalForcesTotalVector, incrementalExternalForcesVector);
                     residualNorm = VectorOperations.VectorNorm2(residual);
+                    if (residualNorm <= Tolerance)
+                    {
+                        OnConvergenceResult("Newton-Raphson: Load Step "+i+ " - Solution converged at iteration " + iteration + " - Residual Norm = " +residualNorm);
+                    }
+                    else
+                    {
+                        OnConvergenceResult("Newton-Raphson: Load Step " + i + " - Solution not converged at iteration " + iteration + " - Residual Norm = " + residualNorm);
+                    }
                     iteration = iteration + 1;
+                    //(Application.Current.Windows[0] as MainWindow).LogTool.Text = "ok"; 
+                    //OnConvergenceResult("Newton-Raphson: Solution not converged at load step" + iteration);
                 }
                 InternalForces.Add(i + 1, internalForcesTotalVector);
                 solutionVector = VectorOperations.VectorVectorAddition(solutionVector, deltaU);
                 Solutions.Add(i + 1, solutionVector);
-                if (iteration >= maxIterations) Console.WriteLine("Newton-Raphson: Solution not converged at current iterations");
-            }
+                if (iteration >= MaxIterations)
+                {
+                    OnConvergenceResult("Newton-Raphson did not converge at Load Step " + i + ". Exiting solution.");
+                    break;
+                }
 
+            }
             return solutionVector;
         }
-
+        
         public override double[] Solve(IAssembly assembly, ILinearSolution linearScheme, double[] forceVector)
         {
             InternalForces = new Dictionary<int, double[]>();
@@ -71,6 +85,11 @@ namespace GFEC
             discretization = assembly;
             linearSolver = linearScheme;
             lambda = 1.0 / numberOfLoadSteps;
+            //double[] solution = null;
+
+            //Thread tcore1 = new Thread(() => LoadControlledNR(forceVector));
+            //tcore1.Start();
+            //tcore1.Join();
             double[] solution = LoadControlledNR(forceVector);
             return solution;
         }

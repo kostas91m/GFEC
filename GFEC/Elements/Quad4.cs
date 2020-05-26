@@ -183,6 +183,7 @@ namespace GFEC
         private double[,] CalculateStressStrainMatrix(double E, double v)
         {
             double[,] Ematrix = new double[3, 3];
+            v = 0.30;
             double Ehat = E / ((1.0 - Math.Pow(v, 2)));
 
             Ematrix[0, 0] = Ehat;
@@ -213,7 +214,7 @@ namespace GFEC
         public double[,] CreateGlobalStiffnessMatrix()
         {
             double[,] K = new double[8, 8];
-            double[,] E = CalculateStressStrainMatrix(Properties.YoungMod, 1.0 / 3.0); //needs fixing in poisson v
+            double[,] E = CalculateStressStrainMatrix(Properties.YoungMod, 0.30); //needs fixing in poisson v
 
             for (int i = 0; i < 2; i++)
             {
@@ -305,7 +306,7 @@ namespace GFEC
         public double[] CreateInternalGlobalForcesVector()
         {
             double[] F = new double[8];
-            double[,] E = CalculateStressStrainMatrix(Properties.YoungMod, 1.0 / 3.0); //needs fixing in poisson v
+            double[,] E = CalculateStressStrainMatrix(Properties.YoungMod, 0.30); //needs fixing in poisson v
 
             for (int i = 0; i < 2; i++)
             {

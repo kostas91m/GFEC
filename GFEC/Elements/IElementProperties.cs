@@ -14,10 +14,15 @@ namespace GFEC
         double Density { get; set; }
         double Thickness { get; set; }
         double ThermalConductivity { get; set; }
-        double lx { get; set; }
-        double ly { get; set; }
-
         double ContactForceValue { get; set; }
+        double ContactThermalConductivity { get; set; }
+        double SurfaceRoughness { get; set; }
+        double YieldStrength { get; set; }
+        double Dx1 { get; set; }
+        double Dx2 { get; set; }
+        double Dx { get; set; }
+        double A { get; set; }
+        double B { get; set; }
     }
 }
 

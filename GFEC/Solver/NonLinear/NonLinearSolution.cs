@@ -11,18 +11,26 @@ namespace GFEC
         protected int[] boundaryDof;
         protected IAssembly discretization;
         protected double lambda;
-        protected double tolerance = 1e-5;
-        protected int maxIterations = 100;
+        public double Tolerance { get; set; } = 1e-5;
+        public int MaxIterations { get; set; } = 150;
         public bool PrintResidual { get; set; } = false;
         protected ILinearSolution linearSolver;
         public Dictionary<int, double[]> InternalForces { get; set; }
         public Dictionary<int, double[]> Solutions { get; set; }
+        public event EventHandler<string> convergenceResult;
 
         public virtual double[] Solve(IAssembly assembly, ILinearSolution linearScheme, double[] forceVector)
         {
             throw new Exception("LinearSolution.Solve not implemented");
         }
 
-
+        protected void OnConvergenceResult(string message)
+        {
+            if (convergenceResult != null)
+            {
+                convergenceResult.Invoke(this, message);
+            }
+            
+        }
     }
 }

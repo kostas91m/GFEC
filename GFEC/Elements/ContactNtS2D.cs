@@ -40,7 +40,11 @@ namespace GFEC
 
         public Dictionary<int, INode> NodesAtFinalState()
         {
-            throw new Exception("Method not implemenented");
+            Dictionary<int, INode> finalNodes = new Dictionary<int, INode>();
+            finalNodes[1] = new Node(Nodes[1].XCoordinate + DisplacementVector[0], Nodes[1].YCoordinate + DisplacementVector[1]);
+            finalNodes[2] = new Node(Nodes[2].XCoordinate + DisplacementVector[2], Nodes[2].YCoordinate + DisplacementVector[3]);
+            finalNodes[2] = new Node(Nodes[3].XCoordinate + DisplacementVector[4], Nodes[3].YCoordinate + DisplacementVector[5]);
+            return finalNodes;
         }
 
         private double ClosestPointProjection()

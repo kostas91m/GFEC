@@ -30,6 +30,10 @@ namespace GFEC
         private Results solverResults;
         private Dictionary<int, INode> nodes = new Dictionary<int, INode>();
         private Dictionary<int, Dictionary<int, int>> elementsConnectivity = new Dictionary<int, Dictionary<int, int>>();
+        public string selectedExample;
+        public SeriesCollection Something { get; set; }
+
+        
 
         public MainWindow()
         {
@@ -42,8 +46,18 @@ namespace GFEC
 
         private void RunButton(object sender, RoutedEventArgs args)
         {
-            SolveSelectedExample();
-            Graph = ShowToGUI.ShowResults(solverResults);
+            //SolveSelectedExample();
+            CoupledThermalStructural.diagramData = new ShowToGUI();
+            CoupledThermalStructural.diagramData.TestEvent += TestEventMethod;
+            CoupledThermalStructural.diagramData.TestEventMethod();
+            selectedExample = ComboBox1.SelectedItem.ToString();
+            Thread thread1 = new Thread(SolveSelectedExample);
+            thread1.SetApartmentState(ApartmentState.STA);
+            thread1.Start();
+            
+            
+            //thread1.Join();
+            //Graph = ShowToGUI.ShowResults(solverResults);
 
 
             //Dictionary<int, INode> nodes = new Dictionary<int, INode>();
@@ -84,22 +98,13 @@ namespace GFEC
             exampleList.Add("TwoQuadsInContactNewExample");
             exampleList.Add("CoupledPhysicsExample");
             exampleList.Add("CoupledThermalStructural");
-            exampleList.Add("CoupledThermalStructural_0001fy");
-            exampleList.Add("CoupledThermalStructural_0002fy");
-            exampleList.Add("CoupledThermalStructural_0005fy");
-            exampleList.Add("CoupledThermalStructural_001fy");
-            exampleList.Add("CoupledThermalStructural_029L_0001fy");
-            exampleList.Add("CoupledThermalStructural_029L_0002fy");
-            exampleList.Add("CoupledThermalStructural_029L_0005fy");
-            exampleList.Add("CoupledThermalStructural_029L_001fy");
-            exampleList.Add("CoupledThermalStructural_0143L_0001fy");
-            exampleList.Add("CoupledThermalStructural_0143L_0002fy");
-            exampleList.Add("CoupledThermalStructural_0143L_0005fy");
-            exampleList.Add("CoupledThermalStructural_0143L_001fy");
-            exampleList.Add("CoupledThermalStructural_0001fy_DenserMesh");
-            exampleList.Add("CoupledThermalStructural_0002fy_DenserMesh");
-            exampleList.Add("CoupledThermalStructural_0005fy_DenserMesh");
-            exampleList.Add("CoupledThermalStructural_001fy_DenserMesh");
+            exampleList.Add("CoupledThermalStructuralCNTs");
+            exampleList.Add("CoupledThermalStructuralCNTs2");
+            exampleList.Add("CoupledThermalStructuralCNTsInAngle");
+            exampleList.Add("CoupledThermalStructuralCNTsInAngle2");
+            exampleList.Add("CoupledThermalStructuralCNTsInAngle3");
+            exampleList.Add("CoupledThermalStructural2");
+
             ComboBox1.ItemsSource = exampleList;
         }
 
@@ -107,7 +112,7 @@ namespace GFEC
         {
             Results finalResults;
             Tuple<Dictionary<int, double[]>, Dictionary<int, double>> results;
-            string selectedExample = ComboBox1.SelectedItem.ToString();
+            //string selectedExample = ComboBox1.SelectedItem.ToString();
             switch (selectedExample)
             {
                 case "TwoQuadsExample":
@@ -135,55 +140,54 @@ namespace GFEC
                     finalResults = CoupledPhysicsExample.RunStaticExample();
                     break;
                 case "CoupledThermalStructural":
+                    CoupledThermalStructural.structuralSolution = new StaticSolver();
+                    CoupledThermalStructural.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+                    CoupledThermalStructural.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
+                    CoupledThermalStructural.diagramData = new ShowToGUI();
+                    CoupledThermalStructural.diagramData.ShowDiagramInGUI += c_ShowDiagramInGUI;
                     finalResults = CoupledThermalStructural.RunStaticExample();
                     break;
-                case "CoupledThermalStructural_0001fy":
-                    finalResults = CoupledThermalStructural_0001fy.RunStaticExample();
+                case "CoupledThermalStructural2":
+                    CoupledThermalStructural2.structuralSolution = new StaticSolver();
+                    CoupledThermalStructural2.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+                    CoupledThermalStructural2.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
+                    CoupledThermalStructural2.diagramData = new ShowToGUI();
+                    CoupledThermalStructural2.diagramData.ShowDiagramInGUI += c_ShowDiagramInGUI;
+                    finalResults = CoupledThermalStructural2.RunStaticExample();
                     break;
-                case "CoupledThermalStructural_0002fy":
-                    finalResults = CoupledThermalStructural_0002fy.RunStaticExample();
+                case "CoupledThermalStructuralCNTs":
+                    CoupledThermalStructuralCNTs.structuralSolution = new StaticSolver(); 
+                    CoupledThermalStructuralCNTs.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+                    CoupledThermalStructuralCNTs.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
+                    finalResults = CoupledThermalStructuralCNTs.RunStaticExample();
                     break;
-                case "CoupledThermalStructural_0005fy":
-                    finalResults = CoupledThermalStructural_0005fy.RunStaticExample();
+                case "CoupledThermalStructuralCNTs2":
+                    CoupledThermalStructuralCNTs2.structuralSolution = new StaticSolver();
+                    CoupledThermalStructuralCNTs2.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+                    CoupledThermalStructuralCNTs2.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
+                    finalResults = CoupledThermalStructuralCNTs2.RunStaticExample();
                     break;
-                case "CoupledThermalStructural_001fy":
-                    finalResults = CoupledThermalStructural_001fy.RunStaticExample();
+                case "CoupledThermalStructuralCNTsInAngle":
+                    CoupledThermalStructuralCNTsInAngle.structuralSolution = new StaticSolver();
+                    CoupledThermalStructuralCNTsInAngle.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+                    CoupledThermalStructuralCNTsInAngle.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
+                    finalResults = CoupledThermalStructuralCNTsInAngle.RunStaticExample();
                     break;
-                case "CoupledThermalStructural_029L_0001fy":
-                    finalResults = CoupledThermalStructural_029L_0001fy.RunStaticExample();
+                case "CoupledThermalStructuralCNTsInAngle2":
+                    CoupledThermalStructuralCNTsInAngle2.structuralSolution = new StaticSolver();
+                    CoupledThermalStructuralCNTsInAngle2.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+                    CoupledThermalStructuralCNTsInAngle2.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
+                    finalResults = CoupledThermalStructuralCNTsInAngle2.RunStaticExample();
                     break;
-                case "CoupledThermalStructural_029L_0002fy":
-                    finalResults = CoupledThermalStructural_029L_0002fy.RunStaticExample();
-                    break;
-                case "CoupledThermalStructural_029L_0005fy":
-                    finalResults = CoupledThermalStructural_029L_0005fy.RunStaticExample();
-                    break;
-                case "CoupledThermalStructural_029L_001fy":
-                    finalResults = CoupledThermalStructural_029L_001fy.RunStaticExample();
-                    break;
-                case "CoupledThermalStructural_0143L_0001fy":
-                    finalResults = CoupledThermalStructural_0143L_0001fy.RunStaticExample();
-                    break;
-                case "CoupledThermalStructural_0143L_0002fy":
-                    finalResults = CoupledThermalStructural_0143L_0002fy.RunStaticExample();
-                    break;
-                case "CoupledThermalStructural_0143L_0005fy":
-                    finalResults = CoupledThermalStructural_0143L_0005fy.RunStaticExample();
-                    break;
-                case "CoupledThermalStructural_0143L_001fy":
-                    finalResults = CoupledThermalStructural_0143L_001fy.RunStaticExample();
-                    break;
-                case "CoupledThermalStructural_0001fy_DenserMesh":
-                    finalResults = CoupledThermalStructural_0001fy_DenserMesh.RunStaticExample();
-                    break;
-                case "CoupledThermalStructural_0002fy_DenserMesh":
-                    finalResults = CoupledThermalStructural_0002fy_DenserMesh.RunStaticExample();
-                    break;
-                case "CoupledThermalStructural_0005fy_DenserMesh":
-                    finalResults = CoupledThermalStructural_0005fy_DenserMesh.RunStaticExample();
-                    break;
-                case "CoupledThermalStructural_001fy_DenserMesh":
-                    finalResults = CoupledThermalStructural_001fy_DenserMesh.RunStaticExample();
+                case "CoupledThermalStructuralCNTsInAngle3":
+                    CoupledThermalStructuralCNTsInAngle3.structuralSolution = new StaticSolver();
+                    CoupledThermalStructuralCNTsInAngle3.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+                    CoupledThermalStructuralCNTsInAngle3.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
+                    //finalResults = CoupledThermalStructuralCNTsInAngle3.RunStaticExample();
+                    //CoupledThermalStructuralCNTsInAngle3.thermalSolution = new StaticSolver();
+                    //CoupledThermalStructuralCNTsInAngle3.thermalSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+                    //CoupledThermalStructuralCNTsInAngle3.thermalSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
+                    finalResults = CoupledThermalStructuralCNTsInAngle3.RunStaticExample();
                     break;
                 default:
                     finalResults = TwoQuadsExample.RunStaticExample();
@@ -192,6 +196,42 @@ namespace GFEC
             //Results.Text = solution[0].ToString();
 
             solverResults = finalResults;
+        }
+
+        private void NonLinearScheme_convergenceResult(object sender, string e)
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() =>
+            {
+                LogTool.Text = e;
+            }));
+        }
+
+        private void PrintResultOnUI(object sender, string e)
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() =>
+            {
+                LogTool.Text = e;
+            }));
+        }
+
+        private void TestEventMethod(object sender, SeriesCollection e)
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() =>
+            {
+                Something = e;
+            }));
+        }
+
+        private void c_ShowDiagramInGUI(object sender, ShowDiagramInGUIArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() =>
+            {
+                Graph = e.DiagramData;
+                Results.Text = "Test succeded";
+            }));
+            //Graph = e.DiagramData;
+            //Results.Text = "Test succeded";
+            //Environment.Exit(0);
         }
 
         private async void Import_Nodes_Button_Click(object sender, RoutedEventArgs args)
@@ -329,6 +369,27 @@ namespace GFEC
 
             gnuplotImage.Source = null;
             gnuplotImage.Source = new BitmapImage(new Uri("file://" + AppContext.BaseDirectory + "gnuplot.png"));
+        }
+
+        private void Button_Test(object sender, RoutedEventArgs e)
+        {
+            double[] testVector = new double[75];
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 15; j++)
+                {
+                    testVector[i * 15 + j] = i;
+                }
+            }
+            string path = @"C:\Users\Public\Documents\ContourDataY.dat";
+            ExportToFile.CreateContourDataForMatlab(testVector, testVector, testVector, 5, 15, path);
+        }
+
+        private void Button_ParallelTest(object sender, RoutedEventArgs e)
+        {
+            MultiThreadingExample test1 = new MultiThreadingExample();
+            test1.timeElapsed += PrintResultOnUI;
+            test1.RunExample();
         }
     }
 

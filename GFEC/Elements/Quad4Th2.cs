@@ -14,9 +14,8 @@ namespace GFEC
         public double[] DisplacementVector { get; set; }
         public double[] AccelerationVector { get; set; }
         public double kc;
-        public double a;
-        public double b;
-
+        private double A { get; set; }
+        private double B { get; set; }
         //private double thickness = 1.0; //To be included in Element Properties
         //private double density = 1.0; //To be included in Element Properties
 
@@ -29,40 +28,38 @@ namespace GFEC
             ElementFreedomSignature[3] = new bool[] { true, false, false, false, false, false };
             ElementFreedomSignature[4] = new bool[] { true, false, false, false, false, false };
             DisplacementVector = new double[4];
+            A = properties.A;
+            B = properties.B;
         }
 
         public Dictionary<int, INode> NodesAtFinalState()
         {
             throw new Exception("Method not implemenented");
         }
-
         public double[,] CreateGlobalStiffnessMatrix()
         {
             kc = Properties.ThermalConductivity;
-            a = Properties.lx;
-            b = Properties.ly;
             double[,] K = new double[4, 4];
 
-            K[0, 0] = kc / (6.0 * a * b) * 2 * (Math.Pow(a,2)+ Math.Pow(b, 2));
-            K[0, 1] = kc / (6.0 * a * b) * (Math.Pow(a, 2) -2 * Math.Pow(b, 2));
-            K[0, 2] = kc / (6.0 * a * b) * (- Math.Pow(a, 2) - Math.Pow(b, 2));
-            K[0, 3] = kc / (6.0 * a * b) * (Math.Pow(b, 2) - 2 * Math.Pow(a, 2));
-
+            K[0, 0] = 2 * (Math.Pow(A, 2) + Math.Pow(B, 2)) * kc / (6.0 * A * B);
+            K[0, 1] = (Math.Pow(A, 2) - 2 * Math.Pow(B, 2)) * kc / (6.0 * A * B);
+            K[0, 2] = -(Math.Pow(A, 2) + Math.Pow(B, 2)) * kc / (6.0 * A * B);
+            K[0, 3] = (Math.Pow(B, 2) - 2 * Math.Pow(A, 2)) * kc / (6.0 * A * B);
 
             K[1, 0] = K[0, 1];
-            K[1, 1] = kc / (6.0 * a * b) * 2 * (Math.Pow(a, 2) + Math.Pow(b, 2));
-            K[1, 2] = kc / (6.0 * a * b) * (Math.Pow(b, 2) - 2 * Math.Pow(a, 2));
-            K[1, 3] = kc / (6.0 * a * b) * (- Math.Pow(a, 2) - Math.Pow(b, 2));
+            K[1, 1] = 2 * (Math.Pow(A, 2) + Math.Pow(B, 2)) * kc / (6.0 * A * B);
+            K[1, 2] = (Math.Pow(B, 2) - 2 * Math.Pow(A, 2)) * kc / (6.0 * A * B);
+            K[1, 3] = -(Math.Pow(A, 2) + Math.Pow(B, 2)) * kc / (6.0 * A * B);
 
             K[2, 0] = K[0, 2];
             K[2, 1] = K[1, 2];
-            K[2, 2] = kc / (6.0 * a * b) * 2 * (Math.Pow(a, 2) + Math.Pow(b, 2));
-            K[2, 3] = K[1, 0];
+            K[2, 2] = 2 * (Math.Pow(A, 2) + Math.Pow(B, 2)) * kc / (6.0 * A * B);
+            K[2, 3] = (Math.Pow(A, 2) - 2 * Math.Pow(B, 2)) * kc / (6.0 * A * B);
 
             K[3, 0] = K[0, 3];
             K[3, 1] = K[1, 3];
             K[3, 2] = K[2, 3];
-            K[3, 3] = K[0, 0];
+            K[3, 3] = 2 * (Math.Pow(A, 2) + Math.Pow(B, 2)) * kc / (6.0 * A * B);
 
             return K;
         }

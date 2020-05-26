@@ -15,9 +15,47 @@ using System.Windows;
 
 namespace GFEC
 {
-    public static class ShowToGUI
+    public class ShowToGUI
     {
-        public static SeriesCollection ShowResults(Results analysisResults)
+        public event EventHandler<ShowDiagramInGUIArgs> ShowDiagramInGUI;
+        public event EventHandler<SeriesCollection> TestEvent;
+
+        protected virtual void OnShowDiagramInGUI(ShowDiagramInGUIArgs e)
+        {
+            EventHandler<ShowDiagramInGUIArgs> handler = ShowDiagramInGUI;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        protected virtual void OnTestEvent(SeriesCollection e)
+        {
+            EventHandler<SeriesCollection> handler = TestEvent;
+            if (handler!=null)
+            {
+                handler(this, e);
+            }
+        }
+
+        public void TestEventMethod()
+        {
+            SeriesCollection Something = new SeriesCollection
+            {
+                new LineSeries
+                {
+                    Values = new ChartValues<double> { 3, 5, 7, 4 }
+                },
+                new ColumnSeries
+                {
+                    Values = new ChartValues<decimal> { 5, 6, 2, 7 }
+                }
+            };
+
+            OnTestEvent(Something);
+        }
+
+        public SeriesCollection ShowResults(Results analysisResults)
         {
             switch (analysisResults.SolutionType)
             {
@@ -28,12 +66,12 @@ namespace GFEC
                     return ShowStaticNonLinearResults(analysisResults);
                     break;
                 default:
-                    return ShowDynamicLinearResults(analysisResults);
+                    return ShowStaticNonLinearResults(analysisResults);
                     break;
             }
         }
 
-        private static SeriesCollection ShowDynamicLinearResults(Results analysisResults)
+        private SeriesCollection ShowDynamicLinearResults(Results analysisResults)
         {
             int countVector = analysisResults.DynamicSolution.Count;
             int step = 0;
@@ -72,7 +110,7 @@ namespace GFEC
             return graph;
         }
 
-        private static SeriesCollection ShowStaticNonLinearResults(Results analysisResults)
+        private SeriesCollection ShowStaticNonLinearResults(Results analysisResults)
         {
             var points = new ObservablePoint[analysisResults.NonlinearSolution.Count];
 
@@ -95,14 +133,17 @@ namespace GFEC
                     Values = new ChartValues<ObservablePoint>(points)
                 }
             };
+
+            OnShowDiagramInGUI(new ShowDiagramInGUIArgs(){ DiagramData = graph});
             return graph;
         }
 
         public static void PlotInitialGeometry(IAssembly assembly)
         {
-            GnuPlot.Set("terminal png size 500, 300");
+            GnuPlot.Set("terminal png size 1920, 1080");
             GnuPlot.Set("output 'gnuplot.png'");
             GnuPlot.HoldOn();
+            GnuPlot.Set("size ratio -1");
             GnuPlot.Unset("key");
             double[] X,Y;
             List<StoredPlot> storedPlots = new List<StoredPlot>();
@@ -137,6 +178,10 @@ namespace GFEC
                         storedPlots.Add(new StoredPlot(X, Y, "with linespoints pt " + (int)PointStyles.SolidCircle + " lt rgb \"red\""));
                         //GnuPlot.Plot(X, Y, "with linespoints pt " + (int)PointStyles.SolidCircle + " lt rgb \"blue\"");
                     }
+                    else if (element.Value is ContactNtS2D)
+                    {
+                        storedPlots.Add(new StoredPlot(X, Y, "with linespoints pt " + (int)PointStyles.SolidCircle + " lt rgb \"red\""));
+                    }
                     else
                     {
                         storedPlots.Add(new StoredPlot(X, Y, "with linespoints pt " + (int)PointStyles.SolidCircle + " lt rgb \"blue\""));
@@ -155,9 +200,10 @@ namespace GFEC
 
         public static void PlotFinalGeometry(IAssembly assembly)
         {
-            GnuPlot.Set("terminal png size 500, 300");
+            GnuPlot.Set("terminal png size 1920, 1080");
             GnuPlot.Set("output 'gnuplot2.png'");
             GnuPlot.HoldOn();
+            GnuPlot.Set("size ratio -1");
             GnuPlot.Unset("key");
             double[] X, Y;
             List<StoredPlot> storedPlots = new List<StoredPlot>();
@@ -202,8 +248,8 @@ namespace GFEC
         public static void PlotHeatMap(List<HeatMapData> plots)
         {
             GnuPlot.HoldOn();
-            GnuPlot.Set("cbrange[0:15.0]");
-            GnuPlot.Set("palette defined(0 \"blue\", 0.25\"green\", 0.75\"yellow\", 1 \"red\")");
+            GnuPlot.Set("cbrange[0:7.0]");
+            GnuPlot.Set("palette defined(0 \"blue\", 0.33\"green\", 0.67\"yellow\", 1 \"red\")");
             GnuPlot.Set("pm3d");
             GnuPlot.Set("dgrid3d");
             GnuPlot.Set("view map");

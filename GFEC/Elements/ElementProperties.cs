@@ -13,11 +13,17 @@ namespace GFEC
         public string ElementType { get; set; }
         public double Density { get; set; }
         public double Thickness { get; set; }
-        public double lx { get; set; }
-        public double ly { get; set; }
-
         public double ThermalConductivity { get; set; }
         public double ContactForceValue { get; set; }
+
+        public double ContactThermalConductivity { get; set; }
+        public double SurfaceRoughness { get; set; }
+        public double YieldStrength { get; set; }
+        public double Dx1 { get; set; }
+        public double Dx2 { get; set; }
+        public double Dx { get; set; }
+        public double A { get; set; }
+        public double B { get; set; }
 
         public ElementProperties(double youngMod, double sectionArea, string elementType)
         {
