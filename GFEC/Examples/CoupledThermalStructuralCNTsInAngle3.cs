@@ -24,7 +24,7 @@ namespace GFEC
         private const double ContactLength = Overlap * Lenght;
         private const double offset = Lenght - ContactLength;//- 0.10 * xIntervals;//8.1;//9.3//-0.65 * xIntervals;
         //private const double gap = 1.139;
-        private const double gap = 0.382;
+        private const double gap = 0.392;
         //private const double angle = Math.PI / 2.2;
         private const double angle = Math.PI * 0.48485;
         private const int loadDof1 = (nodesInXCoor * (nodesInYCoor - 1) + nodesInXCoor - totalContactElements + 1) * 2;
