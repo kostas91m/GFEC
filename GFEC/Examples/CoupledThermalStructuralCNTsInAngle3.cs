@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace GFEC
 {
-    public static class CoupledThermalStructuralCNTsInAngle3
+    public static class CoupledThermalStructuralCNTsInAngle3 //new
     {
         private const double Lenght = 8.0;
         private const double Overlap = 0.12;
