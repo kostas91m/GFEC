@@ -18,6 +18,11 @@ namespace GFEC
         double ContactThermalConductivity { get; set; }
         double SurfaceRoughness { get; set; }
         double YieldStrength { get; set; }
+        double Dx1 { get; set; }
+        double Dx2 { get; set; }
+        double Dx { get; set; }
+        double A { get; set; }
+        double B { get; set; }
     }
 }
 

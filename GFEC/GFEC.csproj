@@ -88,12 +88,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Assemble\AssemblyHelpMethods.cs" />
+    <Compile Include="Elements\Quad4Th2.cs" />
+    <Compile Include="Elements\ContactNtS2DTh.cs" />
     <Compile Include="Elements\ContactNtN2DTh.cs" />
     <Compile Include="Elements\Quad4Th.cs" />
     <Compile Include="Examples\BeamDynamicExample.cs" />
     <Compile Include="Examples\CantileverInContact.cs" />
     <Compile Include="Examples\CantileverQuadsExample.cs" />
     <Compile Include="Examples\CentralDifferencesTest.cs" />
+    <Compile Include="Examples\CoupledThermalStructuralCNTsInAngle3.cs" />
     <Compile Include="Examples\CoupledPhysicsExample.cs" />
     <Compile Include="Examples\CoupledThermalStructural.cs" />
     <Compile Include="Examples\CoupledThermalStructural2.cs" />
