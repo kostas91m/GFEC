@@ -47,7 +47,7 @@ namespace GFEC
             return finalNodes;
         }
 
-        private double ClosestPointProjection()
+        public double ClosestPointProjection()
         {
             double Xm1 = Nodes[1].XCoordinate + DisplacementVector[0];
             double Ym1 = Nodes[1].YCoordinate + DisplacementVector[1];

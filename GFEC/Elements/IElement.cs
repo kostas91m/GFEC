@@ -22,6 +22,7 @@ namespace GFEC
         double[] CreateInternalGlobalForcesVector();
         double[,] CreateDampingMatrix();
         Dictionary<int, INode> NodesAtFinalState();
+        double ClosestPointProjection();
     }
 }
 

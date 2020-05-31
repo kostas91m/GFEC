@@ -30,6 +30,11 @@ namespace GFEC
             ElementFreedomSignature[8] = new bool[] { true, true, true, false, false, false };
         }
 
+        public double ClosestPointProjection()
+        {
+            throw new Exception("Needs to be removed. Has beeb used only for testing purposes");
+        }
+
         public Dictionary<int, INode> NodesAtFinalState()
         {
             throw new Exception("Method not implemenented");
