@@ -85,7 +85,7 @@ namespace GFEC
         const double area = 0.01;
         const double thickness = 0.1;
         const double solidThermalCond = 3300 * 1.0e-6;
-        const double roughness = 2.81;
+        const double roughness = 2.81 * 1.0e-6;
         const double contactCond = 3300 * 1.0e-6;
         const double yieldStrength = 60.0 * 1e6;
 
@@ -449,6 +449,7 @@ namespace GFEC
                 ISolver thermalSolution = new StaticSolver();
                 thermalSolution.LinearScheme = new LUFactorization();
                 thermalSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+                thermalSolution.NonLinearScheme.Tolerance = 1e-7;
                 thermalSolution.ActivateNonLinearSolver = true;
                 thermalSolution.NonLinearScheme.numberOfLoadSteps = 10;
 
