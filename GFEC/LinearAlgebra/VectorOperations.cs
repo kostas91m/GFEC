@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,17 @@ namespace GFEC
             {
                 Console.WriteLine(String.Format("{0}", vector[row]));
             }
+        }
+
+        public static void PrintVectorToFile(double[] vector, string path)
+        {
+            int rows = vector.Length;
+            string[] dataToPrint = new string[rows];
+            for (int i = 0; i < rows; i++)
+            {
+                dataToPrint[i] = vector[i].ToString();
+            }
+            File.WriteAllLines(path, dataToPrint);
         }
 
         public static double[] CreateRandomVector(int rows)

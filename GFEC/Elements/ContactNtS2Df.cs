@@ -36,6 +36,8 @@ namespace GFEC
             FrictionCoef = 0.2;
         }
 
+
+
         //private double[] CalculateNormalUnitVector(double detm)
         //{
         //    double X1 = Nodes[1].XCoordinate;
@@ -53,7 +55,7 @@ namespace GFEC
             throw new Exception("Method not implemenented");
         }
 
-        private double ClosestPointProjection()
+        public double ClosestPointProjection()
         {
             double Xm1 = Nodes[1].XCoordinate + DisplacementVector[0];
             double Ym1 = Nodes[1].YCoordinate + DisplacementVector[1];

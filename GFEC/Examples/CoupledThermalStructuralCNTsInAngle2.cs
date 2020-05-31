@@ -18,7 +18,7 @@ namespace GFEC
         private const double xIntervals = 0.1;
         private const double yIntervals = 0.1;
         private const double offset = 7.0 - 0.05;//8.1;//9.3;
-        private const double gap = 1.2;
+        private const double gap = 1.14;
         public static ISolver structuralSolution;
         private const double angle = Math.PI / 2.2;
 
@@ -49,8 +49,8 @@ namespace GFEC
 
 
         //External loads
-        const double externalStructuralLoad = -10000.0;
-        const double externalHeatLoad = 2500.0 * 1e-9;
+        const double externalStructuralLoad = -1000.0;
+        const double externalHeatLoad = 2500.0 * 1e-6;
         //-----------------------------------------------------------------------------------
         //const double externalStructuralLoad = -5 * 100000000.0 * 1e-18 * 0.3;
         //const double externalHeatLoad = 2500.0 * 1e-9;
@@ -84,10 +84,10 @@ namespace GFEC
         const double density = 8000.0;
         const double area = 0.01;
         const double thickness = 0.1;
-        const double solidThermalCond = 3300 * 1.0e-9;
-        const double roughness = (1.0 / 2.81);
-        const double contactCond = 3300 * 1.0e-9;
-        const double yieldStrength = 60.0 * 1e-9;
+        const double solidThermalCond = 3300 * 1.0e-6;
+        const double roughness = 2.81;
+        const double contactCond = 3300 * 1.0e-6;
+        const double yieldStrength = 60.0 * 1e6;
 
         //----------------------------------------------------------------------
         //const double YoungMod = 1.0e-6;
@@ -291,7 +291,7 @@ namespace GFEC
             double thermalCond = solidThermalCond;
             double A = 0.5;
             string type = "Quad4Th";
-            string type2 = "ContactNtN2DTh";
+            string type2 = "ContactNtS2DTh";
 
             Dictionary<int, IElementProperties> elementProperties = new Dictionary<int, IElementProperties>();
             for (int i = 1; i <= totalElements; i++)
@@ -402,22 +402,28 @@ namespace GFEC
             Dictionary<int, double[]> allStepsSolutions = structuralSolution.GetAllStepsSolutions();
 
             Dictionary<int, Dictionary<int, double[]>> allStepsContactForces = new Dictionary<int, Dictionary<int, double[]>>();
+            Dictionary<int, Dictionary<int, double>> allStepsProjectionPoints = new Dictionary<int, Dictionary<int, double>>();
             Dictionary<int, double[]> elementsInternalContactForcesVector;
+            Dictionary<int, double> projectionPointForEachElement;
             for (int i = 1; i <= allStepsSolutions.Count; i++)
             {
                 elementsInternalContactForcesVector = new Dictionary<int, double[]>();
+                projectionPointForEachElement = new Dictionary<int, double>();
                 elementsAssembly.UpdateDisplacements(allStepsSolutions[i]);
-                for (int j = totalElements + 1; j <= totalElements + totalContactElements; j++)
+                for (int j = totalElements + 1; j <= totalElements + totalContactElements-1; j++)
                 {
                     elementsInternalContactForcesVector[j] = elementsAssembly.ElementsAssembly[j].CreateInternalGlobalForcesVector();
+                    projectionPointForEachElement[j] = elementsAssembly.ElementsAssembly[j].ClosestPointProjection();
                 }
                 allStepsContactForces[i] = elementsInternalContactForcesVector;
+                allStepsProjectionPoints[i] = projectionPointForEachElement;
             }
 
 
 
             List<double[]> structuralSolutions = new List<double[]>();
 
+            ExportToFile.ExportMatlabInitialGeometry(elementsAssembly);
             #endregion
 
 
@@ -428,10 +434,12 @@ namespace GFEC
             {
                 IAssembly elementsAssembly2 = CreateThermalAssembly();
 
-                for (int j = totalElements + 1; j < totalElements + totalContactElements; j++)
+                for (int j = totalElements + 1; j <= totalElements + totalContactElements-1; j++)
                 {
                     double[] contactForce = allStepsContactForces[k][j];
-                    elementsAssembly2.ElementsProperties[j].ContactForceValue = VectorOperations.VectorNorm2(new double[] { contactForce[2], contactForce[3] });
+                    elementsAssembly2.ElementsProperties[j].ContactForceValue = - contactForce[5];
+                    double projectionPoint = allStepsProjectionPoints[k][j];
+                    elementsAssembly2.ElementsProperties[j].Dx1 = projectionPoint;
                 }
 
                 elementsAssembly2.CreateElementsAssembly();
@@ -470,21 +478,31 @@ namespace GFEC
             }
 
             int[] thermalBoundCond = thermalBoundaryConditions;
-            double[] fullStructuralSol1 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[2], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol2 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[4], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[6], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol4 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[8], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol5 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[10], elementsAssembly.BoundedDOFsVector);
-            double[] fullThermalSol1 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[1], thermalBoundCond);
-            double[] fullThermalSol2 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[3], thermalBoundCond);
-            double[] fullThermalSol3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[5], thermalBoundCond);
-            double[] fullThermalSol4 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[7], thermalBoundCond);
-            double[] fullThermalSol5 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[9], thermalBoundCond);
+            double[] fullStructuralSol1 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[4], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol2 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[8], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[12], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol4 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[16], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol5 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[20], elementsAssembly.BoundedDOFsVector);
+            double[] fullThermalSol1 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[3], thermalBoundCond);
+            double[] fullThermalSol2 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[7], thermalBoundCond);
+            double[] fullThermalSol3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[11], thermalBoundCond);
+            double[] fullThermalSol4 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[15], thermalBoundCond);
+            double[] fullThermalSol5 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[19], thermalBoundCond);
+            double[] contactContactivityForLoadStep1 = contactContactivityForEachStep[3].Values.ToArray();
+            double[] contactContactivityForLoadStep2 = contactContactivityForEachStep[7].Values.ToArray();
+            double[] contactContactivityForLoadStep3 = contactContactivityForEachStep[11].Values.ToArray();
+            double[] contactContactivityForLoadStep4 = contactContactivityForEachStep[15].Values.ToArray();
+            double[] contactContactivityForLoadStep5 = contactContactivityForEachStep[19].Values.ToArray();
             ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol1), fullThermalSol1, @"C:\Users\Public\Documents\Results1.dat");
             ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol2), fullThermalSol2, @"C:\Users\Public\Documents\Results2.dat");
             ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol3), fullThermalSol3, @"C:\Users\Public\Documents\Results3.dat");
             ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol4), fullThermalSol4, @"C:\Users\Public\Documents\Results4.dat");
             ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol5), fullThermalSol5, @"C:\Users\Public\Documents\Results5.dat");
+            VectorOperations.PrintVectorToFile(contactContactivityForLoadStep1, @"C:\Users\Public\Documents\contactivity1.dat");
+            VectorOperations.PrintVectorToFile(contactContactivityForLoadStep2, @"C:\Users\Public\Documents\contactivity2.dat");
+            VectorOperations.PrintVectorToFile(contactContactivityForLoadStep3, @"C:\Users\Public\Documents\contactivity3.dat");
+            VectorOperations.PrintVectorToFile(contactContactivityForLoadStep4, @"C:\Users\Public\Documents\contactivity4.dat");
+            VectorOperations.PrintVectorToFile(contactContactivityForLoadStep5, @"C:\Users\Public\Documents\contactivity5.dat");
 
             structuralSolutions.Add(fullStructuralSol1);
             structuralSolutions.Add(fullStructuralSol2);

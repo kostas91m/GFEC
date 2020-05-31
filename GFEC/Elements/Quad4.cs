@@ -28,6 +28,11 @@ namespace GFEC
             DisplacementVector = new double[8];
         }
 
+        public double ClosestPointProjection()
+        {
+            throw new Exception("Needs to be removed. Has beeb used only for testing purposes");
+        }
+
         private double[] UpdateNodalCoordinates(double[] displacementVector)
         {
             double[] updatedCoor = new double[8];

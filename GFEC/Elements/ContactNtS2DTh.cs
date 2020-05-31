@@ -41,6 +41,11 @@ namespace GFEC
             Dx2 = properties.Dx2;
         }
 
+        public double ClosestPointProjection()
+        {
+            throw new Exception("Needs to be removed. Has beeb used only for testing purposes");
+        }
+
         public Dictionary<int, INode> NodesAtFinalState()
         {
             throw new Exception("Method not implemenented");
@@ -62,7 +67,7 @@ namespace GFEC
         public double CalculateCoefficient1()
         {
             double W1;
-            W1 = (Dx - Dx1) / Dx;
+            W1 = 1.0 - Dx1;  //(Dx - Dx1) / Dx;
             return W1;
         }
         public double CalculateCoefficient2()
