@@ -21,6 +21,7 @@ namespace GFEC
         private const double gap = 1.14;
         public static ISolver structuralSolution;
         private const double angle = Math.PI / 2.2;
+        //private const double angle = Math.PI * 0.48485;
 
         //--------------------------------------------
         //private const int totalNodes = 150;
@@ -277,7 +278,7 @@ namespace GFEC
                 elementProperties[i].Thickness = thickness;
             }
 
-            for (int i = totalElements + 1; i <= totalElements + totalContactElements; i++)
+            for (int i = totalElements + 1; i <= totalElements + totalContactElements - 1; i++)
             {
                 elementProperties[i] = new ElementProperties(E, A, type2);
                 elementProperties[i].Density = density;
@@ -289,7 +290,7 @@ namespace GFEC
         private static Dictionary<int, IElementProperties> CreateThermalElementProperties()
         {
             double thermalCond = solidThermalCond;
-            double A = 0.5;
+            double A = area;
             string type = "Quad4Th";
             string type2 = "ContactNtS2DTh";
 
@@ -300,7 +301,7 @@ namespace GFEC
                 elementProperties[i].ElementType = type;
                 elementProperties[i].ThermalConductivity = thermalCond;
             }
-            for (int i = totalElements + 1; i <= totalElements + totalContactElements; i++)
+            for (int i = totalElements + 1; i <= totalElements + totalContactElements - 1; i++)
             {
                 elementProperties[i] = new ElementProperties();
                 elementProperties[i].ElementType = type2;
@@ -410,7 +411,7 @@ namespace GFEC
                 elementsInternalContactForcesVector = new Dictionary<int, double[]>();
                 projectionPointForEachElement = new Dictionary<int, double>();
                 elementsAssembly.UpdateDisplacements(allStepsSolutions[i]);
-                for (int j = totalElements + 1; j <= totalElements + totalContactElements-1; j++)
+                for (int j = totalElements + 1; j <= totalElements + totalContactElements - 1; j++)
                 {
                     elementsInternalContactForcesVector[j] = elementsAssembly.ElementsAssembly[j].CreateInternalGlobalForcesVector();
                     projectionPointForEachElement[j] = elementsAssembly.ElementsAssembly[j].ClosestPointProjection();
@@ -434,7 +435,7 @@ namespace GFEC
             {
                 IAssembly elementsAssembly2 = CreateThermalAssembly();
 
-                for (int j = totalElements + 1; j <= totalElements + totalContactElements-1; j++)
+                for (int j = totalElements + 1; j <= totalElements + totalContactElements - 1; j++)
                 {
                     double[] contactForce = allStepsContactForces[k][j];
                     elementsAssembly2.ElementsProperties[j].ContactForceValue = - contactForce[5];
