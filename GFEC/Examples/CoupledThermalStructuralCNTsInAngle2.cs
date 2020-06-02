@@ -50,7 +50,7 @@ namespace GFEC
 
 
         //External loads
-        const double externalStructuralLoad = -1000.0;
+        const double externalStructuralLoad = -10000.0;
         const double externalHeatLoad = 2500.0 * 1e-6;
         //-----------------------------------------------------------------------------------
         //const double externalStructuralLoad = -5 * 100000000.0 * 1e-18 * 0.3;
