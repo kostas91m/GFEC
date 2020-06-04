@@ -22,7 +22,10 @@ namespace GFEC
         public static ISolver structuralSolution;
         private const double angle = Math.PI / 2.2;
         //private const double angle = Math.PI * 0.48485;
-
+        private const int ThermalDof1 = 1;
+        private const int ThermalDof2 = nodesInXCoor * (nodesInYCoor - 1) + 1;
+        private const int loadDof1 = (nodesInXCoor * (nodesInYCoor - 1) + nodesInXCoor - totalContactElements + 1) * 2;
+        private const int LoadDof2 = loadDof1 + (totalContactElements - 1) * 2;
         //--------------------------------------------
         //private const int totalNodes = 150;
         //private const int totalContactElements = 8;
@@ -50,16 +53,14 @@ namespace GFEC
 
 
         //External loads
-        const double externalStructuralLoad = -10000.0;
-        const double externalHeatLoad = 2500.0 * 1e-6;
+        const double Pressure = -1.000 * 1000000.0;
+        //const double externalStructuralLoad = -10000.0;
+        const double externalStructuralLoad = Pressure * 0.10 * xIntervals;
+        const double externalHeatLoad = 1500.0 * 1e-6;
+        //const double T0 = 100.0;
+        //const double cond = 3300 * 1.0e-6;
+        //static double externalHeatLoad = -2 * T0 * (cond / (6 * xIntervals * yIntervals)) * ((Math.Pow(xIntervals, 2) - 2 * Math.Pow(yIntervals, 2)) - (Math.Pow(xIntervals, 2) + Math.Pow(yIntervals, 2)));
         //-----------------------------------------------------------------------------------
-        //const double externalStructuralLoad = -5 * 100000000.0 * 1e-18 * 0.3;
-        //const double externalHeatLoad = 2500.0 * 1e-9;
-
-
-
-
-
 
         static List<int> loadedStructuralDOFs; // = new List<int>(new int[] { 995, 997, 999, 1001, 1003, 1005, 1007, 1009 });
         static double[] externalForcesStructuralVector; // = new double[2020];
@@ -383,9 +384,22 @@ namespace GFEC
             structuralSolution.NonLinearScheme.numberOfLoadSteps = 20;
 
             double[] externalForces3 = externalForcesStructuralVector;
+            //foreach (var dof in loadedStructuralDOFs)
+            //{
+            //    externalForces3[dof - 1] = externalStructuralLoad;
+            //}
             foreach (var dof in loadedStructuralDOFs)
             {
-                externalForces3[dof - 1] = externalStructuralLoad;
+                if (dof == loadDof1 | dof == LoadDof2)
+                {
+                    externalForces3[dof - 1] = externalStructuralLoad / 2;
+
+                }
+                else
+                {
+                    externalForces3[dof - 1] = externalStructuralLoad;
+
+                }
             }
 
 
@@ -462,9 +476,20 @@ namespace GFEC
                 //externalHeatFlux[45] = externalHeatLoad;
                 //externalHeatFlux[60] = externalHeatLoad;
 
+                //foreach (var dof in loadedThermalDOFs)
+                //{
+                //    externalHeatFlux[dof - 1] = externalHeatLoad;
+                //}
                 foreach (var dof in loadedThermalDOFs)
                 {
-                    externalHeatFlux[dof - 1] = externalHeatLoad;
+                    if ((dof == ThermalDof1 | dof == ThermalDof2))
+                    {
+                        externalHeatFlux[dof - 1] = externalHeatLoad/2;
+                    }
+                    else
+                    {
+                        externalHeatFlux[dof - 1] = externalHeatLoad;
+                    }
                 }
                 //for (int i = 61; i <= 75; i++)
                 //{
