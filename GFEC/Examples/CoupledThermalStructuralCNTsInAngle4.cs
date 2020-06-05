@@ -10,6 +10,8 @@ namespace GFEC
     public static class CoupledThermalStructuralCNTsInAngle4
     {
         private const int totalNodes = 486;
+        private const int AddedNodes = 1;
+        private const int RodElements = AddedNodes;
         private const int totalContactElements = 10;//20;//8;
         private const int totalElements = 320;
         private const int nodesInXCoor = 81;
@@ -17,11 +19,12 @@ namespace GFEC
         private const double scaleFactor = 1.0;
         private const double xIntervals = 0.1;
         private const double yIntervals = 0.1;
-        private const double offset = 7.0 - 0.05;//8.1;//9.3;
-        private const double gap = 1.14;
+        private const double offset = 7.0 + 0.1; //- 0.05;
+        //private const double gap = 1.14;
+        private const double gap = 0.381;
         public static ISolver structuralSolution;
-        private const double angle = Math.PI / 2.2;
-        //private const double angle = Math.PI * 0.48485;
+        //private const double angle = Math.PI / 2.2;
+        private const double angle = Math.PI * 0.48485;
 
         //--------------------------------------------
         //private const int totalNodes = 150;
@@ -50,7 +53,7 @@ namespace GFEC
 
 
         //External loads
-        const double externalStructuralLoad = -10000.0;
+        const double externalStructuralLoad = -100;//10MPa//-1000.0;//100Mpa//-10000.0;//1Gpa
         const double externalHeatLoad = 2500.0 * 1e-6;
         //-----------------------------------------------------------------------------------
         //const double externalStructuralLoad = -5 * 100000000.0 * 1e-18 * 0.3;
@@ -134,17 +137,19 @@ namespace GFEC
             //    boundedDofs.Add(i * 2 + 1); //support for all nodes at X direction
             //}
 
-            for (int i = 487; i <= 489; i++)
+            for (int i = totalNodes + 1; i <= totalNodes + AddedNodes; i++)
             {
                 boundedDofs.Add(i * 2);
                 boundedDofs.Add(i * 2 - 1);
             }
 
-            for (int i = totalNodes / 2 + 1; i < totalNodes; i++)
+            for (int i = totalNodes / 2 + 1; i <= totalNodes; i++)
             {
                 boundedDofs.Add(i * 2 + 0);
-                boundedDofs.Add(i * 2 + 1); //lower beam support for all nodes
+                boundedDofs.Add(i * 2 - 1); //lower beam support for all nodes
             }
+            boundedDofs.Add(82 * 2 - 1);
+
 
             structuralBoundaryConditions = boundedDofs.ToArray<int>();
         }
@@ -163,11 +168,11 @@ namespace GFEC
         private static void CreateStructuralLoadVector()
         {
             loadedStructuralDOFs = new List<int>();
-            for (int i = 0; i < totalContactElements; i++)
+            for (int i = 0; i < 8 * totalContactElements + 1; i++)
             {
                 loadedStructuralDOFs.Add(nodesInXCoor * nodesInYCoor * 2 - 2 * i);
             }
-            externalForcesStructuralVector = new double[(totalNodes+3) * 2];
+            externalForcesStructuralVector = new double[(totalNodes + AddedNodes) * 2];
         }
 
         private static void CreateThermalLoadVector()
@@ -177,7 +182,7 @@ namespace GFEC
             {
                 loadedThermalDOFs.Add(nodesInXCoor * i + 1);
             }
-            externalHeatLoafVector = new double[totalNodes];
+            externalHeatLoafVector = new double[totalNodes + AddedNodes];
         }
 
         private static Dictionary<int, INode> CreateNodes()
@@ -206,10 +211,12 @@ namespace GFEC
             }
 
             //extra nodes for rods on upper left side
-            nodes[487] = new Node(-xIntervals, 0);
-            nodes[488] = new Node(-xIntervals, yIntervals);
-            nodes[489] = new Node(-xIntervals, 2 * yIntervals);
-
+            nodes[487] = new Node(0.009515, 3 * yIntervals);
+            //nodes[487] = new Node(-xIntervals, 0);
+            //nodes[488] = new Node(-xIntervals, yIntervals);
+            //nodes[489] = new Node(-xIntervals, 2 * yIntervals);
+            //nodes[490] = new Node(0, -yIntervals);
+            //nodes[491] = new Node(0.009515, 3 * yIntervals);
             return nodes;
         }
 
@@ -250,10 +257,12 @@ namespace GFEC
 
             //Rod elements
             int count = connectivity.Count;
-            connectivity[count + 1] = new Dictionary<int, int>() { { 1, 1 }, { 2, 487 } };
-            connectivity[count + 2] = new Dictionary<int, int>() { { 1, 82 }, { 2, 488 } };
-            connectivity[count + 3] = new Dictionary<int, int>() { { 1, 163 }, { 2, 489 } };
-
+            connectivity[count + 1] = new Dictionary<int, int>() { { 1, 163 }, { 2, totalNodes + AddedNodes } };
+            //connectivity[count + 1] = new Dictionary<int, int>() { { 1, 1 }, { 2, 487 } };
+            //connectivity[count + 2] = new Dictionary<int, int>() { { 1, 82 }, { 2, 488 } };
+            //connectivity[count + 3] = new Dictionary<int, int>() { { 1, 163 }, { 2, 489 } };
+            //connectivity[count + 4] = new Dictionary<int, int>() { { 1, 1 }, { 2, 490 } };
+            //connectivity[count + 5] = new Dictionary<int, int>() { { 1, 163 }, { 2, 491 } };
 
             return connectivity;
         }
@@ -261,7 +270,7 @@ namespace GFEC
         private static Dictionary<int, bool[]> CreateNodeFAT()
         {
             Dictionary<int, bool[]> nodeFAT = new Dictionary<int, bool[]>();
-            for (int i = 1; i <= totalNodes+3; i++)
+            for (int i = 1; i <= totalNodes + AddedNodes; i++)
             {
                 nodeFAT[i] = new bool[] { true, true, false, false, false, false };
             }
@@ -271,7 +280,7 @@ namespace GFEC
         private static Dictionary<int, bool[]> CreateThermalNodeFAT()
         {
             Dictionary<int, bool[]> nodeFAT = new Dictionary<int, bool[]>();
-            for (int i = 1; i <= totalNodes; i++)
+            for (int i = 1; i <= totalNodes + AddedNodes; i++)
             {
                 nodeFAT[i] = new bool[] { true, false, false, false, false, false };
             }
@@ -306,10 +315,13 @@ namespace GFEC
             }
 
             int count = elementProperties.Count;
-            for (int i = count+1; i <= count+3; i++)
+            for (int i = count + 1; i <= count + AddedNodes; i++)
             {
-                elementProperties[i] = new ElementProperties(E / E, A, type3);
+                elementProperties[i] = new ElementProperties(E / 5000, A, type3);
             }
+            //elementProperties[count + 4] = new ElementProperties(E / 10000, A, type3);
+            //elementProperties[count + 5] = new ElementProperties(E / 10000, A, type3);
+
             return elementProperties;
         }
 
@@ -319,6 +331,7 @@ namespace GFEC
             double A = area;
             string type = "Quad4Th";
             string type2 = "ContactNtS2DTh";
+            string type3 = "ContactNtN2DTh";
 
             Dictionary<int, IElementProperties> elementProperties = new Dictionary<int, IElementProperties>();
             for (int i = 1; i <= totalElements; i++)
@@ -332,6 +345,16 @@ namespace GFEC
                 elementProperties[i] = new ElementProperties();
                 elementProperties[i].ElementType = type2;
                 elementProperties[i].ThermalConductivity = thermalCond;
+                elementProperties[i].SectionArea = A;
+                elementProperties[i].SurfaceRoughness = roughness;
+                elementProperties[i].ContactThermalConductivity = contactCond;
+                elementProperties[i].YieldStrength = yieldStrength;
+            }
+            for (int i = totalElements + totalContactElements; i < totalElements + totalContactElements + RodElements; i++)
+            {
+                elementProperties[i] = new ElementProperties();
+                elementProperties[i].ElementType = type3;
+                elementProperties[i].ThermalConductivity = 0;
                 elementProperties[i].SectionArea = A;
                 elementProperties[i].SurfaceRoughness = roughness;
                 elementProperties[i].ContactThermalConductivity = contactCond;
