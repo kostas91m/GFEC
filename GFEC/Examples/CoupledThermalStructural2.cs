@@ -195,7 +195,7 @@ namespace GFEC
             double thermalCond = solidThermalCond;
             double A = 0.5;
             string type = "Quad4Th";
-            string type2 = "ContactNtN2DTh";
+            string type2 = "ContactNtS2DTh";
 
             Dictionary<int, IElementProperties> elementProperties = new Dictionary<int, IElementProperties>();
             for (int i = 1; i <= totalElements; i++)
@@ -296,7 +296,7 @@ namespace GFEC
             {
                 elementsInternalContactForcesVector = new Dictionary<int, double[]>();
                 elementsAssembly.UpdateDisplacements(allStepsSolutions[i]);
-                for (int j = 113; j <= 120; j++)
+                for (int j = 113; j <= 116; j++)
                 {
                     elementsInternalContactForcesVector[j] = elementsAssembly.ElementsAssembly[j].CreateInternalGlobalForcesVector();
                 }
@@ -337,11 +337,12 @@ namespace GFEC
 
             #region Thermal
             List<double[]> thermalSolutions = new List<double[]>();
+            List<Dictionary<int, double>> contactContactivityForEachStep = new List<Dictionary<int, double>>();
             for (int k = 1; k <= allStepsSolutions.Count; k++)
             {
                 IAssembly elementsAssembly2 = CreateThermalAssembly();
 
-                for (int j = 113; j < 120; j++)
+                for (int j = 113; j < 116; j++)
                 {
                     double[] contactForce = allStepsContactForces[k][j];
                     elementsAssembly2.ElementsProperties[j].ContactForceValue = VectorOperations.VectorNorm2(new double[] { contactForce[2], contactForce[3] });
@@ -355,7 +356,7 @@ namespace GFEC
                 thermalSolution.LinearScheme = new LUFactorization();
                 thermalSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
                 thermalSolution.ActivateNonLinearSolver = true;
-                thermalSolution.NonLinearScheme.numberOfLoadSteps = 10;
+                thermalSolution.NonLinearScheme.numberOfLoadSteps = 30;
 
                 thermalSolution.AssemblyData = elementsAssembly2;
                 double[] externalHeatFlux = externalHeatLoafVector;
@@ -377,6 +378,9 @@ namespace GFEC
                 thermalSolution.Solve(reducedExternalHeatFlux);
                 double[] tempSol = thermalSolution.GetSolution();
                 thermalSolutions.Add(tempSol);
+
+                Dictionary<int, double> contactContactivity = AssemblyHelpMethods.RetrieveContactContactivity(thermalSolution.AssemblyData);
+                contactContactivityForEachStep.Add(contactContactivity);
             }
 
             int[] thermalBoundCond = thermalBoundaryConditions;
@@ -390,11 +394,21 @@ namespace GFEC
             double[] fullThermalSol3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[5], thermalBoundCond);
             double[] fullThermalSol4 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[7], thermalBoundCond);
             double[] fullThermalSol5 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[9], thermalBoundCond);
+            double[] contactContactivityForLoadStep1 = contactContactivityForEachStep[1].Values.ToArray();
+            double[] contactContactivityForLoadStep2 = contactContactivityForEachStep[3].Values.ToArray();
+            double[] contactContactivityForLoadStep3 = contactContactivityForEachStep[5].Values.ToArray();
+            double[] contactContactivityForLoadStep4 = contactContactivityForEachStep[7].Values.ToArray();
+            double[] contactContactivityForLoadStep5 = contactContactivityForEachStep[9].Values.ToArray();
             ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol1), fullThermalSol1, @"C:\Users\Public\Documents\Results1.dat");
             ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol2), fullThermalSol2, @"C:\Users\Public\Documents\Results2.dat");
             ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol3), fullThermalSol3, @"C:\Users\Public\Documents\Results3.dat");
             ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol4), fullThermalSol4, @"C:\Users\Public\Documents\Results4.dat");
             ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol5), fullThermalSol5, @"C:\Users\Public\Documents\Results5.dat");
+            VectorOperations.PrintVectorToFile(contactContactivityForLoadStep1, @"C:\Users\Public\Documents\contactivity1.dat");
+            VectorOperations.PrintVectorToFile(contactContactivityForLoadStep2, @"C:\Users\Public\Documents\contactivity2.dat");
+            VectorOperations.PrintVectorToFile(contactContactivityForLoadStep3, @"C:\Users\Public\Documents\contactivity3.dat");
+            VectorOperations.PrintVectorToFile(contactContactivityForLoadStep4, @"C:\Users\Public\Documents\contactivity4.dat");
+            VectorOperations.PrintVectorToFile(contactContactivityForLoadStep5, @"C:\Users\Public\Documents\contactivity5.dat");
 
 
 

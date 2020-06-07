@@ -308,7 +308,7 @@ namespace GFEC
             int count = elementProperties.Count;
             for (int i = count+1; i <= count+3; i++)
             {
-                elementProperties[i] = new ElementProperties(E / E, A, type3);
+                elementProperties[i] = new ElementProperties(E *1e10, A, type3);
             }
             return elementProperties;
         }
