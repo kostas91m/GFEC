@@ -50,7 +50,7 @@ namespace GFEC
 
 
         //External loads
-        const double externalStructuralLoad = -10000.0;
+        const double externalStructuralLoad = -10000.0*2;
         const double externalHeatLoad = 2500.0 * 1e-6;
         //-----------------------------------------------------------------------------------
         //const double externalStructuralLoad = -5 * 100000000.0 * 1e-18 * 0.3;
@@ -161,6 +161,10 @@ namespace GFEC
             {
                 loadedStructuralDOFs.Add(nodesInXCoor * nodesInYCoor * 2 - 2 * i);
             }
+            //for (int i = 1; i <= nodesInYCoor; i++)
+            //{
+            //    loadedStructuralDOFs.Add((nodesInXCoor * (nodesInYCoor - 1) + i) * 2); //load at upper surface of upper beam
+            //}
             externalForcesStructuralVector = new double[totalNodes * 2];
         }
 
@@ -452,7 +456,7 @@ namespace GFEC
                 thermalSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
                 thermalSolution.NonLinearScheme.Tolerance = 1e-7;
                 thermalSolution.ActivateNonLinearSolver = true;
-                thermalSolution.NonLinearScheme.numberOfLoadSteps = 10;
+                thermalSolution.NonLinearScheme.numberOfLoadSteps = 20;
 
                 thermalSolution.AssemblyData = elementsAssembly2;
                 double[] externalHeatFlux = externalHeatLoafVector;
@@ -480,21 +484,21 @@ namespace GFEC
             }
 
             int[] thermalBoundCond = thermalBoundaryConditions;
-            double[] fullStructuralSol1 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[4], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol2 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[8], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[12], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol4 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[16], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol5 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[20], elementsAssembly.BoundedDOFsVector);
-            double[] fullThermalSol1 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[3], thermalBoundCond);
-            double[] fullThermalSol2 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[7], thermalBoundCond);
-            double[] fullThermalSol3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[11], thermalBoundCond);
-            double[] fullThermalSol4 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[15], thermalBoundCond);
-            double[] fullThermalSol5 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[19], thermalBoundCond);
-            double[] contactContactivityForLoadStep1 = contactContactivityForEachStep[3].Values.ToArray();
-            double[] contactContactivityForLoadStep2 = contactContactivityForEachStep[7].Values.ToArray();
-            double[] contactContactivityForLoadStep3 = contactContactivityForEachStep[11].Values.ToArray();
-            double[] contactContactivityForLoadStep4 = contactContactivityForEachStep[15].Values.ToArray();
-            double[] contactContactivityForLoadStep5 = contactContactivityForEachStep[19].Values.ToArray();
+            double[] fullStructuralSol1 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[8], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol2 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[16], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[24], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol4 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[32], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol5 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[40], elementsAssembly.BoundedDOFsVector);
+            double[] fullThermalSol1 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[7], thermalBoundCond);
+            double[] fullThermalSol2 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[15], thermalBoundCond);
+            double[] fullThermalSol3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[23], thermalBoundCond);
+            double[] fullThermalSol4 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[31], thermalBoundCond);
+            double[] fullThermalSol5 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[39], thermalBoundCond);
+            double[] contactContactivityForLoadStep1 = contactContactivityForEachStep[7].Values.ToArray();
+            double[] contactContactivityForLoadStep2 = contactContactivityForEachStep[15].Values.ToArray();
+            double[] contactContactivityForLoadStep3 = contactContactivityForEachStep[23].Values.ToArray();
+            double[] contactContactivityForLoadStep4 = contactContactivityForEachStep[31].Values.ToArray();
+            double[] contactContactivityForLoadStep5 = contactContactivityForEachStep[39].Values.ToArray();
             ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol1), fullThermalSol1, @"C:\Users\Public\Documents\Results1.dat");
             ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol2), fullThermalSol2, @"C:\Users\Public\Documents\Results2.dat");
             ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol3), fullThermalSol3, @"C:\Users\Public\Documents\Results3.dat");
