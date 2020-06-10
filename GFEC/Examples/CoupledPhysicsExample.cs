@@ -143,6 +143,7 @@ namespace GFEC
             newSolu.ActivateNonLinearSolver = true;
             newSolu.NonLinearScheme.numberOfLoadSteps = 1;
 
+
             //Thermal Settings
             IAssembly elementsAssembly2 = CreateThermalAssembly();
             elementsAssembly2.CreateElementsAssembly();
@@ -193,6 +194,11 @@ namespace GFEC
             //finalNodesList = Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, completeFinalSolutionVector);
              
             return new Results() { NonlinearSolution = structuralSolutions, SelectedDOF=2, SolutionType="Nonlinear" };
+        }
+
+        private static void NonLinearScheme_convergenceResult(object sender, string e)
+        {
+            throw new NotImplementedException();
         }
 
         public static void RunDynamicExample()

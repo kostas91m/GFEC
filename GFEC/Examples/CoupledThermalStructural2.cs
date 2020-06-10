@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
+
 namespace GFEC
 {
     public static class CoupledThermalStructural2
@@ -541,6 +542,11 @@ namespace GFEC
 
             return new Results() { NonlinearSolution = structuralSolutions, SelectedDOF = 2, SolutionType = "Nonlinear" };
         }
+
+        //private static void NonLinearScheme_convergenceResult(object sender, string e)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public static void RunDynamicExample()
         {

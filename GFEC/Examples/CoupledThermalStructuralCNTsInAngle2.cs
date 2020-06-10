@@ -20,6 +20,7 @@ namespace GFEC
         private const double offset = 7.0 - 0.05;//8.1;//9.3;
         private const double gap = 1.14;
         public static ISolver structuralSolution;
+        public static ISolver thermalSolution;
         private const double angle = Math.PI / 2.2;
         //private const double angle = Math.PI * 0.48485;
 
@@ -451,9 +452,9 @@ namespace GFEC
                 elementsAssembly2.ActivateBoundaryConditions = true;
                 double[,] globalStiffnessMatrix2 = elementsAssembly2.CreateTotalStiffnessMatrix();
 
-                ISolver thermalSolution = new StaticSolver();
+                //ISolver thermalSolution = new StaticSolver();
                 thermalSolution.LinearScheme = new LUFactorization();
-                thermalSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+                //thermalSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
                 thermalSolution.NonLinearScheme.Tolerance = 1e-7;
                 thermalSolution.ActivateNonLinearSolver = true;
                 thermalSolution.NonLinearScheme.numberOfLoadSteps = 20;
