@@ -44,6 +44,29 @@ namespace GFEC
             File.WriteAllLines(path, lines);
         }
 
+        public static void ExportGeometryDataWithTemperatures(ISolver structuralSolution, Dictionary<int, double[]> thermalSolutionsList, int[] thermalBoundaryConditions, string path)
+        {
+            Dictionary<int, INode> initialNodesList = structuralSolution.AssemblyData.Nodes;
+            Dictionary<int, double[]> temperaturesForAllSteps = BoundaryConditionsImposition.CreateFullVectorListFromReduced(thermalSolutionsList, thermalBoundaryConditions);
+            Dictionary<int, double[]> displacementsForAllSteps = structuralSolution.GetAllStepsFullSolutionVectors();
+            foreach (KeyValuePair<int, double[]> vector in temperaturesForAllSteps)
+            {
+                Dictionary<int, INode> finalNodesList = Assembly.CalculateFinalNodalCoordinates(initialNodesList, displacementsForAllSteps[vector.Key]);
+                double[] temperatures = vector.Value;
+                string[] lines = new string[finalNodesList.Count + 1];
+                lines[0] = "X\tY\tTemperature";
+                if (finalNodesList.Count != temperatures.Length)
+                {
+                    throw new Exception("Mismatch beetween total nodes and temperatures vector");
+                }
+                for (int j = 1; j <= finalNodesList.Count; j++)
+                {
+                    lines[j] = finalNodesList[j].XCoordinate.ToString() + "\t" + finalNodesList[j].YCoordinate.ToString() + "\t" + temperatures[j - 1];
+                }
+                File.WriteAllLines(path+"Results"+vector.Key.ToString(), lines);
+            }  
+        }
+
         public static void CreateContourDataForMatlab(double[] x, double[] y, double[] z, int rows, int columns, string path)
         {
             double[,] xContour = new double[rows, columns];

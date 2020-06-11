@@ -80,6 +80,17 @@ namespace GFEC
             }
             return fullVector;
         }
+
+        public static Dictionary<int, double[]> CreateFullVectorListFromReduced(Dictionary<int, double[]> reducedVectorList, int[] boundaryDOF)
+        {
+            Dictionary<int, double[]> fullVectorList = new Dictionary<int, double[]>();
+            foreach (KeyValuePair<int, double[]> reducedVector in reducedVectorList)
+            {
+                double[] fullVector = CreateFullVectorFromReducedVector(reducedVector.Value, boundaryDOF);
+                fullVectorList.Add(reducedVector.Key, fullVector);
+            }
+            return fullVectorList;
+        }
     }
 }
 
