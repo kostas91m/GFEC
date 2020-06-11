@@ -386,6 +386,7 @@ namespace GFEC
                 contactContactivityForEachStep.Add(contactContactivity);
             }
             ExportToFile.ExportGeometryDataWithTemperatures(structuralSolution, thermalSolutions, thermalBoundaryConditions, @"C:\Users\Public\Documents\");
+            ExportToFile.ExportCondactivityForAllLoadSteps(contactContactivityForEachStep);
 
             int[] thermalBoundCond = thermalBoundaryConditions;
             //double[] fullStructuralSol1 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[2], elementsAssembly.BoundedDOFsVector);
@@ -398,21 +399,21 @@ namespace GFEC
             //double[] fullThermalSol3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[5], thermalBoundCond);
             //double[] fullThermalSol4 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[7], thermalBoundCond);
             //double[] fullThermalSol5 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[9], thermalBoundCond);
-            double[] contactContactivityForLoadStep1 = contactContactivityForEachStep[1].Values.ToArray();
-            double[] contactContactivityForLoadStep2 = contactContactivityForEachStep[3].Values.ToArray();
-            double[] contactContactivityForLoadStep3 = contactContactivityForEachStep[5].Values.ToArray();
-            double[] contactContactivityForLoadStep4 = contactContactivityForEachStep[7].Values.ToArray();
-            double[] contactContactivityForLoadStep5 = contactContactivityForEachStep[9].Values.ToArray();
+            //double[] contactContactivityForLoadStep1 = contactContactivityForEachStep[1].Values.ToArray();
+            //double[] contactContactivityForLoadStep2 = contactContactivityForEachStep[3].Values.ToArray();
+            //double[] contactContactivityForLoadStep3 = contactContactivityForEachStep[5].Values.ToArray();
+            //double[] contactContactivityForLoadStep4 = contactContactivityForEachStep[7].Values.ToArray();
+            //double[] contactContactivityForLoadStep5 = contactContactivityForEachStep[9].Values.ToArray();
             //ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol1), fullThermalSol1, @"C:\Users\Public\Documents\Results1.dat");
             //ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol2), fullThermalSol2, @"C:\Users\Public\Documents\Results2.dat");
             //ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol3), fullThermalSol3, @"C:\Users\Public\Documents\Results3.dat");
             //ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol4), fullThermalSol4, @"C:\Users\Public\Documents\Results4.dat");
             //ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol5), fullThermalSol5, @"C:\Users\Public\Documents\Results5.dat");
-            VectorOperations.PrintVectorToFile(contactContactivityForLoadStep1, @"C:\Users\Public\Documents\contactivity1.dat");
-            VectorOperations.PrintVectorToFile(contactContactivityForLoadStep2, @"C:\Users\Public\Documents\contactivity2.dat");
-            VectorOperations.PrintVectorToFile(contactContactivityForLoadStep3, @"C:\Users\Public\Documents\contactivity3.dat");
-            VectorOperations.PrintVectorToFile(contactContactivityForLoadStep4, @"C:\Users\Public\Documents\contactivity4.dat");
-            VectorOperations.PrintVectorToFile(contactContactivityForLoadStep5, @"C:\Users\Public\Documents\contactivity5.dat");
+            //VectorOperations.PrintVectorToFile(contactContactivityForLoadStep1, @"C:\Users\Public\Documents\contactivity1.dat");
+            //VectorOperations.PrintVectorToFile(contactContactivityForLoadStep2, @"C:\Users\Public\Documents\contactivity2.dat");
+            //VectorOperations.PrintVectorToFile(contactContactivityForLoadStep3, @"C:\Users\Public\Documents\contactivity3.dat");
+            //VectorOperations.PrintVectorToFile(contactContactivityForLoadStep4, @"C:\Users\Public\Documents\contactivity4.dat");
+            //VectorOperations.PrintVectorToFile(contactContactivityForLoadStep5, @"C:\Users\Public\Documents\contactivity5.dat");
 
             
 

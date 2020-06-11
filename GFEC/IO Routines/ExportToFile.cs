@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Xml.Schema;
+using OpenTK.Input;
 
 namespace GFEC
 {
@@ -152,6 +153,17 @@ namespace GFEC
                 finalCoordinateData.Add(node.Key.ToString() + "\t" + node.Value.XCoordinate.ToString() + "\t" + node.Value.YCoordinate.ToString());
             }
             File.WriteAllLines(@"C:\Users\Public\Documents\finalCoordinateData.dat", finalCoordinateData);
+        }
+
+        public static void ExportCondactivityForAllLoadSteps(List<Dictionary<int, double>> contactContactivityForEachStep)
+        {
+            int k = 0;
+            foreach (var loadStep in contactContactivityForEachStep)
+            {
+                k = k + 1;
+                double[] contactContactivity = loadStep.Values.ToArray();
+                VectorOperations.PrintVectorToFile(contactContactivity, @"C:\Users\Public\Documents\contactivity" + k.ToString() + ".dat");
+            }
         }
     }
 }
