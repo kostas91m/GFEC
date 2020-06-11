@@ -151,7 +151,7 @@ namespace GFEC
                 case "CoupledThermalStructural2":
                     CoupledThermalStructural2.structuralSolution = new StaticSolver();
                     CoupledThermalStructural2.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
-                    CoupledThermalStructural2.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
+                    //CoupledThermalStructural2.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
                     CoupledThermalStructural2.diagramData = new ShowToGUI();
                     CoupledThermalStructural2.diagramData.ShowDiagramInGUI += c_ShowDiagramInGUI;
                     finalResults = CoupledThermalStructural2.RunStaticExample();
@@ -178,6 +178,9 @@ namespace GFEC
                     CoupledThermalStructuralCNTsInAngle2.structuralSolution = new StaticSolver();
                     CoupledThermalStructuralCNTsInAngle2.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
                     CoupledThermalStructuralCNTsInAngle2.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
+                    CoupledThermalStructuralCNTsInAngle2.thermalSolution = new StaticSolver();
+                    CoupledThermalStructuralCNTsInAngle2.thermalSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+                    CoupledThermalStructuralCNTsInAngle2.thermalSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
                     finalResults = CoupledThermalStructuralCNTsInAngle2.RunStaticExample();
                     break;
                 case "CoupledThermalStructuralCNTsInAngle3":
@@ -205,7 +208,7 @@ namespace GFEC
             solverResults = finalResults;
         }
 
-        private void NonLinearScheme_convergenceResult(object sender, string e)
+        public void NonLinearScheme_convergenceResult(object sender, string e)
         {
             Application.Current.Dispatcher.Invoke(new Action(() =>
             {

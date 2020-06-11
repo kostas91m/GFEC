@@ -17,5 +17,6 @@ namespace GFEC
         double[] GetSolution();
         Dictionary<int, double[]> GetInternalForces();
         Dictionary<int, double[]> GetAllStepsSolutions();
+        Dictionary<int, double[]> GetAllStepsFullSolutionVectors();
     }
 }

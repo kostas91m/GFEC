@@ -56,5 +56,18 @@ namespace GFEC
         {
             return NonLinearScheme.Solutions;
         }
+
+        public Dictionary<int, double[]> GetAllStepsFullSolutionVectors()
+        {
+
+            Dictionary<int, double[]> allStepsSolutions = GetAllStepsSolutions();
+            Dictionary<int, double[]> result = new Dictionary<int, double[]>();
+            foreach (KeyValuePair<int, double[]> solutionVector in allStepsSolutions)
+            {
+                double[] fullSolutionVector = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(solutionVector.Value, AssemblyData.BoundedDOFsVector);
+                result.Add(solutionVector.Key, fullSolutionVector);
+            }
+            return result;
+        }
     }
 }

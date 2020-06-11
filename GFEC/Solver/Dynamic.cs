@@ -61,5 +61,11 @@ namespace GFEC
             throw new Exception("Not implemented");
         }
 
+        public Dictionary<int, double[]> GetAllStepsFullSolutionVectors()
+        {
+
+           throw new Exception("Not implemented");
+        }
+
     }
 }
