@@ -19,12 +19,14 @@ namespace GFEC
         private const double scaleFactor = 1.0;
         private const double xIntervals = 0.1;
         private const double yIntervals = 0.1;
-        private const double offset = 7.0 + 0.1; //- 0.05;
+        private const double offset = 7.0 + 0.15; //- 0.05;
         //private const double gap = 1.14;
         private const double gap = 0.381;
         public static ISolver structuralSolution;
         //private const double angle = Math.PI / 2.2;
         private const double angle = Math.PI * 0.48485;
+        private const int ThermalDof1 = 2;
+        private const int ThermalDof2 = nodesInXCoor * (nodesInYCoor - 1) + 2;
 
         //--------------------------------------------
         //private const int totalNodes = 150;
@@ -53,8 +55,11 @@ namespace GFEC
 
 
         //External loads
-        const double externalStructuralLoad = -100;//10MPa//-1000.0;//100Mpa//-10000.0;//1Gpa
-        const double externalHeatLoad = 2500.0 * 1e-6;
+        const double externalStructuralLoad = -100.0;//10MPa//-1000.0;//100Mpa//-10000.0;//1Gpa
+        const double T0 = 100.0;
+        const double cond = 3300 * 1.0e-6;
+        static double externalHeatLoad = -2 * T0 * (cond / (6 * xIntervals * yIntervals)) * ((Math.Pow(xIntervals, 2) - 2 * Math.Pow(yIntervals, 2)) - (Math.Pow(xIntervals, 2) + Math.Pow(yIntervals, 2)));
+        //const double externalHeatLoad = 2500.0 * 1e-6;
         //-----------------------------------------------------------------------------------
         //const double externalStructuralLoad = -5 * 100000000.0 * 1e-18 * 0.3;
         //const double externalHeatLoad = 2500.0 * 1e-9;
@@ -157,7 +162,10 @@ namespace GFEC
         private static void CreateThermalBoundaryConditions()
         {
             List<int> boundedDofs = new List<int>();
-
+            for (int i = 0; i < nodesInYCoor; i++)
+            {
+                boundedDofs.Add(i * nodesInXCoor + 1); //upper beam left side support
+            }
             for (int i = 0; i < nodesInYCoor; i++)
             {
                 boundedDofs.Add(nodesInYCoor * nodesInXCoor + nodesInXCoor * (i + 1)); //lower beam right side support
@@ -180,9 +188,9 @@ namespace GFEC
             loadedThermalDOFs = new List<int>();
             for (int i = 0; i < nodesInYCoor; i++)
             {
-                loadedThermalDOFs.Add(nodesInXCoor * i + 1);
+                loadedThermalDOFs.Add(nodesInXCoor * i + 2);
             }
-            externalHeatLoafVector = new double[totalNodes + AddedNodes];
+            externalHeatLoafVector = new double[totalNodes];
         }
 
         private static Dictionary<int, INode> CreateNodes()
@@ -212,6 +220,40 @@ namespace GFEC
 
             //extra nodes for rods on upper left side
             nodes[487] = new Node(0.009515, 3 * yIntervals);
+            //nodes[487] = new Node(-xIntervals, 0);
+            //nodes[488] = new Node(-xIntervals, yIntervals);
+            //nodes[489] = new Node(-xIntervals, 2 * yIntervals);
+            //nodes[490] = new Node(0, -yIntervals);
+            //nodes[491] = new Node(0.009515, 3 * yIntervals);
+            return nodes;
+        }
+        private static Dictionary<int, INode> CreateNodes2()
+        {
+            Dictionary<int, INode> nodes = new Dictionary<int, INode>();
+            //Upper cantilever
+            int k;
+            k = 1;
+            for (int j = 0; j < nodesInYCoor; j++)
+            {
+                for (int i = 0; i < nodesInXCoor; i++)
+                {
+                    nodes[k] = new Node(i * xIntervals * scaleFactor * Math.Sin(angle) + j * yIntervals * scaleFactor * Math.Cos(angle), -Math.Cos(angle) * i * xIntervals * scaleFactor + Math.Sin(angle) * j * yIntervals * scaleFactor);//j * yIntervals * scaleFactor - (j * yIntervals * scaleFactor * Math.Cos(angle)));
+                    k += 1;
+                }
+            }
+
+            //Lower cantilever
+            for (int j = 0; j < nodesInYCoor; j++)
+            {
+                for (int i = 0; i < nodesInXCoor; i++)
+                {
+                    nodes[k] = new Node(i * xIntervals * scaleFactor + offset, j * yIntervals * scaleFactor - ((nodesInYCoor - 1) * yIntervals + gap));
+                    k += 1;
+                }
+            }
+
+            //extra nodes for rods on upper left side
+            //nodes[487] = new Node(0.009515, 3 * yIntervals);
             //nodes[487] = new Node(-xIntervals, 0);
             //nodes[488] = new Node(-xIntervals, yIntervals);
             //nodes[489] = new Node(-xIntervals, 2 * yIntervals);
@@ -266,6 +308,52 @@ namespace GFEC
 
             return connectivity;
         }
+        private static Dictionary<int, Dictionary<int, int>> CreateConnectivity2()
+        {
+
+            Dictionary<int, Dictionary<int, int>> connectivity = new Dictionary<int, Dictionary<int, int>>();
+            int k = 1;
+            for (int j = 0; j <= nodesInYCoor - 2; j++)
+            {
+                for (int i = 1; i <= nodesInXCoor - 1; i++)
+                {
+                    connectivity[k] = new Dictionary<int, int>() { { 1, i + j * nodesInXCoor }, { 2, i + 1 + j * nodesInXCoor }, { 3, i + 1 + nodesInXCoor + j * nodesInXCoor }, { 4, i + nodesInXCoor + j * nodesInXCoor } };
+                    k += 1;
+                }
+
+            }
+
+            for (int j = 0 + nodesInYCoor; j <= nodesInYCoor - 2 + nodesInYCoor; j++)
+            {
+                for (int i = 1; i <= nodesInXCoor - 1; i++)
+                {
+                    connectivity[k] = new Dictionary<int, int>() { { 1, i + j * nodesInXCoor }, { 2, i + 1 + j * nodesInXCoor }, { 3, i + 1 + nodesInXCoor + j * nodesInXCoor }, { 4, i + nodesInXCoor + j * nodesInXCoor } };
+                    k += 1;
+                }
+
+            }
+
+            //Contact elements
+            for (int i = 1; i <= totalContactElements - 1; i++)
+            {
+                int lowerMiddleNode = 2 * nodesInXCoor * nodesInYCoor - nodesInXCoor + i + 1;
+                int lowerLeftNode = lowerMiddleNode - 1;
+                int lowerRightNode = lowerMiddleNode + 1;
+                int upperNode = nodesInXCoor - totalContactElements + i + 1;
+                connectivity[totalElements + i] = new Dictionary<int, int>() { { 1, lowerLeftNode }, { 2, lowerRightNode }, { 3, upperNode } };
+            }
+
+            //Rod elements
+            //int count = connectivity.Count;
+            //connectivity[count + 1] = new Dictionary<int, int>() { { 1, 163 }, { 2, totalNodes + AddedNodes } };
+            //connectivity[count + 1] = new Dictionary<int, int>() { { 1, 1 }, { 2, 487 } };
+            //connectivity[count + 2] = new Dictionary<int, int>() { { 1, 82 }, { 2, 488 } };
+            //connectivity[count + 3] = new Dictionary<int, int>() { { 1, 163 }, { 2, 489 } };
+            //connectivity[count + 4] = new Dictionary<int, int>() { { 1, 1 }, { 2, 490 } };
+            //connectivity[count + 5] = new Dictionary<int, int>() { { 1, 163 }, { 2, 491 } };
+
+            return connectivity;
+        }
 
         private static Dictionary<int, bool[]> CreateNodeFAT()
         {
@@ -280,7 +368,7 @@ namespace GFEC
         private static Dictionary<int, bool[]> CreateThermalNodeFAT()
         {
             Dictionary<int, bool[]> nodeFAT = new Dictionary<int, bool[]>();
-            for (int i = 1; i <= totalNodes + AddedNodes; i++)
+            for (int i = 1; i <= totalNodes; i++)
             {
                 nodeFAT[i] = new bool[] { true, false, false, false, false, false };
             }
@@ -331,7 +419,7 @@ namespace GFEC
             double A = area;
             string type = "Quad4Th";
             string type2 = "ContactNtS2DTh";
-            string type3 = "ContactNtN2DTh";
+            //string type3 = "ContactNtN2DTh";
 
             Dictionary<int, IElementProperties> elementProperties = new Dictionary<int, IElementProperties>();
             for (int i = 1; i <= totalElements; i++)
@@ -350,16 +438,16 @@ namespace GFEC
                 elementProperties[i].ContactThermalConductivity = contactCond;
                 elementProperties[i].YieldStrength = yieldStrength;
             }
-            for (int i = totalElements + totalContactElements; i < totalElements + totalContactElements + RodElements; i++)
-            {
-                elementProperties[i] = new ElementProperties();
-                elementProperties[i].ElementType = type3;
-                elementProperties[i].ThermalConductivity = 0;
-                elementProperties[i].SectionArea = A;
-                elementProperties[i].SurfaceRoughness = roughness;
-                elementProperties[i].ContactThermalConductivity = contactCond;
-                elementProperties[i].YieldStrength = yieldStrength;
-            }
+            //for (int i = totalElements + totalContactElements; i < totalElements + totalContactElements + RodElements; i++)
+            //{
+            //    elementProperties[i] = new ElementProperties();
+            //    elementProperties[i].ElementType = type3;
+            //    elementProperties[i].ThermalConductivity = 0;
+            //    elementProperties[i].SectionArea = A;
+            //    elementProperties[i].SurfaceRoughness = roughness;
+            //    elementProperties[i].ContactThermalConductivity = contactCond;
+            //    elementProperties[i].YieldStrength = yieldStrength;
+            //}
             return elementProperties;
         }
 
@@ -379,8 +467,8 @@ namespace GFEC
         private static IAssembly CreateThermalAssembly()
         {
             IAssembly assembly = new Assembly();
-            assembly.Nodes = CreateNodes();
-            assembly.ElementsConnectivity = CreateConnectivity();
+            assembly.Nodes = CreateNodes2();
+            assembly.ElementsConnectivity = CreateConnectivity2();
             assembly.ElementsProperties = CreateThermalElementProperties();
             assembly.NodeFreedomAllocationList = CreateThermalNodeFAT();
             CreateThermalBoundaryConditions();
@@ -427,9 +515,9 @@ namespace GFEC
             ///structuralSolution = new StaticSolver();
             structuralSolution.LinearScheme = new PCGSolver();
             //structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
-            structuralSolution.NonLinearScheme.Tolerance = 1e-5;
+            structuralSolution.NonLinearScheme.Tolerance = 1e-6;
             structuralSolution.ActivateNonLinearSolver = true;
-            structuralSolution.NonLinearScheme.numberOfLoadSteps = 20;
+            structuralSolution.NonLinearScheme.numberOfLoadSteps = 40;
 
             double[] externalForces3 = externalForcesStructuralVector;
             foreach (var dof in loadedStructuralDOFs)
@@ -499,9 +587,9 @@ namespace GFEC
                 ISolver thermalSolution = new StaticSolver();
                 thermalSolution.LinearScheme = new LUFactorization();
                 thermalSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
-                thermalSolution.NonLinearScheme.Tolerance = 1e-7;
+                thermalSolution.NonLinearScheme.Tolerance = 1e-9;
                 thermalSolution.ActivateNonLinearSolver = true;
-                thermalSolution.NonLinearScheme.numberOfLoadSteps = 10;
+                thermalSolution.NonLinearScheme.numberOfLoadSteps = 40;
 
                 thermalSolution.AssemblyData = elementsAssembly2;
                 double[] externalHeatFlux = externalHeatLoafVector;
@@ -510,11 +598,21 @@ namespace GFEC
                 //externalHeatFlux[30] = externalHeatLoad;
                 //externalHeatFlux[45] = externalHeatLoad;
                 //externalHeatFlux[60] = externalHeatLoad;
-
                 foreach (var dof in loadedThermalDOFs)
                 {
-                    externalHeatFlux[dof - 1] = externalHeatLoad;
+                    if ((dof == ThermalDof1 | dof == ThermalDof2))
+                    {
+                        externalHeatFlux[dof - 1] = externalHeatLoad / 2;
+                    }
+                    else
+                    {
+                        externalHeatFlux[dof - 1] = externalHeatLoad;
+                    }
                 }
+                //foreach (var dof in loadedThermalDOFs)
+                //{
+                //    externalHeatFlux[dof - 1] = externalHeatLoad;
+                //}
                 //for (int i = 61; i <= 75; i++)
                 //{
                 //    externalHeatFlux[61] = externalHeatLoad;
@@ -529,26 +627,40 @@ namespace GFEC
             }
 
             int[] thermalBoundCond = thermalBoundaryConditions;
-            double[] fullStructuralSol1 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[4], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol2 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[8], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[12], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol4 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[16], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol5 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[20], elementsAssembly.BoundedDOFsVector);
-            double[] fullThermalSol1 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[3], thermalBoundCond);
-            double[] fullThermalSol2 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[7], thermalBoundCond);
-            double[] fullThermalSol3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[11], thermalBoundCond);
-            double[] fullThermalSol4 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[15], thermalBoundCond);
-            double[] fullThermalSol5 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[19], thermalBoundCond);
+            double[] fullStructuralSol1 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[8], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol2 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[16], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[24], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol4 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[32], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol5 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[40], elementsAssembly.BoundedDOFsVector);
+            double[] fullThermalSol1 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[7], thermalBoundCond);
+            double[] fullThermalSol2 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[15], thermalBoundCond);
+            double[] fullThermalSol3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[23], thermalBoundCond);
+            double[] fullThermalSol4 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[31], thermalBoundCond);
+            double[] fullThermalSol5 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[39], thermalBoundCond);
+            double[] fullThermalSolfinal1 = new double[fullThermalSol1.Length + 1];
+            double[] fullThermalSolfinal2 = new double[fullThermalSol1.Length + 1];
+            double[] fullThermalSolfinal3 = new double[fullThermalSol1.Length + 1];
+            double[] fullThermalSolfinal4 = new double[fullThermalSol1.Length + 1];
+            double[] fullThermalSolfinal5 = new double[fullThermalSol1.Length + 1];
+
+            for (int runs = 0; runs < fullThermalSol1.Length; runs++)
+            {
+                fullThermalSolfinal1[runs] = fullThermalSol1[runs];
+                fullThermalSolfinal2[runs] = fullThermalSol2[runs];
+                fullThermalSolfinal3[runs] = fullThermalSol3[runs];
+                fullThermalSolfinal4[runs] = fullThermalSol4[runs];
+                fullThermalSolfinal5[runs] = fullThermalSol5[runs];
+            }
             double[] contactContactivityForLoadStep1 = contactContactivityForEachStep[3].Values.ToArray();
             double[] contactContactivityForLoadStep2 = contactContactivityForEachStep[7].Values.ToArray();
             double[] contactContactivityForLoadStep3 = contactContactivityForEachStep[11].Values.ToArray();
             double[] contactContactivityForLoadStep4 = contactContactivityForEachStep[15].Values.ToArray();
             double[] contactContactivityForLoadStep5 = contactContactivityForEachStep[19].Values.ToArray();
-            ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol1), fullThermalSol1, @"C:\Users\Public\Documents\Results1.dat");
-            ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol2), fullThermalSol2, @"C:\Users\Public\Documents\Results2.dat");
-            ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol3), fullThermalSol3, @"C:\Users\Public\Documents\Results3.dat");
-            ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol4), fullThermalSol4, @"C:\Users\Public\Documents\Results4.dat");
-            ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol5), fullThermalSol5, @"C:\Users\Public\Documents\Results5.dat");
+            ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol1), fullThermalSolfinal1, @"C:\Users\Public\Documents\Results1.dat");
+            ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol2), fullThermalSolfinal2, @"C:\Users\Public\Documents\Results2.dat");
+            ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol3), fullThermalSolfinal3, @"C:\Users\Public\Documents\Results3.dat");
+            ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol4), fullThermalSolfinal4, @"C:\Users\Public\Documents\Results4.dat");
+            ExportToFile.ExportGeometryDataWithTemperatures(Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullStructuralSol5), fullThermalSolfinal5, @"C:\Users\Public\Documents\Results5.dat");
             VectorOperations.PrintVectorToFile(contactContactivityForLoadStep1, @"C:\Users\Public\Documents\contactivity1.dat");
             VectorOperations.PrintVectorToFile(contactContactivityForLoadStep2, @"C:\Users\Public\Documents\contactivity2.dat");
             VectorOperations.PrintVectorToFile(contactContactivityForLoadStep3, @"C:\Users\Public\Documents\contactivity3.dat");
