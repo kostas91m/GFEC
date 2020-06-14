@@ -385,7 +385,7 @@ namespace GFEC
                 Dictionary<int, double> contactContactivity = AssemblyHelpMethods.RetrieveContactContactivity(thermalSolution.AssemblyData);
                 contactContactivityForEachStep.Add(contactContactivity);
             }
-            ExportToFile.ExportGeometryDataWithTemperatures(structuralSolution, thermalSolutions, thermalBoundaryConditions, @"C:\Users\Public\Documents\");
+            ExportToFile.ExportGeometryDataWithTemperatures(structuralSolution, thermalSolutions, thermalBoundaryConditions);
             ExportToFile.ExportCondactivityForAllLoadSteps(contactContactivityForEachStep);
 
             int[] thermalBoundCond = thermalBoundaryConditions;

@@ -434,7 +434,7 @@ namespace GFEC
 
 
             #region Thermal
-            List<double[]> thermalSolutions = new List<double[]>();
+            Dictionary<int, double[]> thermalSolutions = new Dictionary<int, double[]>();
             List<Dictionary<int, double>> contactContactivityForEachStep = new List<Dictionary<int, double>>();
             for (int k = 1; k <= allStepsSolutions.Count; k++)
             {
@@ -478,11 +478,14 @@ namespace GFEC
                 double[] reducedExternalHeatFlux = BoundaryConditionsImposition.ReducedVector(externalHeatFlux, thermalSolution.AssemblyData.BoundedDOFsVector);
                 thermalSolution.Solve(reducedExternalHeatFlux);
                 double[] tempSol = thermalSolution.GetSolution();
-                thermalSolutions.Add(tempSol);
+                thermalSolutions.Add(k,tempSol);
 
                 Dictionary<int, double> contactContactivity = AssemblyHelpMethods.RetrieveContactContactivity(thermalSolution.AssemblyData);
                 contactContactivityForEachStep.Add(contactContactivity);
             }
+
+            ExportToFile.ExportGeometryDataWithTemperatures(structuralSolution, thermalSolutions, thermalBoundaryConditions);
+            ExportToFile.ExportCondactivityForAllLoadSteps(contactContactivityForEachStep);
 
             int[] thermalBoundCond = thermalBoundaryConditions;
             double[] fullStructuralSol1 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[8], elementsAssembly.BoundedDOFsVector);

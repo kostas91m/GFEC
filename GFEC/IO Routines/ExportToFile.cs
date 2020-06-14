@@ -45,7 +45,7 @@ namespace GFEC
             File.WriteAllLines(path, lines);
         }
 
-        public static void ExportGeometryDataWithTemperatures(ISolver structuralSolution, Dictionary<int, double[]> thermalSolutionsList, int[] thermalBoundaryConditions, string path)
+        public static void ExportGeometryDataWithTemperatures(ISolver structuralSolution, Dictionary<int, double[]> thermalSolutionsList, int[] thermalBoundaryConditions)
         {
             Dictionary<int, INode> initialNodesList = structuralSolution.AssemblyData.Nodes;
             Dictionary<int, double[]> temperaturesForAllSteps = BoundaryConditionsImposition.CreateFullVectorListFromReduced(thermalSolutionsList, thermalBoundaryConditions);
@@ -64,7 +64,7 @@ namespace GFEC
                 {
                     lines[j] = finalNodesList[j].XCoordinate.ToString() + "\t" + finalNodesList[j].YCoordinate.ToString() + "\t" + temperatures[j - 1];
                 }
-                File.WriteAllLines(path+"Results"+vector.Key.ToString(), lines);
+                File.WriteAllLines("Results/Results"+vector.Key.ToString() + ".dat", lines);
             }  
         }
 
@@ -162,7 +162,7 @@ namespace GFEC
             {
                 k = k + 1;
                 double[] contactContactivity = loadStep.Values.ToArray();
-                VectorOperations.PrintVectorToFile(contactContactivity, @"C:\Users\Public\Documents\contactivity" + k.ToString() + ".dat");
+                VectorOperations.PrintVectorToFile(contactContactivity, "Results/contactivity" + k.ToString() + ".dat");
             }
         }
     }
