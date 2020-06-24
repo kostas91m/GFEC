@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Xml.Schema;
 using OpenTK.Input;
+using System.Windows.Media.Animation;
 
 namespace GFEC
 {
@@ -159,6 +160,17 @@ namespace GFEC
         {
             int k = 0;
             foreach (var loadStep in contactContactivityForEachStep)
+            {
+                k = k + 1;
+                double[] contactContactivity = loadStep.Values.ToArray();
+                VectorOperations.PrintVectorToFile(contactContactivity, "Results/contactivity" + k.ToString() + ".dat");
+            }
+        }
+
+        public static void ExportContactForcesForAllLoadSteps(Dictionary<int, Dictionary<int, double[]>> allStepsContactForces)
+        {
+            int k = 0;
+            foreach (KeyValuePair<int, Dictionary<int, double[]>> loadStep in allStepsContactForces)
             {
                 k = k + 1;
                 double[] contactContactivity = loadStep.Values.ToArray();

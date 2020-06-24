@@ -1,8 +1,8 @@
 clc;
 clear;
-totalNodes = 150;
-nodesInXcoor = 15;
-nodesInYcoor = 5;
+totalNodes = 486;
+nodesInXcoor = 81;
+nodesInYcoor = 3;
 data = dlmread("Results30.dat");
 data(1,:)=[]
 
