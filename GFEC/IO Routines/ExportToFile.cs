@@ -173,8 +173,20 @@ namespace GFEC
             foreach (KeyValuePair<int, Dictionary<int, double[]>> loadStep in allStepsContactForces)
             {
                 k = k + 1;
-                double[] contactContactivity = loadStep.Values.ToArray();
-                VectorOperations.PrintVectorToFile(contactContactivity, "Results/contactivity" + k.ToString() + ".dat");
+                Dictionary<int, double[]> contactForcesForElements = loadStep.Value;
+                int componentsOfVector = contactForcesForElements[1].Length;
+                string row;
+                List<string> totalData = new List<string>();
+                for (int i = 0; i < componentsOfVector; i++)
+                {
+                    row = "";
+                    foreach (KeyValuePair<int, double[]> forcesVector in contactForcesForElements)
+                    {
+                        row = row + "\t" + forcesVector.Value[i];
+                    }
+                    totalData.Add(row);
+                }
+                File.WriteAllLines("Results/Results" + k + ".dat", totalData);
             }
         }
     }
