@@ -174,7 +174,7 @@ namespace GFEC
             {
                 k = k + 1;
                 Dictionary<int, double[]> contactForcesForElements = loadStep.Value;
-                int componentsOfVector = contactForcesForElements[1].Length;
+                int componentsOfVector = contactForcesForElements[321].Length;
                 string row;
                 List<string> totalData = new List<string>();
                 for (int i = 0; i < componentsOfVector; i++)
@@ -186,7 +186,7 @@ namespace GFEC
                     }
                     totalData.Add(row);
                 }
-                File.WriteAllLines("Results/Results" + k + ".dat", totalData);
+                File.WriteAllLines("Results/ContactForces" + k + ".dat", totalData);
             }
         }
     }

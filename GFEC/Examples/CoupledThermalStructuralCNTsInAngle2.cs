@@ -486,6 +486,7 @@ namespace GFEC
 
             ExportToFile.ExportGeometryDataWithTemperatures(structuralSolution, thermalSolutions, thermalBoundaryConditions);
             ExportToFile.ExportCondactivityForAllLoadSteps(contactContactivityForEachStep);
+            ExportToFile.ExportContactForcesForAllLoadSteps(allStepsContactForces);
 
             int[] thermalBoundCond = thermalBoundaryConditions;
             double[] fullStructuralSol1 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[8], elementsAssembly.BoundedDOFsVector);
