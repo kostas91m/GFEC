@@ -1,15 +1,39 @@
 clc;
 clear;
+dataFiles = 20;
+contactElements = 9;
 
-data1 = dlmread("ContactForces19.dat");
-data2= dlmread("ContactForces20.dat");
-data3 = dlmread("contactivity19.dat");
-data4 = dlmread("contactivity20.dat");
-
-
-contactivity1 = sum(data3);
-contactivity2 = sum(data4);
-
-for i=1:1:9
-  data1Norm(i,1) = norm(data1(:,i));
+%Read contact forces and contactivity .dat files
+%-------------------------------------------------------------------------------
+for i=1:1:dataFiles
+  path = strcat("ContactForces",num2str(i),".dat");
+  contactForceData{i,1} = dlmread(path);
 endfor
+
+for i=1:1:dataFiles
+  path = strcat("contactivity",num2str(i),".dat");
+  contactivityData{i,1} = dlmread(path);
+endfor
+
+%Get contact forces norm for each element per load step. Get total contact force
+%per load step
+%-------------------------------------------------------------------------------
+for j=1:1:dataFiles
+  for i=1:1:contactElements
+    contactForcesNorms{j,1}(i,1) = norm(contactForceData{j,1}(:,i));
+  endfor
+endfor
+
+for i=1:1:dataFiles
+  totalContactForce(i,1) = sum(contactForcesNorms{i,1});  
+endfor
+
+%Get total contactivity per load step
+%-------------------------------------------------------------------------------
+for i=1:1:dataFiles
+  contactivity(i,1) = sum(contactivityData{i,1});
+endfor
+
+%Plot totalContactForce with contactivity
+%-------------------------------------------------------------------------------
+plot(totalContactForce, contactivity);

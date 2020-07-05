@@ -209,6 +209,7 @@
     <None Include="Matlab Scripts\contourScript.m" />
     <None Include="Matlab Scripts\finalGeometryPlotScript.m" />
     <None Include="Matlab Scripts\geometryPlotScript.m" />
+    <None Include="Matlab Scripts\Graphs.m" />
     <None Include="Matlab Scripts\HeatMap.m" />
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
