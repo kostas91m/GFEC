@@ -435,6 +435,7 @@ namespace GFEC
 
             #region Thermal
             Dictionary<int, double[]> thermalSolutions = new Dictionary<int, double[]>();
+            Dictionary<int, Dictionary<int, double[]>> allStepsHeatFluxes = new Dictionary<int, Dictionary<int, double[]>>();
             List<Dictionary<int, double>> contactContactivityForEachStep = new List<Dictionary<int, double>>();
             for (int k = 1; k <= allStepsSolutions.Count; k++)
             {
@@ -480,13 +481,24 @@ namespace GFEC
                 double[] tempSol = thermalSolution.GetSolution();
                 thermalSolutions.Add(k,tempSol);
 
+                double[] fullThermalSolutionVector = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(tempSol, elementsAssembly2.BoundedDOFsVector);
+                elementsAssembly2.UpdateDisplacements(fullThermalSolutionVector);
+                Dictionary<int, double[]> elementsInternalHeatFluxesVector = new Dictionary<int, double[]>();
+                for (int j = totalElements + 1; j <= totalElements + totalContactElements - 1; j++)
+                {
+                    elementsInternalHeatFluxesVector[j] = elementsAssembly.ElementsAssembly[j].CreateInternalGlobalForcesVector();
+                }
+                allStepsHeatFluxes[k] = elementsInternalHeatFluxesVector;
+
                 Dictionary<int, double> contactContactivity = AssemblyHelpMethods.RetrieveContactContactivity(thermalSolution.AssemblyData);
                 contactContactivityForEachStep.Add(contactContactivity);
+                
             }
 
             ExportToFile.ExportGeometryDataWithTemperatures(structuralSolution, thermalSolutions, thermalBoundaryConditions);
             ExportToFile.ExportCondactivityForAllLoadSteps(contactContactivityForEachStep);
             ExportToFile.ExportContactForcesForAllLoadSteps(allStepsContactForces);
+            ExportToFile.ExportHeatFluxesForAllLoadSteps(allStepsHeatFluxes);
 
             int[] thermalBoundCond = thermalBoundaryConditions;
             double[] fullStructuralSol1 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[8], elementsAssembly.BoundedDOFsVector);

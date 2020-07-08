@@ -189,5 +189,28 @@ namespace GFEC
                 File.WriteAllLines("Results/ContactForces" + k + ".dat", totalData);
             }
         }
+
+        public static void ExportHeatFluxesForAllLoadSteps(Dictionary<int, Dictionary<int, double[]>> allStepsContactForces)
+        {
+            int k = 0;
+            foreach (KeyValuePair<int, Dictionary<int, double[]>> loadStep in allStepsContactForces)
+            {
+                k = k + 1;
+                Dictionary<int, double[]> contactForcesForElements = loadStep.Value;
+                int componentsOfVector = contactForcesForElements[321].Length;
+                string row;
+                List<string> totalData = new List<string>();
+                for (int i = 0; i < componentsOfVector; i++)
+                {
+                    row = "";
+                    foreach (KeyValuePair<int, double[]> forcesVector in contactForcesForElements)
+                    {
+                        row = row + "\t" + forcesVector.Value[i];
+                    }
+                    totalData.Add(row);
+                }
+                File.WriteAllLines("Results/HeatFluxes" + k + ".dat", totalData);
+            }
+        }
     }
 }
