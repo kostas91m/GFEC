@@ -17,11 +17,12 @@ namespace GFEC
         private const double scaleFactor = 1.0;
         private const double xIntervals = 0.1;
         private const double yIntervals = 0.1;
-        private const double offset = 7.0 - 0.05;//8.1;//9.3;
-        private const double gap = 1.14;
+        private const double offset = 7.0 -0.45;//8.1;//9.3// tested: 7.0 - 0.05
+        private const double gap = 2.75; //tested: 1.14
         public static ISolver structuralSolution;
         public static ISolver thermalSolution;
-        private const double angle = Math.PI / 2.2;
+        private const double angle = Math.PI / 2.57; //tested: 2.2
+        private static int loadStepsNumber = 40;
         //private const double angle = Math.PI * 0.48485;
 
         //--------------------------------------------
@@ -385,7 +386,7 @@ namespace GFEC
             //structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
             structuralSolution.NonLinearScheme.Tolerance = 1e-5;
             structuralSolution.ActivateNonLinearSolver = true;
-            structuralSolution.NonLinearScheme.numberOfLoadSteps = 20;
+            structuralSolution.NonLinearScheme.numberOfLoadSteps = loadStepsNumber;
 
             double[] externalForces3 = externalForcesStructuralVector;
             foreach (var dof in loadedStructuralDOFs)
