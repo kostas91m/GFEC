@@ -17,11 +17,11 @@ namespace GFEC
         private const double scaleFactor = 1.0;
         private const double xIntervals = 0.1;
         private const double yIntervals = 0.1;
-        private const double offset = 7.0 -0.45;//8.1;//9.3// tested: 7.0 - 0.05
-        private const double gap = 2.75; //tested: 1.14
+        private const double offset = 7.0 -0.25;//8.1;//9.3// tested: 7.0 - 0.05, 7.0 -0.45
+        private const double gap = 2.10; //tested: 1.14, 2.75
         public static ISolver structuralSolution;
         public static ISolver thermalSolution;
-        private const double angle = Math.PI / 2.57; //tested: 2.2
+        private const double angle = Math.PI / 2.40; //tested: 2.2, 2.57
         private static int loadStepsNumber = 40;
         //private const double angle = Math.PI * 0.48485;
 
