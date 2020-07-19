@@ -487,7 +487,7 @@ namespace GFEC
                 Dictionary<int, double[]> elementsInternalHeatFluxesVector = new Dictionary<int, double[]>();
                 for (int j = totalElements + 1; j <= totalElements + totalContactElements - 1; j++)
                 {
-                    elementsInternalHeatFluxesVector[j] = elementsAssembly.ElementsAssembly[j].CreateInternalGlobalForcesVector();
+                    elementsInternalHeatFluxesVector[j] = elementsAssembly2.ElementsAssembly[j].CreateInternalGlobalForcesVector();
                 }
                 allStepsHeatFluxes[k] = elementsInternalHeatFluxesVector;
 
