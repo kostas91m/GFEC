@@ -10,14 +10,14 @@ namespace GFEC
     public static class CoupledThermalStructuralCNTs1b
     {
         private const int totalNodes = 486;
-        private const int totalContactElements = 10;//20;//8;
+        private const int totalContactElements = 41;//20;//8;
         private const int totalElements = 320;
         private const int nodesInXCoor = 81;
         private const int nodesInYCoor = 3;
         private const double scaleFactor = 1.0;
         private const double xIntervals = 0.1;
         private const double yIntervals = 0.1;
-        private const double offset = 7.1;//8.1;//9.3;
+        private const double offset = 4.0;//8.1;//9.3;
         private const double gap = 0.05;
         public static ISolver structuralSolution;
 
@@ -413,7 +413,8 @@ namespace GFEC
 
 
             #region Thermal
-            List<double[]> thermalSolutions = new List<double[]>();
+            Dictionary<int, double[]> thermalSolutions = new Dictionary<int, double[]>();
+            Dictionary<int, Dictionary<int, double[]>> allStepsHeatFluxes = new Dictionary<int, Dictionary<int, double[]>>();
             List<Dictionary<int, double>> contactContactivityForEachStep = new List<Dictionary<int, double>>();
             for (int k = 1; k <= allStepsSolutions.Count; k++)
             {
@@ -454,11 +455,25 @@ namespace GFEC
                 double[] reducedExternalHeatFlux = BoundaryConditionsImposition.ReducedVector(externalHeatFlux, thermalSolution.AssemblyData.BoundedDOFsVector);
                 thermalSolution.Solve(reducedExternalHeatFlux);
                 double[] tempSol = thermalSolution.GetSolution();
-                thermalSolutions.Add(tempSol);
+                thermalSolutions.Add(k,tempSol);
+
+                double[] fullThermalSolutionVector = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(tempSol, elementsAssembly2.BoundedDOFsVector);
+                elementsAssembly2.UpdateDisplacements(fullThermalSolutionVector);
+                Dictionary<int, double[]> elementsInternalHeatFluxesVector = new Dictionary<int, double[]>();
+                for (int j = totalElements + 1; j <= totalElements + totalContactElements - 1; j++)
+                {
+                    elementsInternalHeatFluxesVector[j] = elementsAssembly2.ElementsAssembly[j].CreateInternalGlobalForcesVector();
+                }
+                allStepsHeatFluxes[k] = elementsInternalHeatFluxesVector;
 
                 Dictionary<int, double> contactContactivity = AssemblyHelpMethods.RetrieveContactContactivity(thermalSolution.AssemblyData);
                 contactContactivityForEachStep.Add(contactContactivity);
             }
+
+            ExportToFile.ExportGeometryDataWithTemperatures(structuralSolution, thermalSolutions, thermalBoundaryConditions);
+            ExportToFile.ExportCondactivityForAllLoadSteps(contactContactivityForEachStep);
+            ExportToFile.ExportContactForcesForAllLoadSteps(allStepsContactForces);
+            ExportToFile.ExportHeatFluxesForAllLoadSteps(allStepsHeatFluxes);
 
             int[] thermalBoundCond = thermalBoundaryConditions;
             double[] fullStructuralSol1 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[2], elementsAssembly.BoundedDOFsVector);
