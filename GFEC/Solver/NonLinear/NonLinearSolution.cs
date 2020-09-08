@@ -18,6 +18,7 @@ namespace GFEC
         public Dictionary<int, double[]> InternalForces { get; set; }
         public Dictionary<int, double[]> Solutions { get; set; }
         public event EventHandler<string> convergenceResult;
+        public List<string> LoadStepConvergence { get; set; }
 
         public virtual double[] Solve(IAssembly assembly, ILinearSolution linearScheme, double[] forceVector)
         {

@@ -10,14 +10,14 @@ namespace GFEC
     public static class CoupledThermalStructuralCNTs1b
     {
         private const int totalNodes = 486;
-        private const int totalContactElements = 41;//20;//8;
+        private const int totalContactElements = 11;//20;//8;
         private const int totalElements = 320;
         private const int nodesInXCoor = 81;
         private const int nodesInYCoor = 3;
         private const double scaleFactor = 1.0;
         private const double xIntervals = 0.1;
         private const double yIntervals = 0.1;
-        private const double offset = 4.0;//8.1;//9.3;
+        private const double offset = 7.0;//8.1;//9.3;
         private const double gap = 0.05;
         public static ISolver structuralSolution;
 

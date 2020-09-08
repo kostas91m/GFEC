@@ -212,5 +212,10 @@ namespace GFEC
                 File.WriteAllLines("Results/HeatFluxes" + k + ".dat", totalData);
             }
         }
+
+        public static void ExportConvergenceResultsToFile(List<string> convergenceResults)
+        {
+            File.WriteAllLines("Results/ConvergenceResults.dat", convergenceResults);
+        }
     }
 }
