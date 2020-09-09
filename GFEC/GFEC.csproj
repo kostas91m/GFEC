@@ -106,6 +106,7 @@
     <Compile Include="Examples\CoupledThermalStructuralCNTsInAngle.cs" />
     <Compile Include="Examples\CoupledThermalStructuralCNTsInAngle2.cs" />
     <Compile Include="Examples\CoupledThermalStructuralCNTsInAngle4.cs" />
+    <Compile Include="Examples\CoupledThermalStructuralCNTsInAngle5.cs" />
     <Compile Include="Examples\DynamicExample.cs" />
     <Compile Include="Examples\ExplicitLinearExample.cs" />
     <Compile Include="Examples\LinearFrameExample.cs" />

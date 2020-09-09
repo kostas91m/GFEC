@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace GFEC
 {
-    public static class CoupledThermalStructuralCNTsInAngle2
+    public static class CoupledThermalStructuralCNTsInAngle5
     {
         private const int totalNodes = 486;
         private const int totalContactElements = 30;//20;//8;
@@ -52,7 +52,7 @@ namespace GFEC
 
 
         //External loads
-        const double externalStructuralLoad = -10000.0*2;
+        const double externalStructuralLoad = -10000.0 * 2;
         const double externalHeatLoad = 2500.0 * 1e-6;
         //-----------------------------------------------------------------------------------
         //const double externalStructuralLoad = -5 * 100000000.0 * 1e-18 * 0.3;
@@ -136,7 +136,7 @@ namespace GFEC
             //    boundedDofs.Add(i * 2 + 1); //support for all nodes at X direction
             //}
 
-            for (int i = totalNodes/2 + 1; i < totalNodes; i++)
+            for (int i = totalNodes / 2 + 1; i < totalNodes; i++)
             {
                 boundedDofs.Add(i * 2 + 0);
                 boundedDofs.Add(i * 2 + 1); //lower beam support for all nodes
@@ -241,6 +241,14 @@ namespace GFEC
                 int upperNode = nodesInXCoor - totalContactElements + i + 1;
                 connectivity[totalElements + i] = new Dictionary<int, int>() { { 1, lowerLeftNode }, { 2, lowerRightNode }, { 3, upperNode } };
             }
+            for (int i = 1; i <= totalContactElements - 2; i++)
+            {
+                int lowerMiddleNode = 2 * nodesInXCoor * nodesInYCoor - nodesInXCoor + i + 1;
+                int lowerLeftNode = lowerMiddleNode - 1;
+                int lowerRightNode = lowerMiddleNode + 1;
+                int upperNode = nodesInXCoor - totalContactElements + i + 2;
+                connectivity[totalElements + i + totalContactElements -1] = new Dictionary<int, int>() { { 1, lowerLeftNode }, { 2, lowerRightNode }, { 3, upperNode } };
+            }
 
             return connectivity;
         }
@@ -284,7 +292,7 @@ namespace GFEC
                 elementProperties[i].Thickness = thickness;
             }
 
-            for (int i = totalElements + 1; i <= totalElements + totalContactElements - 1; i++)
+            for (int i = totalElements + 1; i <= totalElements + totalContactElements - 1 + totalContactElements -2; i++)
             {
                 elementProperties[i] = new ElementProperties(E, A, type2);
                 elementProperties[i].Density = density;
@@ -307,7 +315,7 @@ namespace GFEC
                 elementProperties[i].ElementType = type;
                 elementProperties[i].ThermalConductivity = thermalCond;
             }
-            for (int i = totalElements + 1; i <= totalElements + totalContactElements - 1; i++)
+            for (int i = totalElements + 1; i <= totalElements + totalContactElements - 1 + totalContactElements - 2; i++)
             {
                 elementProperties[i] = new ElementProperties();
                 elementProperties[i].ElementType = type2;
@@ -445,7 +453,7 @@ namespace GFEC
                 for (int j = totalElements + 1; j <= totalElements + totalContactElements - 1; j++)
                 {
                     double[] contactForce = allStepsContactForces[k][j];
-                    elementsAssembly2.ElementsProperties[j].ContactForceValue = - contactForce[5];
+                    elementsAssembly2.ElementsProperties[j].ContactForceValue = -contactForce[5];
                     double projectionPoint = allStepsProjectionPoints[k][j];
                     elementsAssembly2.ElementsProperties[j].Dx1 = projectionPoint;
                 }
@@ -480,7 +488,7 @@ namespace GFEC
                 double[] reducedExternalHeatFlux = BoundaryConditionsImposition.ReducedVector(externalHeatFlux, thermalSolution.AssemblyData.BoundedDOFsVector);
                 thermalSolution.Solve(reducedExternalHeatFlux);
                 double[] tempSol = thermalSolution.GetSolution();
-                thermalSolutions.Add(k,tempSol);
+                thermalSolutions.Add(k, tempSol);
 
                 double[] fullThermalSolutionVector = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(tempSol, elementsAssembly2.BoundedDOFsVector);
                 elementsAssembly2.UpdateDisplacements(fullThermalSolutionVector);
@@ -493,7 +501,7 @@ namespace GFEC
 
                 Dictionary<int, double> contactContactivity = AssemblyHelpMethods.RetrieveContactContactivity(thermalSolution.AssemblyData);
                 contactContactivityForEachStep.Add(contactContactivity);
-                
+
             }
 
             ExportToFile.ExportGeometryDataWithTemperatures(structuralSolution, thermalSolutions, thermalBoundaryConditions);
