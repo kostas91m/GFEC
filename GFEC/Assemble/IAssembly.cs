@@ -23,6 +23,7 @@ namespace GFEC
         Dictionary<int, double[]> GetElementsInternalForces(double[] totalInternalForcesVector);
         List<string> GetElementsType();
         Dictionary<int, IElement> ElementsAssembly { get; set; }
+        int CountElementsOfSameType(Type elementType);
 
 
 

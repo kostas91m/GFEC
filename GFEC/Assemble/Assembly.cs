@@ -126,6 +126,21 @@ namespace GFEC
             }
         }
 
+        public int CountElementsOfSameType(Type elementType)
+        {
+            int counter = 0;
+            
+            foreach (var item in ElementsAssembly)
+            {
+                Type kati = item.GetType();
+                if (item.Value.GetType() == elementType)
+                {
+                    counter = counter + 1;
+                }
+            }
+            return counter;
+        }
+
         public void UpdateDisplacements(double[] totalDisplacementVector)
         {
             double[] fullTotalDisplacementVector = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(totalDisplacementVector, BoundedDOFsVector);

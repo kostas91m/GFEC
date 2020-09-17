@@ -17,11 +17,11 @@ namespace GFEC
         private const double scaleFactor = 1.0;
         private const double xIntervals = 0.1;
         private const double yIntervals = 0.1;
-        private const double offset = 4.75;//8.1;//9.3// tested: 7.0 - 0.05, 7.0 -0.45, 7.0 -0.25, 7.0 -0.0
-        private const double gap = 2.10; //tested: 1.14, 2.75, 2.10, 0.75
+        private const double offset = 4.55;//8.1;//9.3// tested: 7.0 - 0.05, 7.0 -0.45, 7.0 -0.25, 7.0 -0.0
+        private const double gap = 2.75; //tested: 1.14, 2.75, 2.10, 0.75
         public static ISolver structuralSolution;
         public static ISolver thermalSolution;
-        private const double angle = Math.PI / 2.40; //tested: 2.2, 2.57, 2.40, 2.12
+        private const double angle = Math.PI / 2.57; //tested: 2.2, 2.57, 2.40, 2.12
         private static int loadStepsNumber = 40;
         //private const double angle = Math.PI * 0.48485;
 
@@ -242,6 +242,36 @@ namespace GFEC
                 connectivity[totalElements + i] = new Dictionary<int, int>() { { 1, lowerLeftNode }, { 2, lowerRightNode }, { 3, upperNode } };
             }
 
+            int count = connectivity.Count;
+            for (int i = 1; i <= totalContactElements - 1-1; i++)
+            {
+                int lowerMiddleNode = 2 * nodesInXCoor * nodesInYCoor - nodesInXCoor + i + 1;
+                int lowerLeftNode = lowerMiddleNode - 1;
+                int lowerRightNode = lowerMiddleNode + 1;
+                int upperNode = nodesInXCoor - totalContactElements + i + 1 + 1;
+                connectivity[count + i] = new Dictionary<int, int>() { { 1, lowerLeftNode }, { 2, lowerRightNode }, { 3, upperNode } };
+            }
+
+            count = connectivity.Count;
+            for (int i = 1; i <= totalContactElements - 1 - 1 -1; i++)
+            {
+                int lowerMiddleNode = 2 * nodesInXCoor * nodesInYCoor - nodesInXCoor + i + 1;
+                int lowerLeftNode = lowerMiddleNode - 1;
+                int lowerRightNode = lowerMiddleNode + 1;
+                int upperNode = nodesInXCoor - totalContactElements + i + 1 + 1 +1;
+                connectivity[count + i] = new Dictionary<int, int>() { { 1, lowerLeftNode }, { 2, lowerRightNode }, { 3, upperNode } };
+            }
+
+            count = connectivity.Count;
+            for (int i = 1; i <= totalContactElements - 1 - 1 - 1 -1; i++)
+            {
+                int lowerMiddleNode = 2 * nodesInXCoor * nodesInYCoor - nodesInXCoor + i + 1;
+                int lowerLeftNode = lowerMiddleNode - 1;
+                int lowerRightNode = lowerMiddleNode + 1;
+                int upperNode = nodesInXCoor - totalContactElements + i + 1 + 1 + 1 +1;
+                connectivity[count + i] = new Dictionary<int, int>() { { 1, lowerLeftNode }, { 2, lowerRightNode }, { 3, upperNode } };
+            }
+
             return connectivity;
         }
 
@@ -284,7 +314,7 @@ namespace GFEC
                 elementProperties[i].Thickness = thickness;
             }
 
-            for (int i = totalElements + 1; i <= totalElements + totalContactElements - 1; i++)
+            for (int i = totalElements + 1; i <= totalElements + totalContactElements - 1 + totalContactElements - 2 + totalContactElements - 3 + totalContactElements - 4; i++)
             {
                 elementProperties[i] = new ElementProperties(E, A, type2);
                 elementProperties[i].Density = density;
@@ -307,7 +337,7 @@ namespace GFEC
                 elementProperties[i].ElementType = type;
                 elementProperties[i].ThermalConductivity = thermalCond;
             }
-            for (int i = totalElements + 1; i <= totalElements + totalContactElements - 1; i++)
+            for (int i = totalElements + 1; i <= totalElements + totalContactElements - 1 + totalContactElements - 2 + totalContactElements - 3 + totalContactElements - 4; i++)
             {
                 elementProperties[i] = new ElementProperties();
                 elementProperties[i].ElementType = type2;
@@ -353,7 +383,7 @@ namespace GFEC
             elementsAssembly.CreateElementsAssembly();
             elementsAssembly.ActivateBoundaryConditions = true;
             double[,] globalStiffnessMatrix = elementsAssembly.CreateTotalStiffnessMatrix();
-
+            int countContactElements = elementsAssembly.CountElementsOfSameType(typeof(ContactNtS2D));
             //Gnuplot graphs
             ShowToGUI.PlotInitialGeometry(elementsAssembly);
 
