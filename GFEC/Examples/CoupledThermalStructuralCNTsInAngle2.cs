@@ -447,7 +447,7 @@ namespace GFEC
                 elementsInternalContactForcesVector = new Dictionary<int, double[]>();
                 projectionPointForEachElement = new Dictionary<int, double>();
                 elementsAssembly.UpdateDisplacements(allStepsSolutions[i]);
-                for (int j = totalElements + 1; j <= totalElements + totalContactElements - 1; j++)
+                for (int j = totalElements + 1; j <= totalElements + countContactElements; j++)
                 {
                     elementsInternalContactForcesVector[j] = elementsAssembly.ElementsAssembly[j].CreateInternalGlobalForcesVector();
                     projectionPointForEachElement[j] = elementsAssembly.ElementsAssembly[j].ClosestPointProjection();
@@ -472,7 +472,7 @@ namespace GFEC
             {
                 IAssembly elementsAssembly2 = CreateThermalAssembly();
 
-                for (int j = totalElements + 1; j <= totalElements + totalContactElements - 1; j++)
+                for (int j = totalElements + 1; j <= totalElements + countContactElements; j++)
                 {
                     double[] contactForce = allStepsContactForces[k][j];
                     elementsAssembly2.ElementsProperties[j].ContactForceValue = - contactForce[5];
@@ -515,7 +515,7 @@ namespace GFEC
                 double[] fullThermalSolutionVector = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(tempSol, elementsAssembly2.BoundedDOFsVector);
                 elementsAssembly2.UpdateDisplacements(fullThermalSolutionVector);
                 Dictionary<int, double[]> elementsInternalHeatFluxesVector = new Dictionary<int, double[]>();
-                for (int j = totalElements + 1; j <= totalElements + totalContactElements - 1; j++)
+                for (int j = totalElements + 1; j <= totalElements + countContactElements; j++)
                 {
                     elementsInternalHeatFluxesVector[j] = elementsAssembly2.ElementsAssembly[j].CreateInternalGlobalForcesVector();
                 }
