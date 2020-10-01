@@ -120,7 +120,7 @@ namespace GFEC
             {
                 string line = element.Key.ToString();
 
-                if (element.Value is ContactNtN2D)
+                if (element.Value is ContactNtS2D)
                 {
                     foreach (var elementNode in assembly.ElementsConnectivity[element.Key])
                     {
@@ -138,9 +138,9 @@ namespace GFEC
                 }
             }
 
-            File.WriteAllLines(@"C:\Users\Public\Documents\coordinateData.dat", coordinateData);
-            File.WriteAllLines(@"C:\Users\Public\Documents\connectivityData.dat", connectivityData);
-            File.WriteAllLines(@"C:\Users\Public\Documents\contactConnectivityData.dat", contactConnectivityData);
+            File.WriteAllLines("Results/coordinateData.dat", coordinateData);
+            File.WriteAllLines("Results/connectivityData.dat", connectivityData);
+            File.WriteAllLines("Results/contactConnectivityData.dat", contactConnectivityData);
         }
 
         public static void ExportMatlabFinalGeometry(IAssembly assembly, double[] displacements)
