@@ -10,18 +10,18 @@ namespace GFEC
     public static class CoupledThermalStructuralCNTsInAngle2
     {
         private const int totalNodes = 486;
-        private const int totalContactElements = 30;//20;//8;
+        private const int totalContactElements = 10;//20;//8;
         private const int totalElements = 320;
         private const int nodesInXCoor = 81;
         private const int nodesInYCoor = 3;
         private const double scaleFactor = 1.0;
         private const double xIntervals = 0.1;
         private const double yIntervals = 0.1;
-        private const double offset = 4.55;//8.1;//9.3// tested: 7.0 - 0.05, 7.0 -0.45, 7.0 -0.25, 7.0 -0.0
-        private const double gap = 2.75; //tested: 1.14, 2.75, 2.10, 0.75
+        private const double offset = 7.0;//8.1;//9.3// tested: 7.0 - 0.05, 7.0 -0.45, 7.0 -0.25, 7.0 -0.0
+        private const double gap = 0.75; //tested: 1.14, 2.75, 2.10, 0.75
         public static ISolver structuralSolution;
         public static ISolver thermalSolution;
-        private const double angle = Math.PI / 2.57; //tested: 2.2, 2.57, 2.40, 2.12
+        private const double angle = Math.PI / 2.12; //tested: 2.2, 2.57, 2.40, 2.12
         private static int loadStepsNumber = 40;
         //private const double angle = Math.PI * 0.48485;
 
