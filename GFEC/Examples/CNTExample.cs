@@ -10,7 +10,7 @@ namespace GFEC
     public static class CNTExample
     {
         private const int totalNodes = 486/2;
-        private const int totalContactElements = 11;//20;//8;
+        private const int totalLoadedNodes = 1;//20;//8;
         private const int totalElements = 320/2;
         private const int nodesInXCoor = 81;
         private const int nodesInYCoor = 3;
@@ -19,59 +19,18 @@ namespace GFEC
         private const double yIntervals = 0.1;
         public static ISolver structuralSolution;
 
-        //--------------------------------------------
-        //private const int totalNodes = 150;
-        //private const int totalContactElements = 8;
-        //private const int totalElements = 112;
-        //private const int nodesInXCoor = 15;
-        //private const int nodesInYCoor = 5;
-        //private const double scaleFactor = 1.0;
-        //private const double xIntervals = 0.1;
-        //private const double yIntervals = 0.1;
-        //private const double offset = 0.7;
-        //private const double gap = 0.01;
-
-
-
         //Boundary conditions
         static int[] structuralBoundaryConditions; // = new int[] { 1, 203, 505, 707, 909, 1012, 1014, 1016, 1018, 1020, 1022, 1024, 1026, 1211, 1413, 1615, 1817, 2019 };
 
         //External loads
-        const double externalStructuralLoad = -0.1;
-
+        const double externalStructuralLoad = -10000.0;
         static List<int> loadedStructuralDOFs; // = new List<int>(new int[] { 995, 997, 999, 1001, 1003, 1005, 1007, 1009 });
         static double[] externalForcesStructuralVector; // = new double[2020];
 
-        //CNT values
-        //const double YoungMod = 1.0e12;
-        //const double density = 8000.0;
-        //const double area = 0.01;
-        //const double thickness = 0.1;
-        //const double solidThermalCond = 6600;
-        //const double roughness = (1000000.0 / 2.81);
-        //const double contactCond = 6600;
-        //const double yieldStrength = 60000000000.0;
-
         //CNT values scaled
-        const double YoungMod = 1.0 * 1e9;
+        const double YoungMod = 200e9;
         const double density = 8000.0;
-        const double area = 0.01;
         const double thickness = 0.1;
-        const double solidThermalCond = 3300 * 1.0e-9;
-        const double roughness = (1.0 / 2.81);
-        const double contactCond = 3300 * 1.0e-9;
-        const double yieldStrength = 60.0 * 1e-9;
-
-        //----------------------------------------------------------------------
-        //const double YoungMod = 1.0e-6;
-        //const double density = 8000.0;
-        //const double area = 0.01;
-        //const double thickness = 0.1;
-        //const double solidThermalCond = 3300 * 1.0e-9;
-        //const double roughness = (1.0 / 2.81);
-        //const double contactCond = 3300 * 1.0e-9;
-        //const double yieldStrength = 60.0 * 1e-9;
-
 
         private static void CreateStructuralBoundaryConditions()
         {
@@ -90,7 +49,7 @@ namespace GFEC
         private static void CreateStructuralLoadVector()
         {
             loadedStructuralDOFs = new List<int>();
-            for (int i = 0; i < totalContactElements; i++)
+            for (int i = 0; i < totalLoadedNodes; i++)
             {
                 loadedStructuralDOFs.Add(nodesInXCoor * nodesInYCoor * 2 - 2 * i);
             }
@@ -100,7 +59,6 @@ namespace GFEC
         private static Dictionary<int, INode> CreateNodes()
         {
             Dictionary<int, INode> nodes = new Dictionary<int, INode>();
-            //Upper cantilever
             int k;
             k = 1;
             for (int j = 0; j < nodesInYCoor; j++)
@@ -110,8 +68,7 @@ namespace GFEC
                     nodes[k] = new Node(i * xIntervals * scaleFactor, j * yIntervals * scaleFactor);
                     k += 1;
                 }
-            }
-         
+            }    
             return nodes;
         }
 
@@ -129,7 +86,6 @@ namespace GFEC
                 }
 
             }
-
             return connectivity;
         }
 
@@ -146,8 +102,8 @@ namespace GFEC
         private static Dictionary<int, IElementProperties> CreateElementProperties()
         {
             double E = YoungMod;
-            double A = area;
             string type = "Quad4";
+            double A = 0;
 
             Dictionary<int, IElementProperties> elementProperties = new Dictionary<int, IElementProperties>();
             for (int i = 1; i <= totalElements; i++)
@@ -160,7 +116,6 @@ namespace GFEC
                 elementProperties[i].Density = density;
                 elementProperties[i].Thickness = thickness;
             }
-
             return elementProperties;
         }
 
@@ -213,7 +168,7 @@ namespace GFEC
 
 
             ///structuralSolution = new StaticSolver();
-            structuralSolution.LinearScheme = new PCGSolver();
+            structuralSolution.LinearScheme = new CholeskyFactorization();
             //structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
             structuralSolution.NonLinearScheme.Tolerance = 1e-5;
             structuralSolution.ActivateNonLinearSolver = false;
@@ -245,7 +200,7 @@ namespace GFEC
             {
                 elementsInternalContactForcesVector = new Dictionary<int, double[]>();
                 elementsAssembly.UpdateDisplacements(allStepsSolutions[i]);
-                for (int j = totalElements + 1; j <= totalElements + totalContactElements; j++)
+                for (int j = totalElements + 1; j <= totalElements ; j++)
                 {
                     elementsInternalContactForcesVector[j] = elementsAssembly.ElementsAssembly[j].CreateInternalGlobalForcesVector();
                 }
@@ -297,26 +252,7 @@ namespace GFEC
 
         public static void RunDynamicExample()
         {
-            IAssembly elementsAssembly = CreateAssembly();
-            elementsAssembly.CreateElementsAssembly();
-            elementsAssembly.ActivateBoundaryConditions = true;
-
-            InitialConditions initialValues = new InitialConditions();
-            initialValues.InitialAccelerationVector = new double[6];
-            initialValues.InitialDisplacementVector = new double[6];
-            //initialValues.InitialDisplacementVector[7] = -0.02146;
-            initialValues.InitialVelocityVector = new double[6];
-            initialValues.InitialTime = 0.0;
-
-            ExplicitSolver newSolver = new ExplicitSolver(1.0, 10000);
-            newSolver.Assembler = elementsAssembly;
-
-            newSolver.InitialValues = initialValues;
-            newSolver.ExternalForcesVector = new double[] { 0, 0, 0, 0, -50000, -50000 };
-            newSolver.LinearSolver = new CholeskyFactorization();
-            newSolver.ActivateNonLinearSolution = true;
-            newSolver.SolveNewmark();
-            newSolver.PrintExplicitSolution();//
+            throw new Exception("Not implemented");
         }
 
     }
