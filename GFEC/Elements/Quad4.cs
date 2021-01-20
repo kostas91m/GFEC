@@ -233,7 +233,7 @@ namespace GFEC
                     double detJ = CalculateInverseJacobian(J).Item2;
                     Dictionary<int, double[]> globaldN = CalculateShapeFunctionsGlobalDerivatives(localdN, invJ);
                     double[,] B = CalculateBMatrix(globaldN);
-                    K = MatrixOperations.MatrixAddition(K, MatrixOperations.ScalarMatrixProductNew(detJ * gW[0] * gW[1],
+                    K = MatrixOperations.MatrixAddition(K, MatrixOperations.ScalarMatrixProductNew(detJ * gW[0] * gW[1] * Properties.Thickness,
                         MatrixOperations.MatrixProduct(MatrixOperations.Transpose(B), MatrixOperations.MatrixProduct(E, B))));
                 }
             }
@@ -328,7 +328,7 @@ namespace GFEC
                     double[] strainVector = CalculateStrainsVector(B);
                     double[] stressVector = CalculateStressVector(E, strainVector);
                     F = VectorOperations.VectorVectorAddition(F, VectorOperations.VectorScalarProductNew(
-                        VectorOperations.MatrixVectorProduct(MatrixOperations.Transpose(B), stressVector), detJ * gW[0] * gW[1]));
+                        VectorOperations.MatrixVectorProduct(MatrixOperations.Transpose(B), stressVector), detJ * gW[0] * gW[1] * Properties.Thickness));
                 }
             }
             return F;

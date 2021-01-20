@@ -37,7 +37,7 @@ namespace GFEC
         static int[] structuralBoundaryConditions; // = new int[] { 1, 203, 505, 707, 909, 1012, 1014, 1016, 1018, 1020, 1022, 1024, 1026, 1211, 1413, 1615, 1817, 2019 };
 
         //External loads
-        const double externalStructuralLoad = -1000.0;
+        const double externalStructuralLoad = -0.1;
 
         static List<int> loadedStructuralDOFs; // = new List<int>(new int[] { 995, 997, 999, 1001, 1003, 1005, 1007, 1009 });
         static double[] externalForcesStructuralVector; // = new double[2020];
