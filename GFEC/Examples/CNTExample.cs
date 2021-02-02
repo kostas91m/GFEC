@@ -9,28 +9,28 @@ namespace GFEC
 {
     public static class CNTExample
     {
-        private const int totalNodes = 486/2;
+        private const int totalNodes = 324;
         private const int totalLoadedNodes = 1;//20;//8;
-        private const int totalElements = 320/2;
+        private const int totalElements = 240;
         private const int nodesInXCoor = 81;
-        private const int nodesInYCoor = 3;
+        private const int nodesInYCoor = 4;
         private const double scaleFactor = 1.0;
-        private const double xIntervals = 0.1;
-        private const double yIntervals = 0.1;
+        private const double xIntervals = 0.375;
+        private const double yIntervals = 0.41;
         public static ISolver structuralSolution;
 
         //Boundary conditions
         static int[] structuralBoundaryConditions; // = new int[] { 1, 203, 505, 707, 909, 1012, 1014, 1016, 1018, 1020, 1022, 1024, 1026, 1211, 1413, 1615, 1817, 2019 };
 
         //External loads
-        const double externalStructuralLoad = -10000.0;
+        const double externalStructuralLoad = (26 * 4e-13) / 4;
         static List<int> loadedStructuralDOFs; // = new List<int>(new int[] { 995, 997, 999, 1001, 1003, 1005, 1007, 1009 });
         static double[] externalForcesStructuralVector; // = new double[2020];
 
         //CNT values scaled
-        const double YoungMod = 200e9;
+        const double YoungMod = 1.45e-6;
         const double density = 8000.0;
-        const double thickness = 0.1;
+        const double thickness = 0.38;
 
         private static void CreateStructuralBoundaryConditions()
         {
@@ -49,10 +49,14 @@ namespace GFEC
         private static void CreateStructuralLoadVector()
         {
             loadedStructuralDOFs = new List<int>();
-            for (int i = 0; i < totalLoadedNodes; i++)
-            {
-                loadedStructuralDOFs.Add(nodesInXCoor * nodesInYCoor * 2 - 2 * i);
-            }
+            //for (int i = 0; i < totalLoadedNodes; i++)
+            //{
+            //    loadedStructuralDOFs.Add(nodesInXCoor * nodesInYCoor * 2 - 2 * i);
+            //}
+            loadedStructuralDOFs.Add(nodesInXCoor * 2);
+            loadedStructuralDOFs.Add(nodesInXCoor * 2 * 2);
+            loadedStructuralDOFs.Add(nodesInXCoor * 2 * 3);
+            loadedStructuralDOFs.Add(nodesInXCoor * 2 * 4);
             externalForcesStructuralVector = new double[totalNodes * 2];
         }
 
@@ -189,7 +193,9 @@ namespace GFEC
             elementsAssembly.UpdateDisplacements(solvector3);
             ShowToGUI.PlotFinalGeometry(elementsAssembly);
             double[] fullSolVector3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(solvector3, elementsAssembly.BoundedDOFsVector);
+            double tempResult = fullSolVector3[fullSolVector3.Length-1];
             Dictionary<int, INode> finalNodes = Assembly.CalculateFinalNodalCoordinates(elementsAssembly.Nodes, fullSolVector3);
+            
             double[] xFinalNodalCoor = Assembly.NodalCoordinatesToVectors(finalNodes).Item1;
             double[] yFinalNodalCoor = Assembly.NodalCoordinatesToVectors(finalNodes).Item2;
             Dictionary<int, double[]> allStepsSolutions = structuralSolution.GetAllStepsSolutions();
