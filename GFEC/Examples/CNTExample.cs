@@ -172,7 +172,7 @@ namespace GFEC
 
 
             ///structuralSolution = new StaticSolver();
-            structuralSolution.LinearScheme = new CholeskyFactorization();
+            structuralSolution.LinearScheme = new PCGSolver();
             //structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
             structuralSolution.NonLinearScheme.Tolerance = 1e-5;
             structuralSolution.ActivateNonLinearSolver = false;

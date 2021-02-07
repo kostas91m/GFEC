@@ -9,7 +9,6 @@ namespace GFEC
 {
     public static class CNTsInAngleFinalExample
     {
-        private const int offsetNodes = 11;
         private const int totalNodes = 648;
         private const int totalContactElements = 60;//20;//8;
         private const int totalElements = 480;
@@ -18,11 +17,14 @@ namespace GFEC
         private const double scaleFactor = 1.0;
         private const double xIntervals = 0.375;
         private const double yIntervals = 0.41;
-        private const double offset = 6.95;//8.1;//9.3// tested: 7.0 - 0.05, 7.0 -0.45, 7.0 -0.25, 7.0 -0.0
-        private const double gap = 4.57; //tested: 1.14, 2.75, 2.10, 0.75
+ 
         public static ISolver structuralSolution;
         public static ISolver thermalSolution;
-        private const double angle = Math.PI / 2.20; //tested: 2.2, 2.57, 2.40, 2.12
+        private const double angleInDegrees = 80;
+        private const double angle = (Math.PI / 180) * angleInDegrees; //tested: 2.2, 2.57, 2.40, 2.12
+        private static double offset = (nodesInXCoor - 1) * xIntervals * Math.Sin(angle) - totalContactElements * xIntervals; //6.95;//8.1;//9.3// tested: 7.0 - 0.05, 7.0 -0.45, 7.0 -0.25, 7.0 -0.0
+        private static double offsetInY = (nodesInXCoor - 1) * xIntervals * Math.Cos(angle);
+        private static double gap = offsetInY + 0.05; //tested: 1.14, 2.75, 2.10, 0.75
         private static int loadStepsNumber = 40;
         //private const double angle = Math.PI * 0.48485;
 

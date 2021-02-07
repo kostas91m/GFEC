@@ -19,7 +19,7 @@ namespace GFEC
         private const double xIntervals = 0.375;
         private const double yIntervals = 0.41;
         private const double offset = (offsetNodes-1)*xIntervals;//8.1;//9.3;
-        private const double gap = 0.2;
+        private const double gap = 0.05;
         public static ISolver structuralSolution;
 
         //--------------------------------------------
@@ -49,7 +49,7 @@ namespace GFEC
 
 
         //External loads
-        const double externalStructuralLoad = -2.6;
+        const double externalStructuralLoad = -2.6/100;
         const double externalHeatLoad = 2500.0 * 1e-9;
         //-----------------------------------------------------------------------------------
         //const double externalStructuralLoad = -5 * 100000000.0 * 1e-18 * 0.3;
@@ -82,8 +82,9 @@ namespace GFEC
         //CNT values scaled
         const double YoungMod = 1.45e6;
         const double density = 8000.0;
-        const double area = 0.01;
+
         const double thickness = 0.38;
+        const double area = thickness * (nodesInYCoor - 1) * yIntervals;
         const double solidThermalCond = 3300 * 1.0e-9;
         const double roughness = (1.0 / 2.81);
         const double contactCond = 3300 * 1.0e-9;
@@ -103,10 +104,10 @@ namespace GFEC
         private static void CreateStructuralBoundaryConditions()
         {
             List<int> boundedDofs = new List<int>();
-            //for (int i = 0; i < nodesInYCoor; i++)
-            //{
-            //    boundedDofs.Add(i * 2 * nodesInXCoor + 1); //upper beam left side support
-            //}
+            for (int i = 0; i < nodesInYCoor; i++)
+            {
+                boundedDofs.Add(i * 2 * nodesInXCoor + 1); //upper beam left side support
+            }
 
             //for (int i = 0; i < nodesInYCoor; i++)
             //{
@@ -128,10 +129,10 @@ namespace GFEC
             //    boundedDofs.Add(nodesInYCoor * nodesInXCoor * 2 + nodesInXCoor * 2 * (i+1) - 1); //lower beam right side support
             //}
 
-            for (int i = 0; i < totalNodes; i++)
-            {
-                boundedDofs.Add(i * 2 + 1); //support for all nodes at X direction
-            }
+            //for (int i = 0; i < totalNodes; i++)
+            //{
+            //    boundedDofs.Add(i * 2 + 1); //support for all nodes at X direction
+            //}
 
             structuralBoundaryConditions = boundedDofs.ToArray<int>();
         }
@@ -367,7 +368,7 @@ namespace GFEC
 
 
             ///structuralSolution = new StaticSolver();
-            structuralSolution.LinearScheme = new BiCGSTABSolver();
+            structuralSolution.LinearScheme = new LUFactorization();
             //structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
             structuralSolution.NonLinearScheme.Tolerance = 1e-5;
             structuralSolution.ActivateNonLinearSolver = true;

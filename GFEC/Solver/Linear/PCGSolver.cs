@@ -28,8 +28,8 @@ namespace GFEC
                 double[] u = VectorOperations.MatrixVectorProduct(stiffnessMatrix, preconVector);
                 double residualDotOld = VectorOperations.VectorDotProduct(residual, preconVector);
                 double alpha = residualDotOld / VectorOperations.VectorDotProduct(preconVector, u);
-                solutionVector = VectorOperations.VectorVectorAddition(solutionVector, VectorOperations.VectorScalarProduct(preconVector, alpha));
-                residual = VectorOperations.VectorVectorSubtraction(residual, VectorOperations.VectorScalarProduct(u, alpha));
+                solutionVector = VectorOperations.VectorVectorAddition(solutionVector, VectorOperations.VectorScalarProductNew(preconVector, alpha));
+                residual = VectorOperations.VectorVectorSubtraction(residual, VectorOperations.VectorScalarProductNew(u, alpha));
                 if (VectorOperations.VectorDotProduct(residual, residual) < tolerance)
                 {
                     break;
@@ -38,7 +38,7 @@ namespace GFEC
                 double beta = residualDotNew / residualDotOld;
                 preconVector = VectorOperations.VectorVectorAddition(
                     VectorOperations.MatrixVectorProduct(preconditioner, residual),
-                    VectorOperations.VectorScalarProduct(preconVector, beta)
+                    VectorOperations.VectorScalarProductNew(preconVector, beta)
                     );
             }
             return solutionVector;
