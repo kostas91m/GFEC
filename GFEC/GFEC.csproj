@@ -97,6 +97,8 @@
     <Compile Include="Examples\CantileverQuadsExample.cs" />
     <Compile Include="Examples\CentralDifferencesTest.cs" />
     <Compile Include="Examples\CNTExample.cs" />
+    <Compile Include="Examples\CNTsInAngleFinalExample.cs" />
+    <Compile Include="Examples\CNTsInParallelFinalExample.cs" />
     <Compile Include="Examples\CoupledThermalStructuralCNTs1b.cs" />
     <Compile Include="Examples\CoupledThermalStructuralCNTsInAngle3.cs" />
     <Compile Include="Examples\CoupledPhysicsExample.cs" />
