@@ -55,11 +55,13 @@ namespace GFEC
         {
             //double k = 19.2;
             double m = 0.1259 * Math.Pow(SurfaceRoughness * Math.Pow(10, 6), 0.402);
-            //double c1 = 6271.0 * Math.Pow(10, 6);
-            //double c2 = -0.229;
+            //double c1 = 6271.0 * Math.Pow(10, 6);//SS
+            //double c2 = -0.229;//SS
+            double c1 = 1024691.406 * Math.Pow(10, 3);//154237.1846;//180460.6748 * Math.Pow(10, 3);//Yovanovitch5//200577.997 * Math.Pow(10, 3);//Yovanovitch4//236818.1659 * Math.Pow(10, 3);//Yovanovitch3//267224.3367 * Math.Pow(10, 3);//Yovanovitch2//453323.5643 * Math.Pow(10, 3);//Yovanovitch1
+            double c2 = -0.745;//-0.118//Yovanovitch6// - 0.17;//Yovanovitch5//-0.205;//Yovanovitch4// -0.26;//Yovanovitch3// -0.3;//Yovanovitch2//-0.475;//Yovanovitch1
             //double sigma = 0.478 * Math.Pow(10, -6);
-            //double cc = (1.25 * k * m / sigma) * Math.Pow((ContactPressure / c1) * Math.Pow(1.6177 * 1000000 * sigma / m, -c2), 0.95 / (1 + 0.0711 * c2));
-            double cc = 1.25 * ContactThermalConductivity * (m / (SurfaceRoughness)) * Math.Pow(ContactPressure / (3.0 * YieldStrength), 0.95);// * 2.582260191 * Math.Pow(10, -4);
+            double cc = (1.25 * ContactThermalConductivity * m / SurfaceRoughness) * Math.Pow((ContactPressure / c1) * Math.Pow(1.6177 * 1000000 * SurfaceRoughness / m, -c2), 0.95 / (1 + 0.0711 * c2));
+            //double cc = 1.25 * ContactThermalConductivity * (m / (SurfaceRoughness)) * Math.Pow(ContactPressure / (3.0 * YieldStrength), 0.95);// * 2.582260191 * Math.Pow(10, -4);
             double cH = cc * ContactArea;
             return cH;
         }

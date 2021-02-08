@@ -7,30 +7,24 @@ using System.Threading;
 
 namespace GFEC
 {
-    public static class CoupledThermalStructuralCNTsInAngle4
+    public static class CoupledThermalStructuralCNTsInAngleFinal
     {
-        private const int totalNodes = 486;
+        private const int totalNodes = 648;
         private const int AddedNodes = 1;
         private const int RodElements = AddedNodes;
-        private const int totalContactElements = 42;/*77;*//*71;*//*49;*//*30;*///10;//+11
-        private const int totalElements = 320;
+        private const int totalContactElements = 41;//50% Contact
+        private const int totalElements = 480;
         private const int nodesInXCoor = 81;
-        private const int nodesInYCoor = 3;
+        private const int nodesInYCoor = 4;
         private const double scaleFactor = 1.0;
-        private const double xIntervals = 0.1;
-        private const double yIntervals = 0.1;
-        //offset for 10 contacts
-        //private const double offset = 7.0 + 0.075;/*7.0;*//*7.0 + 0.05;*//*7.0 + 0.075;*//*7.0 + 0.10;*//*7.0 + 0.125;*//*7.0 + 0.15;*7.0 + 0.165*////- 0.05;//9 contacts
-        /*private const double offset =*/ /*7.0 + 0.0695 - 6.10;*/ /*7.0 + 0.0695 - 15 * 0.0065 - 6.10;*//*7.0 + 0.0695;*//*7.0 + 0.07;*//*7.0 + 0.10;*//*7.0 + 0.11;*///- 6.10;//71 contacts
-        //private const double offset = 7.0 + 0.070 - 6.10 - 0.60;/*7.0 + 0.0695 - 15 * 0.0065 - 6.10 - 0.60;*/ /*7.0 + 0.0695 - 6.10 - 0.60;*//*7.0 + 0.075 - 6.10 - 0.60;*//*7.0 + 0.09 - 6.10 - 0.60;*//*7.0 + 0.11 - 6.10 - 0.60;*//*7.0 + 0.135 - 6.10 - 0.60;*///-0.60//76 contacts
-        //private const double offset = 7.0 + 0.070 - 3.90;/*7.0 + 0.0695 - 15 * 0.0065 - 3.90;*/ /*7.0 + 0.0695 - 3.90;*//*7.0 + 0.070 - 3.90;*//*7.0 + 0.075 - 3.90;*//*7.0 + 0.09 - 3.90;*//*7.0 + 0.11 - 3.90;*//*7.0 + 0.135 - 3.90;*///-3.90//48 contacts
-        //private const double offset = 7.0 + 0.075 - 2;/*7.0 + 0.0695 - 15 * 0.0065 - 2;*/ /*7.0 + 0.0695 - 2;*//*7.0 + 0.070 - 2;*//*7.0 + 0.075 - 2;*//*7.0 + 0.09 - 2;*//*7.0 + 0.11 - 2;*//*7.0 + 0.135 - 2;*///-2//29 contacts
-        private const double offset = 7.0 + 0.0695 - 3.2;/*7.0 + 0.0695 - 15 * 0.0065 - 3.2;*/ /*7.0 + 0.0695 - 3.2;*//*7.0 + 0.070 - 3.2;*//*7.0 + 0.075 - 3.2;*//*7.0 + 0.09 - 3.2;*//*7.0 + 0.11 - 3.2;*//*7.0 + 0.135 - 3.2;*///-3.2//41 contacts
+        private const double xIntervals = 0.375;
+        private const double yIntervals = 0.41;
+        private const double angle = Math.PI * 0.46666667 - Math.PI * 0.016666667;/*Math.PI * 0.46666667 - 2 * Math.PI * 0.016666667;*//*Math.PI * 0.46666667 - Math.PI * 0.016666667;*//*0.491666667 * Math.PI - 2 * Math.PI * 0.016666667;*//*Math.PI * 0.46666667;*//* 0.491666667 * Math.PI - Math.PI * 0.016666667;*//*Math.PI * 0.48485;/* 0.49166667 * Math.PI;*/
+        private static double offset = xIntervals * ((nodesInXCoor - 1) * Math.Cos(Math.PI/2 - angle) - totalContactElements * Math.Cos(Math.PI / 2 - angle));
         //private const double gap = 1.14;
         public static ISolver structuralSolution;
         //private const double angle = Math.PI / 2.2;
-        private const double angle = Math.PI * 0.46666667 - Math.PI * 0.016666667;/*Math.PI * 0.46666667 - 2 * Math.PI * 0.016666667;*//*Math.PI * 0.46666667 - Math.PI * 0.016666667;*//*0.491666667 * Math.PI - 2 * Math.PI * 0.016666667;*//*Math.PI * 0.46666667;*//* 0.491666667 * Math.PI - Math.PI * 0.016666667;*//*Math.PI * 0.48485;/* 0.49166667 * Math.PI;*/
-        private const double gap = 1.252;/*1.6633;*//*1.252;*//*1.045;*//*0.837*//*0.628;*//*0.381*//*0.2095;*/
+        private static double gap = 2* Math.Sin(Math.PI / 2 - angle)* Math.Cos(Math.PI / 2 - angle) * totalContactElements * xIntervals;
         private const int ThermalDof1 = 2;
         private const int ThermalDof2 = nodesInXCoor * (nodesInYCoor - 1) + 2;
 
@@ -61,9 +55,9 @@ namespace GFEC
 
 
         //External loads
-        const double externalStructuralLoad = -10.0;//1 MPa
+        const double externalStructuralLoad = (26 * 4e-1) / (nodesInXCoor - 1);
         const double T0 = 100.0;
-        const double cond = 3300 * 1.0e-6;
+        const double cond = 3300 * 1.0e-9;
         static double externalHeatLoad = -2 * T0 * (cond / (6 * xIntervals * yIntervals)) * ((Math.Pow(xIntervals, 2) - 2 * Math.Pow(yIntervals, 2)) - (Math.Pow(xIntervals, 2) + Math.Pow(yIntervals, 2)));
         //const double externalHeatLoad = 2500.0 * 1e-6;
         //-----------------------------------------------------------------------------------
@@ -81,28 +75,15 @@ namespace GFEC
 
 
         static double[] externalHeatLoafVector; // = new double[1010];
-        //static readonly List<int> loadedThermalDOFs = new List<int>(new int[] { 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75 });
-        static List<int> loadedThermalDOFs; // = new List<int>(new int[] { 0, 101, 202, 303, 404 }); //zero indexed
-
-        //CNT values
-        //const double YoungMod = 1.0e12;
-        //const double density = 8000.0;
-        //const double area = 0.01;
-        //const double thickness = 0.1;
-        //const double solidThermalCond = 6600;
-        //const double roughness = (1000000.0 / 2.81);
-        //const double contactCond = 6600;
-        //const double yieldStrength = 60000000000.0;
-
-        //CNT values scaled
-        const double YoungMod = 1.0 * 1e9;
+        static List<int> loadedThermalDOFs; 
+        const double YoungMod = 1.45 * 1e6;
         const double density = 8000.0;
-        const double area = 0.01;
-        const double thickness = 0.1;
-        const double solidThermalCond = 3300 * 1.0e-6;
+        const double thickness = 0.38;
+        const double area = thickness * xIntervals;
+        const double solidThermalCond = 3300 * 1.0e-9;
         const double roughness = 2.81 * 1.0e-6;
-        const double contactCond = 3300 * 1.0e-6;
-        const double yieldStrength = 60.0 * 1e6;
+        const double contactCond = 3300 * 1.0e-9;
+        const double yieldStrength = 60.0 * 1e3;
 
         //----------------------------------------------------------------------
         //const double YoungMod = 1.0e-6;
@@ -226,7 +207,7 @@ namespace GFEC
 
             //extra nodes for rods on upper left side
             double ancos = Math.Cos(angle);
-            nodes[487] = new Node(ancos * xIntervals * 2, 3 * yIntervals);
+            nodes[totalNodes + 1] = new Node(ancos * xIntervals * 2, 3 * yIntervals);
             //nodes[487] = new Node(-xIntervals, 0);
             //nodes[488] = new Node(-xIntervals, yIntervals);
             //nodes[489] = new Node(-xIntervals, 2 * yIntervals);
@@ -395,7 +376,6 @@ namespace GFEC
             {
                 elementProperties[i] = new ElementProperties(E, A, type);
             }
-
             for (int i = 1; i <= totalElements; i++)
             {
                 elementProperties[i].Density = density;
@@ -412,7 +392,7 @@ namespace GFEC
             int count = elementProperties.Count;
             for (int i = count + 1; i <= count + AddedNodes; i++)
             {
-                elementProperties[i] = new ElementProperties(E / 5000, A, type3);
+                elementProperties[i] = new ElementProperties(E / 5000, 0.01, type3);
             }
             //elementProperties[count + 4] = new ElementProperties(E / 10000, A, type3);
             //elementProperties[count + 5] = new ElementProperties(E / 10000, A, type3);
@@ -975,30 +955,6 @@ namespace GFEC
 
 
             return new Results() { NonlinearSolution = structuralSolutions, SelectedDOF = 2, SolutionType = "Nonlinear" };
-        }
-
-        public static void RunDynamicExample()
-        {
-            IAssembly elementsAssembly = CreateAssembly();
-            elementsAssembly.CreateElementsAssembly();
-            elementsAssembly.ActivateBoundaryConditions = true;
-
-            InitialConditions initialValues = new InitialConditions();
-            initialValues.InitialAccelerationVector = new double[6];
-            initialValues.InitialDisplacementVector = new double[6];
-            //initialValues.InitialDisplacementVector[7] = -0.02146;
-            initialValues.InitialVelocityVector = new double[6];
-            initialValues.InitialTime = 0.0;
-
-            ExplicitSolver newSolver = new ExplicitSolver(1.0, 10000);
-            newSolver.Assembler = elementsAssembly;
-
-            newSolver.InitialValues = initialValues;
-            newSolver.ExternalForcesVector = new double[] { 0, 0, 0, 0, -50000, -50000 };
-            newSolver.LinearSolver = new CholeskyFactorization();
-            newSolver.ActivateNonLinearSolution = true;
-            newSolver.SolveNewmark();
-            newSolver.PrintExplicitSolution();//
         }
 
     }

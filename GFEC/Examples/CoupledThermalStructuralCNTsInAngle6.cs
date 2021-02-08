@@ -7,12 +7,12 @@ using System.Threading;
 
 namespace GFEC
 {
-    public static class CoupledThermalStructuralCNTsInAngle4
+    public static class CoupledThermalStructuralCNTsInAngle6
     {
         private const int totalNodes = 486;
         private const int AddedNodes = 1;
         private const int RodElements = AddedNodes;
-        private const int totalContactElements = 42;/*77;*//*71;*//*49;*//*30;*///10;//+11
+        private const int totalContactElements = 71;/*77;*//*71;*//*49;*//*30;*///10;//+11
         private const int totalElements = 320;
         private const int nodesInXCoor = 81;
         private const int nodesInYCoor = 3;
@@ -21,16 +21,16 @@ namespace GFEC
         private const double yIntervals = 0.1;
         //offset for 10 contacts
         //private const double offset = 7.0 + 0.075;/*7.0;*//*7.0 + 0.05;*//*7.0 + 0.075;*//*7.0 + 0.10;*//*7.0 + 0.125;*//*7.0 + 0.15;*7.0 + 0.165*////- 0.05;//9 contacts
-        /*private const double offset =*/ /*7.0 + 0.0695 - 6.10;*/ /*7.0 + 0.0695 - 15 * 0.0065 - 6.10;*//*7.0 + 0.0695;*//*7.0 + 0.07;*//*7.0 + 0.10;*//*7.0 + 0.11;*///- 6.10;//71 contacts
+        private const double offset = 7.0 + 0.07 - 6.10; /*7.0 + 0.0695 - 6.10;*/ /*7.0 + 0.0695 - 15 * 0.0065 - 6.10;*//*7.0 + 0.0695;*//*7.0 + 0.07;*//*7.0 + 0.10;*//*7.0 + 0.11;*///- 6.10;//71 contacts
         //private const double offset = 7.0 + 0.070 - 6.10 - 0.60;/*7.0 + 0.0695 - 15 * 0.0065 - 6.10 - 0.60;*/ /*7.0 + 0.0695 - 6.10 - 0.60;*//*7.0 + 0.075 - 6.10 - 0.60;*//*7.0 + 0.09 - 6.10 - 0.60;*//*7.0 + 0.11 - 6.10 - 0.60;*//*7.0 + 0.135 - 6.10 - 0.60;*///-0.60//76 contacts
         //private const double offset = 7.0 + 0.070 - 3.90;/*7.0 + 0.0695 - 15 * 0.0065 - 3.90;*/ /*7.0 + 0.0695 - 3.90;*//*7.0 + 0.070 - 3.90;*//*7.0 + 0.075 - 3.90;*//*7.0 + 0.09 - 3.90;*//*7.0 + 0.11 - 3.90;*//*7.0 + 0.135 - 3.90;*///-3.90//48 contacts
         //private const double offset = 7.0 + 0.075 - 2;/*7.0 + 0.0695 - 15 * 0.0065 - 2;*/ /*7.0 + 0.0695 - 2;*//*7.0 + 0.070 - 2;*//*7.0 + 0.075 - 2;*//*7.0 + 0.09 - 2;*//*7.0 + 0.11 - 2;*//*7.0 + 0.135 - 2;*///-2//29 contacts
-        private const double offset = 7.0 + 0.0695 - 3.2;/*7.0 + 0.0695 - 15 * 0.0065 - 3.2;*/ /*7.0 + 0.0695 - 3.2;*//*7.0 + 0.070 - 3.2;*//*7.0 + 0.075 - 3.2;*//*7.0 + 0.09 - 3.2;*//*7.0 + 0.11 - 3.2;*//*7.0 + 0.135 - 3.2;*///-3.2//41 contacts
+        //private const double offset = 7.0 + 0.0695 - 3.2;/*7.0 + 0.0695 - 15 * 0.0065 - 3.2;*/ /*7.0 + 0.0695 - 3.2;*//*7.0 + 0.070 - 3.2;*//*7.0 + 0.075 - 3.2;*//*7.0 + 0.09 - 3.2;*//*7.0 + 0.11 - 3.2;*//*7.0 + 0.135 - 3.2;*///-3.2//41 contacts
         //private const double gap = 1.14;
         public static ISolver structuralSolution;
         //private const double angle = Math.PI / 2.2;
-        private const double angle = Math.PI * 0.46666667 - Math.PI * 0.016666667;/*Math.PI * 0.46666667 - 2 * Math.PI * 0.016666667;*//*Math.PI * 0.46666667 - Math.PI * 0.016666667;*//*0.491666667 * Math.PI - 2 * Math.PI * 0.016666667;*//*Math.PI * 0.46666667;*//* 0.491666667 * Math.PI - Math.PI * 0.016666667;*//*Math.PI * 0.48485;/* 0.49166667 * Math.PI;*/
-        private const double gap = 1.252;/*1.6633;*//*1.252;*//*1.045;*//*0.837*//*0.628;*//*0.381*//*0.2095;*/
+        private const double angle = 0.491666667 * Math.PI - Math.PI * 0.016666667;/*Math.PI * 0.46666667 - 2 * Math.PI * 0.016666667;*//*Math.PI * 0.46666667 - Math.PI * 0.016666667;*//*0.491666667 * Math.PI - 2 * Math.PI * 0.016666667;*//*Math.PI * 0.46666667;*//* 0.491666667 * Math.PI - Math.PI * 0.016666667;*//*Math.PI * 0.48485;/* 0.49166667 * Math.PI;*/
+        private const double gap = 0.628;/*1.6633;*//*1.252;*//*1.045;*//*0.837*//*0.628;*//*0.381*//*0.2095;*/
         private const int ThermalDof1 = 2;
         private const int ThermalDof2 = nodesInXCoor * (nodesInYCoor - 1) + 2;
 
@@ -61,7 +61,7 @@ namespace GFEC
 
 
         //External loads
-        const double externalStructuralLoad = -10.0;//1 MPa
+        const double externalStructuralLoad = -200.0;//20 MPa
         const double T0 = 100.0;
         const double cond = 3300 * 1.0e-6;
         static double externalHeatLoad = -2 * T0 * (cond / (6 * xIntervals * yIntervals)) * ((Math.Pow(xIntervals, 2) - 2 * Math.Pow(yIntervals, 2)) - (Math.Pow(xIntervals, 2) + Math.Pow(yIntervals, 2)));
@@ -303,6 +303,82 @@ namespace GFEC
                 int upperNode = nodesInXCoor - totalContactElements + i + 1;
                 connectivity[totalElements + i] = new Dictionary<int, int>() { { 1, lowerLeftNode }, { 2, lowerRightNode }, { 3, upperNode } };
             }
+            int localcounter = 0;
+            for (int i = 1; i <= totalContactElements - 1; i++)
+            {
+                int lowerMiddleNode = new int();
+                int lowerLeftNode = new int();
+                int lowerRightNode = new int();
+                int upperNode = new int();
+                int lowerMiddleNode2 = new int();
+                int lowerLeftNode2 = new int();
+                int lowerRightNode2 = new int();
+                int upperNode2 = new int();
+                if (i == 1)
+                {
+                    lowerMiddleNode = 2 * nodesInXCoor * nodesInYCoor - nodesInXCoor + i + 3;
+                    lowerLeftNode = lowerMiddleNode - 1;
+                    lowerRightNode = lowerMiddleNode + 1;
+                    upperNode = nodesInXCoor - totalContactElements + i + 1;
+                    localcounter += 1;
+                    connectivity[totalElements + totalContactElements - 1 + localcounter] = new Dictionary<int, int>() { { 1, lowerLeftNode }, { 2, lowerRightNode }, { 3, upperNode } };
+                }
+                else if (i == totalContactElements - 1)
+                {
+                    lowerMiddleNode = 2 * nodesInXCoor * nodesInYCoor - nodesInXCoor + i - 1;
+                    lowerLeftNode = lowerMiddleNode - 1;
+                    lowerRightNode = lowerMiddleNode + 1;
+                    upperNode = nodesInXCoor - totalContactElements + i + 1;
+                    localcounter += 1;
+                    connectivity[totalElements + totalContactElements - 1 + localcounter] = new Dictionary<int, int>() { { 1, lowerLeftNode }, { 2, lowerRightNode }, { 3, upperNode } };
+                }
+                else if (i == 2)
+                {
+                    lowerMiddleNode = 2 * nodesInXCoor * nodesInYCoor - nodesInXCoor + i;
+                    lowerLeftNode = lowerMiddleNode - 1;
+                    lowerRightNode = lowerMiddleNode;
+                    upperNode = nodesInXCoor - totalContactElements + i + 1;
+                    localcounter += 1;
+                    connectivity[totalElements + totalContactElements - 1 + localcounter] = new Dictionary<int, int>() { { 1, lowerLeftNode }, { 2, lowerRightNode }, { 3, upperNode } };
+                    lowerMiddleNode2 = 2 * nodesInXCoor * nodesInYCoor - nodesInXCoor + i + 3;
+                    lowerLeftNode2 = lowerMiddleNode2 - 1;
+                    lowerRightNode2 = lowerMiddleNode2 + 1;
+                    upperNode2 = nodesInXCoor - totalContactElements + i + 1;
+                    localcounter += 1;
+                    connectivity[totalElements + totalContactElements - 1 + localcounter] = new Dictionary<int, int>() { { 1, lowerLeftNode2 }, { 2, lowerRightNode2 }, { 3, upperNode2 } };
+                }
+                else if(i == totalContactElements - 2)
+                {
+                    lowerMiddleNode = 2 * nodesInXCoor * nodesInYCoor - nodesInXCoor + i - 1;
+                    lowerLeftNode = lowerMiddleNode - 1;
+                    lowerRightNode = lowerMiddleNode + 1;
+                    upperNode = nodesInXCoor - totalContactElements + i + 1;
+                    localcounter += 1;
+                    connectivity[totalElements + totalContactElements - 1 + localcounter] = new Dictionary<int, int>() { { 1, lowerLeftNode }, { 2, lowerRightNode }, { 3, upperNode } };
+                    lowerMiddleNode2 = 2 * nodesInXCoor * nodesInYCoor - nodesInXCoor + i + 2;
+                    lowerLeftNode2 = lowerMiddleNode2 - 1;
+                    lowerRightNode2 = lowerMiddleNode2;
+                    upperNode2 = nodesInXCoor - totalContactElements + i + 1;
+                    localcounter += 1;
+                    connectivity[totalElements + totalContactElements - 1 + localcounter] = new Dictionary<int, int>() { { 1, lowerLeftNode2 }, { 2, lowerRightNode2 }, { 3, upperNode2 } };
+                }
+                else
+                {
+                    lowerMiddleNode = 2 * nodesInXCoor * nodesInYCoor - nodesInXCoor + i - 1;
+                    lowerLeftNode = lowerMiddleNode - 1;
+                    lowerRightNode = lowerMiddleNode + 1;
+                    upperNode = nodesInXCoor - totalContactElements + i + 1;
+                    localcounter += 1;
+                    connectivity[totalElements + totalContactElements - 1 + localcounter] = new Dictionary<int, int>() { { 1, lowerLeftNode }, { 2, lowerRightNode }, { 3, upperNode } };
+                    lowerMiddleNode2 = 2 * nodesInXCoor * nodesInYCoor - nodesInXCoor + i + 3;
+                    lowerLeftNode2 = lowerMiddleNode2 - 1;
+                    lowerRightNode2 = lowerMiddleNode2 + 1;
+                    upperNode2 = nodesInXCoor - totalContactElements + i + 1;
+                    localcounter += 1;
+                    connectivity[totalElements + totalContactElements - 1 + localcounter] = new Dictionary<int, int>() { { 1, lowerLeftNode2 }, { 2, lowerRightNode2 }, { 3, upperNode2 } };
+                }
+
+            }
 
             //Rod elements
             int count = connectivity.Count;
@@ -349,7 +425,51 @@ namespace GFEC
                 int upperNode = nodesInXCoor - totalContactElements + i + 1;
                 connectivity[totalElements + i] = new Dictionary<int, int>() { { 1, lowerLeftNode }, { 2, lowerRightNode }, { 3, upperNode } };
             }
-
+            int localcounter = 0;
+            for (int i = 1; i <= totalContactElements - 1; i++)
+            {
+                int lowerMiddleNode = new int();
+                int lowerLeftNode = new int();
+                int lowerRightNode = new int();
+                int upperNode = new int();
+                int lowerMiddleNode2 = new int();
+                int lowerLeftNode2 = new int();
+                int lowerRightNode2 = new int();
+                int upperNode2 = new int();
+                if (i == 1)
+                {
+                    lowerMiddleNode = 2 * nodesInXCoor * nodesInYCoor - nodesInXCoor + i + 3;
+                    lowerLeftNode = lowerMiddleNode - 1;
+                    lowerRightNode = lowerMiddleNode + 1;
+                    upperNode = nodesInXCoor - totalContactElements + i + 1;
+                    localcounter += 1;
+                    connectivity[totalElements + totalContactElements - 1 + localcounter] = new Dictionary<int, int>() { { 1, lowerLeftNode }, { 2, lowerRightNode }, { 3, upperNode } };
+                }
+                else if (i == totalContactElements - 1)
+                {
+                    lowerMiddleNode = 2 * nodesInXCoor * nodesInYCoor - nodesInXCoor + i - 1;
+                    lowerLeftNode = lowerMiddleNode - 1;
+                    lowerRightNode = lowerMiddleNode + 1;
+                    upperNode = nodesInXCoor - totalContactElements + i + 1;
+                    localcounter += 1;
+                    connectivity[totalElements + totalContactElements - 1 + localcounter] = new Dictionary<int, int>() { { 1, lowerLeftNode }, { 2, lowerRightNode }, { 3, upperNode } };
+                }
+                else
+                {
+                    lowerMiddleNode = 2 * nodesInXCoor * nodesInYCoor - nodesInXCoor + i - 1;
+                    lowerLeftNode = lowerMiddleNode - 1;
+                    lowerRightNode = lowerMiddleNode + 1;
+                    upperNode = nodesInXCoor - totalContactElements + i + 1;
+                    localcounter += 1;
+                    connectivity[totalElements + totalContactElements - 1 + localcounter] = new Dictionary<int, int>() { { 1, lowerLeftNode }, { 2, lowerRightNode }, { 3, upperNode } };
+                    lowerMiddleNode2 = 2 * nodesInXCoor * nodesInYCoor - nodesInXCoor + i + 3;
+                    lowerLeftNode2 = lowerMiddleNode - 1;
+                    lowerRightNode2 = lowerMiddleNode + 1;
+                    upperNode2 = nodesInXCoor - totalContactElements + i + 1;
+                    localcounter += 1;
+                    connectivity[totalElements + totalContactElements - 1 + localcounter] = new Dictionary<int, int>() { { 1, lowerLeftNode2 }, { 2, lowerRightNode2 }, { 3, upperNode2 } };
+                }
+            }
             //Rod elements
             //int count = connectivity.Count;
             //connectivity[count + 1] = new Dictionary<int, int>() { { 1, 163 }, { 2, totalNodes + AddedNodes } };
@@ -402,7 +522,7 @@ namespace GFEC
                 elementProperties[i].Thickness = thickness;
             }
 
-            for (int i = totalElements + 1; i <= totalElements + totalContactElements - 1; i++)
+            for (int i = totalElements + 1; i <= totalElements + 3 * totalContactElements - 5; i++)
             {
                 elementProperties[i] = new ElementProperties(E, A, type2);
                 elementProperties[i].Density = density;
@@ -435,7 +555,7 @@ namespace GFEC
                 elementProperties[i].ElementType = type;
                 elementProperties[i].ThermalConductivity = thermalCond;
             }
-            for (int i = totalElements + 1; i <= totalElements + totalContactElements - 1; i++)
+            for (int i = totalElements + 1; i <= totalElements + 3 * totalContactElements - 5; i++)
             {
                 elementProperties[i] = new ElementProperties();
                 elementProperties[i].ElementType = type2;
@@ -522,9 +642,9 @@ namespace GFEC
             ///structuralSolution = new StaticSolver();
             structuralSolution.LinearScheme = new PCGSolver();
             //structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
-            structuralSolution.NonLinearScheme.Tolerance = 1e-6;
+            structuralSolution.NonLinearScheme.Tolerance = 1e-5;
             structuralSolution.ActivateNonLinearSolver = true;
-            structuralSolution.NonLinearScheme.numberOfLoadSteps = 80;
+            structuralSolution.NonLinearScheme.numberOfLoadSteps = 120;
 
             double[] externalForces3 = externalForcesStructuralVector;
             foreach (var dof in loadedStructuralDOFs)
@@ -555,7 +675,7 @@ namespace GFEC
                 elementsInternalContactForcesVector = new Dictionary<int, double[]>();
                 projectionPointForEachElement = new Dictionary<int, double>();
                 elementsAssembly.UpdateDisplacements(allStepsSolutions[i]);
-                for (int j = totalElements + 1; j <= totalElements + totalContactElements - 1; j++)
+                for (int j = totalElements + 1; j <= totalElements + 3 * totalContactElements - 5; j++)
                 {
                     elementsInternalContactForcesVector[j] = elementsAssembly.ElementsAssembly[j].CreateInternalGlobalForcesVector();
                     projectionPointForEachElement[j] = elementsAssembly.ElementsAssembly[j].ClosestPointProjection();
@@ -580,7 +700,7 @@ namespace GFEC
             {
                 IAssembly elementsAssembly2 = CreateThermalAssembly();
 
-                for (int j = totalElements + 1; j <= totalElements + totalContactElements - 1; j++)
+                for (int j = totalElements + 1; j <= totalElements + 3 * totalContactElements - 5; j++)
                 {
                     double[] contactForce = allStepsContactForces[k][j];
                     elementsAssembly2.ElementsProperties[j].ContactForceValue = -contactForce[5];
@@ -638,86 +758,86 @@ namespace GFEC
             //ExportToFile.ExportCondactivityForAllLoadSteps(contactContactivityForEachStep);
 
             int[] thermalBoundCond = thermalBoundaryConditions;
-            double[] fullStructuralSol1 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[2], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol2 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[4], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[6], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol4 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[8], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol5 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[10], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol6 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[12], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol7 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[14], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol8 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[16], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol9 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[18], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol10 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[20], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol11 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[22], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol12 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[24], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol13 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[26], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol14 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[28], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol15 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[30], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol16 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[32], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol17 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[34], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol18 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[36], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol19 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[38], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol20 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[40], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol21 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[42], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol22 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[44], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol23 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[46], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol24 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[48], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol25 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[50], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol26 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[52], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol27 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[54], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol28 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[56], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol29 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[58], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol30 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[60], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol31 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[62], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol32 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[64], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol33 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[66], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol34 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[68], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol35 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[70], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol36 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[72], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol37 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[74], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol38 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[76], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol39 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[78], elementsAssembly.BoundedDOFsVector);
-            double[] fullStructuralSol40 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[80], elementsAssembly.BoundedDOFsVector);
-            double[] fullThermalSol1 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[1], thermalBoundCond);
-            double[] fullThermalSol2 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[3], thermalBoundCond);
-            double[] fullThermalSol3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[5], thermalBoundCond);
-            double[] fullThermalSol4 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[7], thermalBoundCond);
-            double[] fullThermalSol5 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[9], thermalBoundCond);
-            double[] fullThermalSol6 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[11], thermalBoundCond);
-            double[] fullThermalSol7 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[13], thermalBoundCond);
-            double[] fullThermalSol8 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[15], thermalBoundCond);
-            double[] fullThermalSol9 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[17], thermalBoundCond);
-            double[] fullThermalSol10 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[19], thermalBoundCond);
-            double[] fullThermalSol11 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[21], thermalBoundCond);
-            double[] fullThermalSol12 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[23], thermalBoundCond);
-            double[] fullThermalSol13 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[25], thermalBoundCond);
-            double[] fullThermalSol14 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[27], thermalBoundCond);
-            double[] fullThermalSol15 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[29], thermalBoundCond);
-            double[] fullThermalSol16 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[31], thermalBoundCond);
-            double[] fullThermalSol17 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[33], thermalBoundCond);
-            double[] fullThermalSol18 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[35], thermalBoundCond);
-            double[] fullThermalSol19 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[37], thermalBoundCond);
-            double[] fullThermalSol20 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[39], thermalBoundCond);
-            double[] fullThermalSol21 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[41], thermalBoundCond);
-            double[] fullThermalSol22 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[43], thermalBoundCond);
-            double[] fullThermalSol23 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[45], thermalBoundCond);
-            double[] fullThermalSol24 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[47], thermalBoundCond);
-            double[] fullThermalSol25 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[49], thermalBoundCond);
-            double[] fullThermalSol26 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[51], thermalBoundCond);
-            double[] fullThermalSol27 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[53], thermalBoundCond);
-            double[] fullThermalSol28 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[55], thermalBoundCond);
-            double[] fullThermalSol29 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[57], thermalBoundCond);
-            double[] fullThermalSol30 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[59], thermalBoundCond);
-            double[] fullThermalSol31 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[61], thermalBoundCond);
-            double[] fullThermalSol32 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[63], thermalBoundCond);
-            double[] fullThermalSol33 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[65], thermalBoundCond);
-            double[] fullThermalSol34 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[67], thermalBoundCond);
-            double[] fullThermalSol35 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[69], thermalBoundCond);
-            double[] fullThermalSol36 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[71], thermalBoundCond);
-            double[] fullThermalSol37 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[73], thermalBoundCond);
-            double[] fullThermalSol38 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[75], thermalBoundCond);
-            double[] fullThermalSol39 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[77], thermalBoundCond);
-            double[] fullThermalSol40 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[79], thermalBoundCond);
+            double[] fullStructuralSol1 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[3], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol2 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[6], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[9], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol4 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[12], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol5 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[15], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol6 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[18], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol7 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[21], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol8 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[24], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol9 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[27], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol10 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[30], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol11 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[33], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol12 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[36], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol13 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[39], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol14 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[42], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol15 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[45], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol16 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[48], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol17 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[51], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol18 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[54], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol19 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[57], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol20 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[60], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol21 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[63], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol22 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[66], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol23 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[69], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol24 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[72], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol25 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[75], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol26 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[78], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol27 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[81], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol28 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[84], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol29 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[87], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol30 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[90], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol31 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[93], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol32 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[96], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol33 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[99], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol34 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[102], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol35 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[105], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol36 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[108], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol37 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[111], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol38 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[114], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol39 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[117], elementsAssembly.BoundedDOFsVector);
+            double[] fullStructuralSol40 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(allStepsSolutions[120], elementsAssembly.BoundedDOFsVector);
+            double[] fullThermalSol1 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[2], thermalBoundCond);
+            double[] fullThermalSol2 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[5], thermalBoundCond);
+            double[] fullThermalSol3 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[8], thermalBoundCond);
+            double[] fullThermalSol4 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[11], thermalBoundCond);
+            double[] fullThermalSol5 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[14], thermalBoundCond);
+            double[] fullThermalSol6 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[17], thermalBoundCond);
+            double[] fullThermalSol7 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[20], thermalBoundCond);
+            double[] fullThermalSol8 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[23], thermalBoundCond);
+            double[] fullThermalSol9 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[26], thermalBoundCond);
+            double[] fullThermalSol10 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[29], thermalBoundCond);
+            double[] fullThermalSol11 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[32], thermalBoundCond);
+            double[] fullThermalSol12 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[35], thermalBoundCond);
+            double[] fullThermalSol13 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[38], thermalBoundCond);
+            double[] fullThermalSol14 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[41], thermalBoundCond);
+            double[] fullThermalSol15 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[44], thermalBoundCond);
+            double[] fullThermalSol16 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[47], thermalBoundCond);
+            double[] fullThermalSol17 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[50], thermalBoundCond);
+            double[] fullThermalSol18 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[53], thermalBoundCond);
+            double[] fullThermalSol19 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[56], thermalBoundCond);
+            double[] fullThermalSol20 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[59], thermalBoundCond);
+            double[] fullThermalSol21 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[62], thermalBoundCond);
+            double[] fullThermalSol22 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[65], thermalBoundCond);
+            double[] fullThermalSol23 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[68], thermalBoundCond);
+            double[] fullThermalSol24 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[71], thermalBoundCond);
+            double[] fullThermalSol25 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[74], thermalBoundCond);
+            double[] fullThermalSol26 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[77], thermalBoundCond);
+            double[] fullThermalSol27 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[80], thermalBoundCond);
+            double[] fullThermalSol28 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[83], thermalBoundCond);
+            double[] fullThermalSol29 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[86], thermalBoundCond);
+            double[] fullThermalSol30 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[89], thermalBoundCond);
+            double[] fullThermalSol31 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[92], thermalBoundCond);
+            double[] fullThermalSol32 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[95], thermalBoundCond);
+            double[] fullThermalSol33 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[98], thermalBoundCond);
+            double[] fullThermalSol34 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[101], thermalBoundCond);
+            double[] fullThermalSol35 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[104], thermalBoundCond);
+            double[] fullThermalSol36 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[107], thermalBoundCond);
+            double[] fullThermalSol37 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[110], thermalBoundCond);
+            double[] fullThermalSol38 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[113], thermalBoundCond);
+            double[] fullThermalSol39 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[116], thermalBoundCond);
+            double[] fullThermalSol40 = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(thermalSolutions[119], thermalBoundCond);
             double[] fullThermalSolfinal1 = new double[fullThermalSol1.Length + 1];
             double[] fullThermalSolfinal2 = new double[fullThermalSol1.Length + 1];
             double[] fullThermalSolfinal3 = new double[fullThermalSol1.Length + 1];

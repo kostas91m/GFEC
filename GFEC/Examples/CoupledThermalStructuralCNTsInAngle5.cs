@@ -7,12 +7,12 @@ using System.Threading;
 
 namespace GFEC
 {
-    public static class CoupledThermalStructuralCNTsInAngle4
+    public static class CoupledThermalStructuralCNTsInAngle5
     {
         private const int totalNodes = 486;
         private const int AddedNodes = 1;
         private const int RodElements = AddedNodes;
-        private const int totalContactElements = 42;/*77;*//*71;*//*49;*//*30;*///10;//+11
+        private const int totalContactElements = 71;/*77;*//*71;*//*49;*//*30;*///10;//+11
         private const int totalElements = 320;
         private const int nodesInXCoor = 81;
         private const int nodesInYCoor = 3;
@@ -21,16 +21,16 @@ namespace GFEC
         private const double yIntervals = 0.1;
         //offset for 10 contacts
         //private const double offset = 7.0 + 0.075;/*7.0;*//*7.0 + 0.05;*//*7.0 + 0.075;*//*7.0 + 0.10;*//*7.0 + 0.125;*//*7.0 + 0.15;*7.0 + 0.165*////- 0.05;//9 contacts
-        /*private const double offset =*/ /*7.0 + 0.0695 - 6.10;*/ /*7.0 + 0.0695 - 15 * 0.0065 - 6.10;*//*7.0 + 0.0695;*//*7.0 + 0.07;*//*7.0 + 0.10;*//*7.0 + 0.11;*///- 6.10;//71 contacts
+        private const double offset = 7.0 + 0.07;/*7.0 + 0.0695 - 6.10;*/ /*7.0 + 0.0695 - 15 * 0.0065 - 6.10;*//*7.0 + 0.0695;*//*7.0 + 0.07;*//*7.0 + 0.10;*//*7.0 + 0.11;*///- 6.10;//71 contacts
         //private const double offset = 7.0 + 0.070 - 6.10 - 0.60;/*7.0 + 0.0695 - 15 * 0.0065 - 6.10 - 0.60;*/ /*7.0 + 0.0695 - 6.10 - 0.60;*//*7.0 + 0.075 - 6.10 - 0.60;*//*7.0 + 0.09 - 6.10 - 0.60;*//*7.0 + 0.11 - 6.10 - 0.60;*//*7.0 + 0.135 - 6.10 - 0.60;*///-0.60//76 contacts
         //private const double offset = 7.0 + 0.070 - 3.90;/*7.0 + 0.0695 - 15 * 0.0065 - 3.90;*/ /*7.0 + 0.0695 - 3.90;*//*7.0 + 0.070 - 3.90;*//*7.0 + 0.075 - 3.90;*//*7.0 + 0.09 - 3.90;*//*7.0 + 0.11 - 3.90;*//*7.0 + 0.135 - 3.90;*///-3.90//48 contacts
         //private const double offset = 7.0 + 0.075 - 2;/*7.0 + 0.0695 - 15 * 0.0065 - 2;*/ /*7.0 + 0.0695 - 2;*//*7.0 + 0.070 - 2;*//*7.0 + 0.075 - 2;*//*7.0 + 0.09 - 2;*//*7.0 + 0.11 - 2;*//*7.0 + 0.135 - 2;*///-2//29 contacts
-        private const double offset = 7.0 + 0.0695 - 3.2;/*7.0 + 0.0695 - 15 * 0.0065 - 3.2;*/ /*7.0 + 0.0695 - 3.2;*//*7.0 + 0.070 - 3.2;*//*7.0 + 0.075 - 3.2;*//*7.0 + 0.09 - 3.2;*//*7.0 + 0.11 - 3.2;*//*7.0 + 0.135 - 3.2;*///-3.2//41 contacts
+        //private const double offset = 7.0 + 0.0695 - 3.2;/*7.0 + 0.0695 - 15 * 0.0065 - 3.2;*/ /*7.0 + 0.0695 - 3.2;*//*7.0 + 0.070 - 3.2;*//*7.0 + 0.075 - 3.2;*//*7.0 + 0.09 - 3.2;*//*7.0 + 0.11 - 3.2;*//*7.0 + 0.135 - 3.2;*///-3.2//41 contacts
         //private const double gap = 1.14;
         public static ISolver structuralSolution;
         //private const double angle = Math.PI / 2.2;
-        private const double angle = Math.PI * 0.46666667 - Math.PI * 0.016666667;/*Math.PI * 0.46666667 - 2 * Math.PI * 0.016666667;*//*Math.PI * 0.46666667 - Math.PI * 0.016666667;*//*0.491666667 * Math.PI - 2 * Math.PI * 0.016666667;*//*Math.PI * 0.46666667;*//* 0.491666667 * Math.PI - Math.PI * 0.016666667;*//*Math.PI * 0.48485;/* 0.49166667 * Math.PI;*/
-        private const double gap = 1.252;/*1.6633;*//*1.252;*//*1.045;*//*0.837*//*0.628;*//*0.381*//*0.2095;*/
+        private const double angle = 0.491666667 * Math.PI - Math.PI * 0.016666667;/*Math.PI * 0.46666667 - 2 * Math.PI * 0.016666667;*//*Math.PI * 0.46666667 - Math.PI * 0.016666667;*//*0.491666667 * Math.PI - 2 * Math.PI * 0.016666667;*//*Math.PI * 0.46666667;*//* 0.491666667 * Math.PI - Math.PI * 0.016666667;*//*Math.PI * 0.48485;/* 0.49166667 * Math.PI;*/
+        private const double gap = 0.628;/*1.6633;*//*1.252;*//*1.045;*//*0.837*//*0.628;*//*0.381*//*0.2095;*/
         private const int ThermalDof1 = 2;
         private const int ThermalDof2 = nodesInXCoor * (nodesInYCoor - 1) + 2;
 
@@ -61,7 +61,7 @@ namespace GFEC
 
 
         //External loads
-        const double externalStructuralLoad = -10.0;//1 MPa
+        const double externalStructuralLoad = -200.0;//20 MPa
         const double T0 = 100.0;
         const double cond = 3300 * 1.0e-6;
         static double externalHeatLoad = -2 * T0 * (cond / (6 * xIntervals * yIntervals)) * ((Math.Pow(xIntervals, 2) - 2 * Math.Pow(yIntervals, 2)) - (Math.Pow(xIntervals, 2) + Math.Pow(yIntervals, 2)));
@@ -349,7 +349,49 @@ namespace GFEC
                 int upperNode = nodesInXCoor - totalContactElements + i + 1;
                 connectivity[totalElements + i] = new Dictionary<int, int>() { { 1, lowerLeftNode }, { 2, lowerRightNode }, { 3, upperNode } };
             }
+            int contactelemvounter = 1;
+            for (int i = 1; i <= totalContactElements - 1; i++)
+            {
+                int lowerMiddleNode = new int();
+                int lowerLeftNode = new int();
+                int lowerRightNode = new int();
+                int upperNode = new int();
+                int lowerMiddleNode2 = new int();
+                int lowerLeftNode2 = new int();
+                int lowerRightNode2 = new int();
 
+                if (i == 1)
+                {
+                    lowerMiddleNode = 2 * nodesInXCoor * nodesInYCoor - nodesInXCoor + i + 3;
+                    lowerLeftNode = lowerMiddleNode - 1;
+                    lowerRightNode = lowerMiddleNode + 1;
+                    upperNode = nodesInXCoor - totalContactElements + i + 1;
+                    connectivity[totalElements + totalContactElements - 1 + contactelemvounter] = new Dictionary<int, int>() { { 1, lowerLeftNode }, { 2, lowerRightNode }, { 3, upperNode } };
+                    contactelemvounter += 1;
+                }
+                else if(i== totalContactElements - 1)
+                {
+                    lowerMiddleNode = 2 * nodesInXCoor * nodesInYCoor - nodesInXCoor + i - 1;
+                    lowerLeftNode = lowerMiddleNode - 1;
+                    lowerRightNode = lowerMiddleNode + 1;
+                    upperNode = nodesInXCoor - totalContactElements + i + 1;
+                    connectivity[totalElements + totalContactElements - 1 + contactelemvounter] = new Dictionary<int, int>() { { 1, lowerLeftNode }, { 2, lowerRightNode }, { 3, upperNode } };
+                    contactelemvounter += 1;
+                }
+                else
+                {
+                     lowerMiddleNode = 2 * nodesInXCoor * nodesInYCoor - nodesInXCoor + i - 1;
+                     lowerLeftNode = lowerMiddleNode - 1;
+                     lowerRightNode = lowerMiddleNode + 1;
+                     lowerMiddleNode2 = 2 * nodesInXCoor * nodesInYCoor - nodesInXCoor + i + 3;
+                     lowerLeftNode2 = lowerMiddleNode - 1;
+                     lowerRightNode2 = lowerMiddleNode + 1;
+                     upperNode = nodesInXCoor - totalContactElements + i + 1;
+                    connectivity[totalElements + totalContactElements - 1 + contactelemvounter] = new Dictionary<int, int>() { { 1, lowerLeftNode }, { 2, lowerRightNode }, { 3, upperNode } };
+                    connectivity[totalElements + totalContactElements - 1 + contactelemvounter] = new Dictionary<int, int>() { { 1, lowerLeftNode2 }, { 2, lowerRightNode2 }, { 3, upperNode } };
+                    contactelemvounter += 2;
+                }
+            }
             //Rod elements
             //int count = connectivity.Count;
             //connectivity[count + 1] = new Dictionary<int, int>() { { 1, 163 }, { 2, totalNodes + AddedNodes } };

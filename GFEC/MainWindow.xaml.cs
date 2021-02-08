@@ -104,8 +104,10 @@ namespace GFEC
             exampleList.Add("CoupledThermalStructuralCNTsInAngle2");
             exampleList.Add("CoupledThermalStructuralCNTsInAngle3");
             exampleList.Add("CoupledThermalStructuralCNTsInAngle4");
+            exampleList.Add("CoupledThermalStructuralCNTsInAngle6");
             exampleList.Add("CoupledThermalStructural2");
-
+            exampleList.Add("CNTs2DCantileverTest");
+            exampleList.Add("CoupledThermalStructuralCNTsInAngleFinal");
             ComboBox1.ItemsSource = exampleList;
         }
 
@@ -198,6 +200,22 @@ namespace GFEC
                     CoupledThermalStructuralCNTsInAngle4.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
                     CoupledThermalStructuralCNTsInAngle4.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
                     finalResults = CoupledThermalStructuralCNTsInAngle4.RunStaticExample();
+                    break;
+                case "CoupledThermalStructuralCNTsInAngle6":
+                    CoupledThermalStructuralCNTsInAngle6.structuralSolution = new StaticSolver();
+                    CoupledThermalStructuralCNTsInAngle6.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+                    CoupledThermalStructuralCNTsInAngle6.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
+                    finalResults = CoupledThermalStructuralCNTsInAngle6.RunStaticExample();
+                    break;
+                case "CoupledThermalStructuralCNTsInAngleFinal":
+                    CoupledThermalStructuralCNTsInAngleFinal.structuralSolution = new StaticSolver();
+                    CoupledThermalStructuralCNTsInAngleFinal.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+                    CoupledThermalStructuralCNTsInAngleFinal.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
+                    finalResults = CoupledThermalStructuralCNTsInAngleFinal.RunStaticExample();
+                    break;
+                case "CNTs2DCantileverTest":
+                    CNTs2DCantileverTest.structuralSolution = new StaticSolver();
+                    finalResults = CNTs2DCantileverTest.RunStaticExample();
                     break;
                 default:
                     finalResults = TwoQuadsExample.RunStaticExample();

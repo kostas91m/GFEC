@@ -14,9 +14,9 @@ namespace GFEC
         public double[] DisplacementVector { get; set; }
         public double[] AccelerationVector { get; set; }
         public double poisson { get; set; }
-        //private double thickness = 1.0; //To be included in Element Properties
-        //private double density = 1.0; //To be included in Element Properties
-        
+        //private double Thickness { get; set; } //To be included in Element Properties
+                                               //private double density = 1.0; //To be included in Element Properties
+
         public Quad4(IElementProperties properties, Dictionary<int, INode> nodes)
         {
             Properties = properties;
@@ -233,7 +233,7 @@ namespace GFEC
                     double detJ = CalculateInverseJacobian(J).Item2;
                     Dictionary<int, double[]> globaldN = CalculateShapeFunctionsGlobalDerivatives(localdN, invJ);
                     double[,] B = CalculateBMatrix(globaldN);
-                    K = MatrixOperations.MatrixAddition(K, MatrixOperations.ScalarMatrixProductNew(detJ * gW[0] * gW[1],
+                    K = MatrixOperations.MatrixAddition(K, MatrixOperations.ScalarMatrixProductNew(detJ * gW[0] * gW[1] * Properties.Thickness,
                         MatrixOperations.MatrixProduct(MatrixOperations.Transpose(B), MatrixOperations.MatrixProduct(E, B))));
                 }
             }
@@ -311,7 +311,7 @@ namespace GFEC
         public double[] CreateInternalGlobalForcesVector()
         {
             double[] F = new double[8];
-            double[,] E = CalculateStressStrainMatrix(Properties.YoungMod, 0.30); //needs fixing in poisson v
+            double[,] E = CalculateStressStrainMatrix(Properties.YoungMod, 0.25); //needs fixing in poisson v
 
             for (int i = 0; i < 2; i++)
             {
@@ -328,7 +328,7 @@ namespace GFEC
                     double[] strainVector = CalculateStrainsVector(B);
                     double[] stressVector = CalculateStressVector(E, strainVector);
                     F = VectorOperations.VectorVectorAddition(F, VectorOperations.VectorScalarProductNew(
-                        VectorOperations.MatrixVectorProduct(MatrixOperations.Transpose(B), stressVector), detJ * gW[0] * gW[1]));
+                        VectorOperations.MatrixVectorProduct(MatrixOperations.Transpose(B), stressVector), detJ * gW[0] * gW[1] * Properties.Thickness));
                 }
             }
             return F;
