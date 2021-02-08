@@ -7,21 +7,24 @@ using System.Threading;
 
 namespace GFEC
 {
-    public static class CoupledThermalStructuralCNTsInAngle2
+    public static class CNTsInAngleFinalExample
     {
-        private const int totalNodes = 486;
-        private const int totalContactElements = 10;//20;//8;
-        private const int totalElements = 320;
+        private const int totalNodes = 648;
+        private const int totalContactElements = 60;//20;//8;
+        private const int totalElements = 480;
         private const int nodesInXCoor = 81;
-        private const int nodesInYCoor = 3;
+        private const int nodesInYCoor = 4;
         private const double scaleFactor = 1.0;
-        private const double xIntervals = 0.1;
-        private const double yIntervals = 0.1;
-        private const double offset = 6.95;//8.1;//9.3// tested: 7.0 - 0.05, 7.0 -0.45, 7.0 -0.25, 7.0 -0.0
-        private const double gap = 1.17; //tested: 1.14, 2.75, 2.10, 0.75
+        private const double xIntervals = 0.375;
+        private const double yIntervals = 0.41;
+ 
         public static ISolver structuralSolution;
         public static ISolver thermalSolution;
-        private const double angle = Math.PI / 2.20; //tested: 2.2, 2.57, 2.40, 2.12
+        private const double angleInDegrees = 80;
+        private const double angle = (Math.PI / 180) * angleInDegrees; //tested: 2.2, 2.57, 2.40, 2.12
+        private static double offset = (nodesInXCoor - 1) * xIntervals * Math.Sin(angle) - totalContactElements * xIntervals; //6.95;//8.1;//9.3// tested: 7.0 - 0.05, 7.0 -0.45, 7.0 -0.25, 7.0 -0.0
+        private static double offsetInY = (nodesInXCoor - 1) * xIntervals * Math.Cos(angle);
+        private static double gap = offsetInY + 0.05; //tested: 1.14, 2.75, 2.10, 0.75
         private static int loadStepsNumber = 40;
         //private const double angle = Math.PI * 0.48485;
 
@@ -52,7 +55,7 @@ namespace GFEC
 
 
         //External loads
-        const double externalStructuralLoad = -10000.0*2;
+        const double externalStructuralLoad = -10000.0 * 2;
         const double externalHeatLoad = 2500.0 * 1e-6;
         //-----------------------------------------------------------------------------------
         //const double externalStructuralLoad = -5 * 100000000.0 * 1e-18 * 0.3;
@@ -136,7 +139,7 @@ namespace GFEC
             //    boundedDofs.Add(i * 2 + 1); //support for all nodes at X direction
             //}
 
-            for (int i = totalNodes/2 + 1; i < totalNodes; i++)
+            for (int i = totalNodes / 2 + 1; i < totalNodes; i++)
             {
                 boundedDofs.Add(i * 2 + 0);
                 boundedDofs.Add(i * 2 + 1); //lower beam support for all nodes
@@ -243,7 +246,7 @@ namespace GFEC
             }
 
             int count = connectivity.Count;
-            for (int i = 1; i <= totalContactElements - 1-1; i++)
+            for (int i = 1; i <= totalContactElements - 1 - 1; i++)
             {
                 int lowerMiddleNode = 2 * nodesInXCoor * nodesInYCoor - nodesInXCoor + i + 1;
                 int lowerLeftNode = lowerMiddleNode - 1;
@@ -253,22 +256,22 @@ namespace GFEC
             }
 
             count = connectivity.Count;
-            for (int i = 1; i <= totalContactElements - 1 - 1 -1; i++)
+            for (int i = 1; i <= totalContactElements - 1 - 1 - 1; i++)
             {
                 int lowerMiddleNode = 2 * nodesInXCoor * nodesInYCoor - nodesInXCoor + i + 1;
                 int lowerLeftNode = lowerMiddleNode - 1;
                 int lowerRightNode = lowerMiddleNode + 1;
-                int upperNode = nodesInXCoor - totalContactElements + i + 1 + 1 +1;
+                int upperNode = nodesInXCoor - totalContactElements + i + 1 + 1 + 1;
                 connectivity[count + i] = new Dictionary<int, int>() { { 1, lowerLeftNode }, { 2, lowerRightNode }, { 3, upperNode } };
             }
 
             count = connectivity.Count;
-            for (int i = 1; i <= totalContactElements - 1 - 1 - 1 -1; i++)
+            for (int i = 1; i <= totalContactElements - 1 - 1 - 1 - 1; i++)
             {
                 int lowerMiddleNode = 2 * nodesInXCoor * nodesInYCoor - nodesInXCoor + i + 1;
                 int lowerLeftNode = lowerMiddleNode - 1;
                 int lowerRightNode = lowerMiddleNode + 1;
-                int upperNode = nodesInXCoor - totalContactElements + i + 1 + 1 + 1 +1;
+                int upperNode = nodesInXCoor - totalContactElements + i + 1 + 1 + 1 + 1;
                 connectivity[count + i] = new Dictionary<int, int>() { { 1, lowerLeftNode }, { 2, lowerRightNode }, { 3, upperNode } };
             }
 
@@ -475,7 +478,7 @@ namespace GFEC
                 for (int j = totalElements + 1; j <= totalElements + countContactElements; j++)
                 {
                     double[] contactForce = allStepsContactForces[k][j];
-                    elementsAssembly2.ElementsProperties[j].ContactForceValue = - contactForce[5];
+                    elementsAssembly2.ElementsProperties[j].ContactForceValue = -contactForce[5];
                     double projectionPoint = allStepsProjectionPoints[k][j];
                     elementsAssembly2.ElementsProperties[j].Dx1 = projectionPoint;
                 }
@@ -510,7 +513,7 @@ namespace GFEC
                 double[] reducedExternalHeatFlux = BoundaryConditionsImposition.ReducedVector(externalHeatFlux, thermalSolution.AssemblyData.BoundedDOFsVector);
                 thermalSolution.Solve(reducedExternalHeatFlux);
                 double[] tempSol = thermalSolution.GetSolution();
-                thermalSolutions.Add(k,tempSol);
+                thermalSolutions.Add(k, tempSol);
 
                 double[] fullThermalSolutionVector = BoundaryConditionsImposition.CreateFullVectorFromReducedVector(tempSol, elementsAssembly2.BoundedDOFsVector);
                 elementsAssembly2.UpdateDisplacements(fullThermalSolutionVector);
@@ -523,7 +526,7 @@ namespace GFEC
 
                 Dictionary<int, double> contactContactivity = AssemblyHelpMethods.RetrieveContactContactivity(thermalSolution.AssemblyData);
                 contactContactivityForEachStep.Add(contactContactivity);
-                
+
             }
 
             ExportToFile.ExportGeometryDataWithTemperatures(structuralSolution, thermalSolutions, thermalBoundaryConditions);

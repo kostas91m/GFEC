@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Xml.Schema;
 using OpenTK.Input;
+using System.Windows.Media.Animation;
 
 namespace GFEC
 {
@@ -45,7 +46,7 @@ namespace GFEC
             File.WriteAllLines(path, lines);
         }
 
-        public static void ExportGeometryDataWithTemperatures(ISolver structuralSolution, Dictionary<int, double[]> thermalSolutionsList, int[] thermalBoundaryConditions, string path)
+        public static void ExportGeometryDataWithTemperatures(ISolver structuralSolution, Dictionary<int, double[]> thermalSolutionsList, int[] thermalBoundaryConditions)
         {
             Dictionary<int, INode> initialNodesList = structuralSolution.AssemblyData.Nodes;
             Dictionary<int, double[]> temperaturesForAllSteps = BoundaryConditionsImposition.CreateFullVectorListFromReduced(thermalSolutionsList, thermalBoundaryConditions);
@@ -64,7 +65,7 @@ namespace GFEC
                 {
                     lines[j] = finalNodesList[j].XCoordinate.ToString() + "\t" + finalNodesList[j].YCoordinate.ToString() + "\t" + temperatures[j - 1];
                 }
-                File.WriteAllLines(path+"Results"+vector.Key.ToString(), lines);
+                File.WriteAllLines("Results/Results"+vector.Key.ToString() + ".dat", lines);
             }  
         }
 
@@ -119,7 +120,7 @@ namespace GFEC
             {
                 string line = element.Key.ToString();
 
-                if (element.Value is ContactNtN2D)
+                if (element.Value is ContactNtS2D)
                 {
                     foreach (var elementNode in assembly.ElementsConnectivity[element.Key])
                     {
@@ -137,9 +138,9 @@ namespace GFEC
                 }
             }
 
-            File.WriteAllLines(@"C:\Users\Public\Documents\coordinateData.dat", coordinateData);
-            File.WriteAllLines(@"C:\Users\Public\Documents\connectivityData.dat", connectivityData);
-            File.WriteAllLines(@"C:\Users\Public\Documents\contactConnectivityData.dat", contactConnectivityData);
+            File.WriteAllLines("Results/coordinateData.dat", coordinateData);
+            File.WriteAllLines("Results/connectivityData.dat", connectivityData);
+            File.WriteAllLines("Results/contactConnectivityData.dat", contactConnectivityData);
         }
 
         public static void ExportMatlabFinalGeometry(IAssembly assembly, double[] displacements)
@@ -162,8 +163,59 @@ namespace GFEC
             {
                 k = k + 1;
                 double[] contactContactivity = loadStep.Values.ToArray();
-                VectorOperations.PrintVectorToFile(contactContactivity, @"C:\Users\Public\Documents\contactivity" + k.ToString() + ".dat");
+                VectorOperations.PrintVectorToFile(contactContactivity, "Results/contactivity" + k.ToString() + ".dat");
             }
+        }
+
+        public static void ExportContactForcesForAllLoadSteps(Dictionary<int, Dictionary<int, double[]>> allStepsContactForces)
+        {
+            int k = 0;
+            foreach (KeyValuePair<int, Dictionary<int, double[]>> loadStep in allStepsContactForces)
+            {
+                k = k + 1;
+                Dictionary<int, double[]> contactForcesForElements = loadStep.Value;
+                int componentsOfVector = contactForcesForElements[321].Length;
+                string row;
+                List<string> totalData = new List<string>();
+                for (int i = 0; i < componentsOfVector; i++)
+                {
+                    row = "";
+                    foreach (KeyValuePair<int, double[]> forcesVector in contactForcesForElements)
+                    {
+                        row = row + "\t" + forcesVector.Value[i];
+                    }
+                    totalData.Add(row);
+                }
+                File.WriteAllLines("Results/ContactForces" + k + ".dat", totalData);
+            }
+        }
+
+        public static void ExportHeatFluxesForAllLoadSteps(Dictionary<int, Dictionary<int, double[]>> allStepsContactForces)
+        {
+            int k = 0;
+            foreach (KeyValuePair<int, Dictionary<int, double[]>> loadStep in allStepsContactForces)
+            {
+                k = k + 1;
+                Dictionary<int, double[]> contactForcesForElements = loadStep.Value;
+                int componentsOfVector = contactForcesForElements[321].Length;
+                string row;
+                List<string> totalData = new List<string>();
+                for (int i = 0; i < componentsOfVector; i++)
+                {
+                    row = "";
+                    foreach (KeyValuePair<int, double[]> forcesVector in contactForcesForElements)
+                    {
+                        row = row + "\t" + forcesVector.Value[i];
+                    }
+                    totalData.Add(row);
+                }
+                File.WriteAllLines("Results/HeatFluxes" + k + ".dat", totalData);
+            }
+        }
+
+        public static void ExportConvergenceResultsToFile(List<string> convergenceResults)
+        {
+            File.WriteAllLines("Results/ConvergenceResults.dat", convergenceResults);
         }
     }
 }

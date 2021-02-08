@@ -96,6 +96,10 @@
     <Compile Include="Examples\CantileverInContact.cs" />
     <Compile Include="Examples\CantileverQuadsExample.cs" />
     <Compile Include="Examples\CentralDifferencesTest.cs" />
+    <Compile Include="Examples\CNTExample.cs" />
+    <Compile Include="Examples\CNTsInAngleFinalExample.cs" />
+    <Compile Include="Examples\CNTsInParallelFinalExample.cs" />
+    <Compile Include="Examples\CoupledThermalStructuralCNTs1b.cs" />
     <Compile Include="Examples\CoupledThermalStructuralCNTsInAngle3.cs" />
     <Compile Include="Examples\CoupledPhysicsExample.cs" />
     <Compile Include="Examples\CoupledThermalStructural.cs" />
@@ -105,6 +109,7 @@
     <Compile Include="Examples\CoupledThermalStructuralCNTsInAngle.cs" />
     <Compile Include="Examples\CoupledThermalStructuralCNTsInAngle2.cs" />
     <Compile Include="Examples\CoupledThermalStructuralCNTsInAngle4.cs" />
+    <Compile Include="Examples\CoupledThermalStructuralCNTsInAngle5.cs" />
     <Compile Include="Examples\DynamicExample.cs" />
     <Compile Include="Examples\ExplicitLinearExample.cs" />
     <Compile Include="Examples\LinearFrameExample.cs" />
@@ -209,6 +214,8 @@
     <None Include="Matlab Scripts\contourScript.m" />
     <None Include="Matlab Scripts\finalGeometryPlotScript.m" />
     <None Include="Matlab Scripts\geometryPlotScript.m" />
+    <None Include="Matlab Scripts\Graphs.m" />
+    <None Include="Matlab Scripts\HeatMap.m" />
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

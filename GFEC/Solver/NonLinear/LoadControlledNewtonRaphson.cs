@@ -67,8 +67,10 @@ namespace GFEC
                 if (iteration >= MaxIterations)
                 {
                     OnConvergenceResult("Newton-Raphson did not converge at Load Step " + i + ". Exiting solution.");
+                    LoadStepConvergence.Add("Solution not converged.");
                     break;
                 }
+                LoadStepConvergence.Add("Solution converged.");
 
             }
             return solutionVector;
@@ -78,6 +80,7 @@ namespace GFEC
         {
             InternalForces = new Dictionary<int, double[]>();
             Solutions = new Dictionary<int, double[]>();
+            LoadStepConvergence = new List<string>();
             if (localSolutionVector == null)
             {
                 localSolutionVector = new double[forceVector.Length];

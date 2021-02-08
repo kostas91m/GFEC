@@ -14,5 +14,6 @@ namespace GFEC
         double Tolerance { get; set; }
         int MaxIterations { get; set; }
         event EventHandler<string> convergenceResult;
+        List<string> LoadStepConvergence { get; set; }
     }
 }
