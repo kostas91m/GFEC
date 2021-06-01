@@ -29,12 +29,30 @@ namespace GFEC
         {
             throw new Exception("Needs to be removed. Has beeb used only for testing purposes");
         }
-
+        public List<double[]> GetStressVector()
+        {
+            throw new Exception("Needs to be removed. Has beeb used only for testing purposes");
+        }
+        public List<double[]> GetStrainVector()
+        {
+            throw new Exception("Needs to be removed. Has beeb used only for testing purposes");
+        }
+        public List<double[]> GetGaussPointsInPhysicalSpace()
+        {
+            throw new Exception("Needs to be removed. Has beeb used only for testing purposes");
+        }
         public Dictionary<int, INode> NodesAtFinalState()
         {
             throw new Exception("Method not implemenented");
         }
-
+        public List<double[]> GetStressFromElementsNodes()
+        {
+            throw new Exception("Needs to be removed. Has beeb used only for testing purposes");
+        }
+        public List<double[]> GetStrainFromElementsNodes()
+        {
+            throw new Exception("Needs to be removed. Has beeb used only for testing purposes");
+        }
         public double CalculateElementLength()
         {
             double X1 = Nodes[1].XCoordinate;

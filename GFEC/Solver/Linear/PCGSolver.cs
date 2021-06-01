@@ -8,7 +8,7 @@ namespace GFEC
     class PCGSolver : LinearSolution
     {
         int maxIterations = 1000;
-        double tolerance = 1e-12;
+        double tolerance = 1e-9;
 
         private double[] PCG(double[,] stiffnessMatrix, double[] forceVector)
         {

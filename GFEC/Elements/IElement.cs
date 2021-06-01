@@ -23,6 +23,13 @@ namespace GFEC
         double[,] CreateDampingMatrix();
         Dictionary<int, INode> NodesAtFinalState();
         double ClosestPointProjection();
+        List<double[]> GetStressVector();
+        List<double[]> GetStrainVector();
+        List<double[]> GetGaussPointsInPhysicalSpace();
+        List<double[]> GetStressFromElementsNodes();
+        List<double[]> GetStrainFromElementsNodes();
+
+
     }
 }
 

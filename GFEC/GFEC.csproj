@@ -88,6 +88,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Assemble\AssemblyHelpMethods.cs" />
+    <Compile Include="Elements\ContactNtS3D.cs" />
+    <Compile Include="Elements\Quad8.cs" />
+    <Compile Include="Elements\Triangle3.cs" />
     <Compile Include="Elements\Quad4Th2.cs" />
     <Compile Include="Elements\ContactNtS2DTh.cs" />
     <Compile Include="Elements\ContactNtN2DTh.cs" />
@@ -96,6 +99,18 @@
     <Compile Include="Examples\CantileverInContact.cs" />
     <Compile Include="Examples\CantileverQuadsExample.cs" />
     <Compile Include="Examples\CentralDifferencesTest.cs" />
+    <Compile Include="Examples\CantileverWithTriangElements.cs" />
+    <Compile Include="Examples\CantileverWithQuad8Elements.cs" />
+    <Compile Include="Examples\Hxa8TestExample.cs" />
+    <Compile Include="Examples\TwoBlocksInContact3D.cs" />
+    <Compile Include="Examples\ImpactCircle2.cs" />
+    <Compile Include="Examples\ImpactCircle.cs" />
+    <Compile Include="Examples\ImpactElasticAgainstRigid2.cs" />
+    <Compile Include="Examples\ImpactBetweenBars.cs" />
+    <Compile Include="Examples\NewDynamicExample.cs" />
+    <Compile Include="Examples\ImpactElasticAgainstRigid.cs" />
+    <Compile Include="Examples\NewExampleContacts.cs" />
+    <Compile Include="Examples\ElasticContrainsCNTsInAngleFinal.cs" />
     <Compile Include="Examples\CNTExample.cs" />
     <Compile Include="Examples\CNTsInAngleFinalExample.cs" />
     <Compile Include="Examples\CNTsInParallelFinalExample.cs" />

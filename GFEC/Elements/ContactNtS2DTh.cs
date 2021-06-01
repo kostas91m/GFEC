@@ -50,7 +50,30 @@ namespace GFEC
         {
             throw new Exception("Method not implemenented");
         }
+        public List<double[]> GetStressVector()
+        {
+            throw new Exception("Needs to be removed. Has beeb used only for testing purposes");
+        }
+        public List<double[]> GetStrainVector()
+        {
+            throw new Exception("Needs to be removed. Has beeb used only for testing purposes");
+        }
+        public List<double[]> GetStressFromElementsNodes()
+        {
+            throw new Exception("Method not implemenented");
 
+        }
+        public List<double[]> GetStrainFromElementsNodes()
+        {
+            throw new Exception("Method not implemenented");
+
+        }
+        public List<double[]> GetGaussPointsInPhysicalSpace()
+        {
+            List<double[]> l = new List<double[]>();
+            l.Add(new double[] { 0.0, 0.0 });
+            return l;
+        }
         public double CalculateConductivity()
         {
             //double k = 19.2;

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GFEC
 {
-    class Quad4 : IElement
+    class Triangle3 : IElement
     {
         public Dictionary<int, INode> Nodes { get; }
         public IElementProperties Properties { get; set; }
@@ -13,19 +13,15 @@ namespace GFEC
         public List<int> ElementFreedomList { get; set; }
         public double[] DisplacementVector { get; set; }
         public double[] AccelerationVector { get; set; }
-        public double poisson { get; set; }
-        //private double thickness = 1.0; //To be included in Element Properties
-        //private double density = 1.0; //To be included in Element Properties
-        
-        public Quad4(IElementProperties properties, Dictionary<int, INode> nodes)
+
+        public Triangle3(IElementProperties properties, Dictionary<int, INode> nodes)
         {
             Properties = properties;
             this.Nodes = nodes;
             ElementFreedomSignature[1] = new bool[] { true, true, false, false, false, false };
             ElementFreedomSignature[2] = new bool[] { true, true, false, false, false, false };
             ElementFreedomSignature[3] = new bool[] { true, true, false, false, false, false };
-            ElementFreedomSignature[4] = new bool[] { true, true, false, false, false, false };
-            DisplacementVector = new double[8];
+            DisplacementVector = new double[6];
         }
 
         public double ClosestPointProjection()
@@ -37,7 +33,7 @@ namespace GFEC
             double[,] E = CalculateStressStrainMatrix(Properties.YoungMod, Properties.PoissonRatio);
             List<double[]> stressVectors = new List<double[]>();
             List<double[]> strainVectors = GetStrainVector();
-            foreach(var v in strainVectors)
+            foreach (var v in strainVectors)
             {
                 double[] stressV = CalculateStressVector(E, v);
                 stressVectors.Add(stressV);
@@ -48,9 +44,9 @@ namespace GFEC
         {
 
             List<double[]> strainVectors = new List<double[]>();
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 4; i++)
             {
-                for (int j = 0; j < 2; j++)
+                for (int j = 0; j < 4; j++)
                 {
                     double[] gP = GaussPoints(i, j).Item1;
                     Dictionary<string, double[]> localdN = CalculateShapeFunctionsLocalDerivatives(gP);
@@ -69,12 +65,12 @@ namespace GFEC
         {
             List<double[]> gaussPoints = new List<double[]>();
             double[] xUpdated = UpdateNodalCoordinates(DisplacementVector);
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 4; i++)
             {
-                for (int j = 0; j < 2; j++)
+                for (int j = 0; j < 4; j++)
                 {
                     double[] gP = GaussPoints(i, j).Item1;
-                    double[] gaussPoint = VectorOperations.MatrixVectorProduct(CalculateShapeFunctionMatrix(gP[0], gP[1]), xUpdated) ;
+                    double[] gaussPoint = VectorOperations.MatrixVectorProduct(CalculateShapeFunctionMatrix(gP[0], gP[1]), xUpdated);
                     gaussPoints.Add(gaussPoint);
                 }
             }
@@ -82,43 +78,20 @@ namespace GFEC
         }
         public List<double[]> GetStressFromElementsNodes()
         {
-            double[,] E = CalculateStressStrainMatrix(Properties.YoungMod, Properties.PoissonRatio);
-            List<double[]> stressVectors = new List<double[]>();
-            List<double[]> strainVectors = GetStrainFromElementsNodes();
-            foreach (var v in strainVectors)
-            {
-                double[] stressV = CalculateStressVector(E, v);
-                stressVectors.Add(stressV);
-            }
-            return stressVectors;
+            List<double[]> l = new List<double[]>();
+            l.Add(new double[] { 0.0, 0.0, 0.0 });
+            return l;
         }
         public List<double[]> GetStrainFromElementsNodes()
         {
-            List<double[]> strainVectors = new List<double[]>();
-            double[] ksi = new double[] { -1.0, 1.0, 1.0, -1.0 };
-            int k = 0;
-            for (int i = 0; i <= 2; i+=2)
-            {
-                for (int j = 1; j <= 2; j++)
-                {
-                    double[] node = new double[] {ksi[k], (double)(i) - 1.0 };
-                    Dictionary<string, double[]> localdN = CalculateShapeFunctionsLocalDerivatives(node);
-                    double[,] J = CalculateJacobian(localdN);
-                    double[,] invJ = CalculateInverseJacobian(J).Item1;
-                    double detJ = CalculateInverseJacobian(J).Item2;
-                    Dictionary<int, double[]> globaldN = CalculateShapeFunctionsGlobalDerivatives(localdN, invJ);
-                    double[,] B = CalculateBMatrix(globaldN);
-                    double[] strainV = CalculateStrainsVector(B);
-                    strainVectors.Add(strainV);
-                    k += 1;
-                }
-            }
-            return strainVectors;
+            List<double[]> l = new List<double[]>();
+            l.Add(new double[] { 0.0, 0.0, 0.0 });
+            return l;
         }
         private double[] UpdateNodalCoordinates(double[] displacementVector)
         {
-            double[] updatedCoor = new double[8];
-            for (int i = 1; i <= 4; i++)
+            double[] updatedCoor = new double[6];
+            for (int i = 1; i <= 3; i++)
             {
                 updatedCoor[2 * i - 2] = Nodes[i].XCoordinate + displacementVector[2 * i - 2];
                 updatedCoor[2 * i - 1] = Nodes[i].YCoordinate + displacementVector[2 * i - 1];
@@ -132,18 +105,15 @@ namespace GFEC
             finalNodes[1] = new Node(Nodes[1].XCoordinate + DisplacementVector[0], Nodes[1].YCoordinate + DisplacementVector[1]);
             finalNodes[2] = new Node(Nodes[2].XCoordinate + DisplacementVector[2], Nodes[2].YCoordinate + DisplacementVector[3]);
             finalNodes[3] = new Node(Nodes[3].XCoordinate + DisplacementVector[4], Nodes[3].YCoordinate + DisplacementVector[5]);
-            finalNodes[4] = new Node(Nodes[4].XCoordinate + DisplacementVector[6], Nodes[4].YCoordinate + DisplacementVector[7]);
             return finalNodes;
         }
 
         private Dictionary<int, double> CalculateShapeFunctions(double ksi, double ihta)
         {
             Dictionary<int, double> shapeFunctions = new Dictionary<int, double>();
-            double N1 = 1.0 / 4.0 * (1 - ksi) * (1 - ihta); shapeFunctions.Add(1, N1);
-            double N2 = 1.0 / 4.0 * (1 + ksi) * (1 - ihta); shapeFunctions.Add(2, N2);
-            double N3 = 1.0 / 4.0 * (1 + ksi) * (1 + ihta); shapeFunctions.Add(3, N3);
-            double N4 = 1.0 / 4.0 * (1 - ksi) * (1 + ihta); shapeFunctions.Add(4, N4);
-
+            double N1 = ksi; shapeFunctions.Add(1, N1);
+            double N2 = ihta; shapeFunctions.Add(2, N2);
+            double N3 = 1.0 - ksi - ihta; shapeFunctions.Add(3, N3);
             return shapeFunctions;
         }
 
@@ -152,8 +122,8 @@ namespace GFEC
             Dictionary<int, double> shapeFunctions = CalculateShapeFunctions(ksi, ihta);
             double[,] N = new double[,]
             {
-                {shapeFunctions[1], 0, shapeFunctions[2], 0, shapeFunctions[3], 0, shapeFunctions[4], 0 },
-                {0, shapeFunctions[1], 0, shapeFunctions[2], 0, shapeFunctions[3], 0, shapeFunctions[4] }
+                {shapeFunctions[1], 0, shapeFunctions[2], 0, shapeFunctions[3], 0},
+                {0, shapeFunctions[1], 0, shapeFunctions[2], 0, shapeFunctions[3]}
             };
             return N;
         }
@@ -165,18 +135,16 @@ namespace GFEC
 
             double[] dN_ksi = new double[]
             {
-                (-1.0/4.0*(1-ihta)),
-                (1.0/4.0*(1-ihta)),
-                (1.0/4.0*(1+ihta)),
-                (-1.0/4.0*(1+ihta)),
+                (1),
+                (0),
+                (-1),
             };
 
             double[] dN_ihta = new double[]
             {
-                (-1.0/4.0*(1-ksi)),
-                (-1.0/4.0*(1+ksi)),
-                (1.0/4.0*(1+ksi)),
-                (1.0/4.0*(1-ksi)),
+                (0),
+                (1),
+                (-1),
             };
 
             Dictionary<string, double[]> dN = new Dictionary<string, double[]>();
@@ -192,26 +160,26 @@ namespace GFEC
             double[] xUpdated = UpdateNodalCoordinates(DisplacementVector);
 
             int k = 0;
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 3; i++)
             {
                 jacobianMatrix[0, 0] = jacobianMatrix[0, 0] + xUpdated[k] * dN["ksi"][i];
                 k = k + 2;
             }
             k = 1;
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 3; i++)
             {
                 jacobianMatrix[0, 1] = jacobianMatrix[0, 1] + xUpdated[k] * dN["ksi"][i];
                 k = k + 2;
             }
 
             k = 0;
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 3; i++)
             {
                 jacobianMatrix[1, 0] = jacobianMatrix[1, 0] + xUpdated[k] * dN["ihta"][i];
                 k = k + 2;
             }
             k = 1;
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 3; i++)
             {
                 jacobianMatrix[1, 1] = jacobianMatrix[1, 1] + xUpdated[k] * dN["ihta"][i];
                 k = k + 2;
@@ -238,7 +206,7 @@ namespace GFEC
         {
             Dictionary<int, double[]> dNg = new Dictionary<int, double[]>();
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 3; i++)
             {
                 double[] dNlocal = new double[] { dN["ksi"][i], dN["ihta"][i] };
                 double[] dNglobal = VectorOperations.MatrixVectorProduct(Jinv, dNlocal);
@@ -255,9 +223,9 @@ namespace GFEC
 
         private double[,] CalculateBMatrix(Dictionary<int, double[]> dNglobal)
         {
-            double[,] Bmatrix = new double[3, 8];
+            double[,] Bmatrix = new double[3, 6];
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 3; i++)
             {
                 Bmatrix[0, i * 2] = dNglobal[i][0];
                 Bmatrix[1, i * 2 + 1] = dNglobal[i][1];
@@ -289,24 +257,25 @@ namespace GFEC
             return stressVector;
         }
 
-        private Tuple<double[], double[]> GaussPoints(int i, int j)
+        private Tuple<double[], double[]> GaussPoints(int i , int j)
         {
-            double[] gaussPoints = new double[] { -1.0 / Math.Sqrt(3), 1.0 / Math.Sqrt(3) };
-            double[] gaussWeights = new double[] { 1.0, 1.0 };
-
-            double[] vectorWithPoints = new double[] { gaussPoints[i], gaussPoints[j]};
-            double[] vectorWithWeights = new double[] { gaussWeights[i], gaussWeights[j]};
+            double[] gaussPoints = new double[] { 0.0571041961, 0.2768430136, 0.5835904324, 0.8602401957 };
+            double[] gaussPoints2 = new double[] { 0.06546699465, 0.2386486597, 0.2789904635, 0.1300560792 };
+            double[] gaussWeights = new double[] { 0.1355069134, 0.2034645680, 0.1298475476, 0.0311809709 };
+            double[] gaussWeights2 = new double[] { 0.1739274226, 0.3260725774, 0.3260725774, 0.1739274226 };
+            double[] vectorWithPoints = new double[] { gaussPoints[i], gaussPoints2[j] };
+            double[] vectorWithWeights = new double[] { gaussWeights[i], gaussWeights2[j] };
             return new Tuple<double[], double[]>(vectorWithPoints, vectorWithWeights);
         }
 
         public double[,] CreateGlobalStiffnessMatrix()
         {
-            double[,] K = new double[8, 8];
-            double[,] E = CalculateStressStrainMatrix(Properties.YoungMod, Properties.PoissonRatio); 
+            double[,] K = new double[6, 6];
+            double[,] E = CalculateStressStrainMatrix(Properties.YoungMod, Properties.PoissonRatio);
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i <= 3; i++)
             {
-                for (int j = 0; j < 2; j++)
+                for (int j = 0; j <= 3; j++)
                 {
                     double[] gP = GaussPoints(i, j).Item1;
                     double[] gW = GaussPoints(i, j).Item2;
@@ -325,101 +294,32 @@ namespace GFEC
 
         public double[,] CreateMassMatrix()
         {
-            //double[,] M = new double[8, 8];
-
-            //double[,] consinstentMass = new double[8, 8];
-            //for (int i = 0; i < 2; i++)
-            //{
-            //    for (int j = 0; j < 2; j++)
-            //    {
-            //        double[] gP = GaussPoints(i, j).Item1;
-            //        double[] gW = GaussPoints(i, j).Item2;
-            //        Dictionary<string, double[]> localdN = CalculateShapeFunctionsLocalDerivatives(gP);
-            //        double[,] J = CalculateJacobian(localdN);
-            //        double detJ = CalculateInverseJacobian(J).Item2;
-            //        double[,] Nmatrix = CalculateShapeFunctionMatrix(gP[0], gP[1]);
-            //        consinstentMass = MatrixOperations.MatrixAddition(consinstentMass, MatrixOperations.ScalarMatrixProductNew(Properties.Density * Properties.Thickness * detJ * gW[0] * gW[1],
-            //            MatrixOperations.MatrixProduct(MatrixOperations.Transpose(Nmatrix), Nmatrix)));
-            //    }
-            //}
-            //for (int i = 0; i <= 7; i++)
-            //{
-            //    for (int j = 0; j <= 7; j++)
-            //    {
-            //        M[i, i] += consinstentMass[i, j];
-            //    }
-            //}
-            //-------------------------------------------------------------------
-            double[,] tempM = MatrixOperations.CreateDiagonalMatrix(8, 1.0);
-            double length = 0.3;
-            double scalar = Properties.Density * Properties.Thickness * length * (length / 3.0) / 4.0;
+            double[,] tempM = MatrixOperations.CreateDiagonalMatrix(6, 1.0);
+            double[] xUpdated = UpdateNodalCoordinates(DisplacementVector);
+            double a = Math.Pow(Math.Pow(xUpdated[0] - xUpdated[2], 2) + Math.Pow(xUpdated[1] - xUpdated[3], 2), 0.5);
+            double b = Math.Pow(Math.Pow(xUpdated[0] - xUpdated[4], 2) + Math.Pow(xUpdated[1] - xUpdated[5], 2), 0.5);
+            double c = Math.Pow(Math.Pow(xUpdated[2] - xUpdated[4], 2) + Math.Pow(xUpdated[3] - xUpdated[5], 2), 0.5);
+            double t = (a + b + c) / 2;
+            double area = Math.Pow(t * (t - a) * (t - b) * (t - c), 0.5);
+            double scalar = Properties.Density * Properties.Thickness * area / 3.0;
             double[,] M = MatrixOperations.ScalarMatrixProductNew(scalar, tempM);
-
             double waveSpeed = Math.Sqrt(Properties.YoungMod / Properties.Density);
-            double deltatCritical = length * Math.Sqrt(1.0 - 0.33) / waveSpeed;
-
-
-            //--------------------------------------------------------------
-            //for (int i = 0; i < 2; i++)
-            //{
-            //    for (int j = 0; j < 2; j++)
-            //    {
-            //        double[] gP = GaussPoints(i, j).Item1;
-            //        double[] gW = GaussPoints(i, j).Item2;
-            //        Dictionary<string, double[]> localdN = CalculateShapeFunctionsLocalDerivatives(gP);
-            //        double[,] J = CalculateJacobian(localdN);
-            //        double[,] invJ = CalculateInverseJacobian(J).Item1;
-            //        double detJ = CalculateInverseJacobian(J).Item2;
-            //        double[,] Nmatrix = CalculateShapeFunctionMatrix(gP[i], gP[j]);
-            //        M = MatrixOperations.MatrixAddition(M, MatrixOperations.ScalarMatrixProductNew(Properties.Density * Properties.Thickness * detJ * gW[i] * gW[j],
-            //            MatrixOperations.MatrixProduct(MatrixOperations.Transpose(Nmatrix), Nmatrix)));
-            //    }
-            //}
-
-            //--------------------------------------------------------
-
-            //for (int i = 0; i < 8; i++)
-            //{
-            //    M[i, i] = 4.0;
-            //}
-
-            //for (int i = 0; i < 6; i++)
-            //{
-            //    M[i, i + 2] = 2.0;
-            //    M[i + 2, i] = 2.0;
-            //}
-
-            //for (int i = 0; i < 4; i++)
-            //{
-            //    M[i, i + 4] = 1.0;
-            //    M[i + 4, i] = 1.0;
-            //}
-
-            //for (int i = 0; i < 2; i++)
-            //{
-            //    M[i, i + 6] = 2.0;
-            //    M[i + 6, i] = 2.0;
-            //}
-
-            //M = MatrixOperations.ScalarMatrixProductNew(0.67 * 0.8 * Properties.Density * Properties.Thickness / 32, M);
-            //MatrixOperations.PrintMatrix(M);
-
             return M;
         }
 
         public double[,] CreateDampingMatrix()
         {
-            return new double[8, 8];
+            return new double[6, 6];
         }
 
         public double[] CreateInternalGlobalForcesVector()
         {
-            double[] F = new double[8];
-            double[,] E = CalculateStressStrainMatrix(Properties.YoungMod, Properties.PoissonRatio); //needs fixing in poisson v
+            double[] F = new double[6];
+            double[,] E = CalculateStressStrainMatrix(Properties.YoungMod, Properties.PoissonRatio); 
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i <= 3; i++)
             {
-                for (int j = 0; j < 2; j++)
+                for (int j = 0; j <= 3; j++)
                 {
                     double[] gP = GaussPoints(i, j).Item1;
                     double[] gW = GaussPoints(i, j).Item2;

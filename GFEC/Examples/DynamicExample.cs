@@ -63,7 +63,7 @@ namespace GFEC
             return assembly;
         }
 
-        public static void RunExample()
+        public static Results RunExample()
         {
             IAssembly elementsAssembly = CreateAssembly();
             elementsAssembly.CreateElementsAssembly();
@@ -85,6 +85,8 @@ namespace GFEC
             newSolver.ActivateNonLinearSolution = true;
             newSolver.SolveExplicit();
             newSolver.PrintExplicitSolution();
+            Results finalResults = new Results() { DynamicSolution = newSolver.explicitSolution, TimeSteps = newSolver.TimeAtEachStep, SelectedDOF = 1, SelectedInterval = 1, SolutionType = "Dynamic" };
+            return finalResults;
         }
     }
 }

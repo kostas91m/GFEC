@@ -103,6 +103,12 @@ namespace GFEC
                     case "Quad4":
                         ElementsAssembly[elem] = new Quad4(ElementsProperties[elem], elementNodes);
                         break;
+                    case "Quad8":
+                        ElementsAssembly[elem] = new Quad8(ElementsProperties[elem], elementNodes);
+                        break;
+                    case "Triangle3":
+                        ElementsAssembly[elem] = new Triangle3(ElementsProperties[elem], elementNodes);
+                        break;
                     case "ContactNtS2Df":
                         ElementsAssembly[elem] = new ContactNtS2Df(ElementsProperties[elem], elementNodes);
                         break;
@@ -117,6 +123,12 @@ namespace GFEC
                         break;
                     case "ContactNtN2DTh":
                         ElementsAssembly[elem] = new ContactNtN2DTh(ElementsProperties[elem], elementNodes);
+                        break;
+                    case "Hex8":
+                        ElementsAssembly[elem] = new Hex8(ElementsProperties[elem], elementNodes);
+                        break;
+                    case "ContactNtS3D":
+                        ElementsAssembly[elem] = new ContactNtS3D(ElementsProperties[elem], elementNodes);
                         break;
                 }
                 Dictionary<int, bool[]> efs = ElementsAssembly[elem].ElementFreedomSignature;
@@ -360,6 +372,61 @@ namespace GFEC
                 yCoorVector[i - 1] = nodesList[i].YCoordinate;
             }
             return new Tuple<double[], double[]>(xCoorVector, yCoorVector);
+        }
+        public Dictionary<int, List<double[]>> GetElementsStresses(double[] totalDisplacementVector)
+        {
+            UpdateDisplacements(totalDisplacementVector);
+            Dictionary<int, List<double[]>> elementsStresses = new Dictionary<int, List<double[]>>();
+            for (int element = 1; element <= ElementsConnectivity.Count; element++)
+            {
+                List<double[]> elementStress = ElementsAssembly[element].GetStressVector();
+                elementsStresses.Add(element, elementStress);
+            }
+            return elementsStresses;
+        }
+        public Dictionary<int, List<double[]>> GetElementsGaussPoints(double[] totalDisplacementVector)
+        {
+            UpdateDisplacements(totalDisplacementVector);
+            Dictionary<int, List<double[]>> elementsGaussPoints = new Dictionary<int, List<double[]>>();
+            for (int element = 1; element <= ElementsConnectivity.Count; element++)
+            {
+                List<double[]> elementStress = ElementsAssembly[element].GetGaussPointsInPhysicalSpace();
+                elementsGaussPoints.Add(element, elementStress);
+            }
+            return elementsGaussPoints;
+        }
+        public Dictionary<int, List<double[]>> GetElementsStains(double[] totalDisplacementVector)
+        {
+            UpdateDisplacements(totalDisplacementVector);
+            Dictionary<int, List<double[]>> elementsStains = new Dictionary<int, List<double[]>>();
+            for (int element = 1; element <= ElementsConnectivity.Count; element++)
+            {
+                List<double[]> elementStress = ElementsAssembly[element].GetStrainVector();
+                elementsStains.Add(element, elementStress);
+            }
+            return elementsStains;
+        }
+        public Dictionary<int, List<double[]>> GetElementsNodesStains(double[] totalDisplacementVector)
+        {
+            UpdateDisplacements(totalDisplacementVector);
+            Dictionary<int, List<double[]>> elementsStains = new Dictionary<int, List<double[]>>();
+            for (int element = 1; element <= ElementsConnectivity.Count; element++)
+            {
+                List<double[]> elementStress = ElementsAssembly[element].GetStrainFromElementsNodes();
+                elementsStains.Add(element, elementStress);
+            }
+            return elementsStains;
+        }
+        public Dictionary<int, List<double[]>> GetElementsNodesStresses(double[] totalDisplacementVector)
+        {
+            UpdateDisplacements(totalDisplacementVector);
+            Dictionary<int, List<double[]>> elementsStresses = new Dictionary<int, List<double[]>>();
+            for (int element = 1; element <= ElementsConnectivity.Count; element++)
+            {
+                List<double[]> elementStress = ElementsAssembly[element].GetStressFromElementsNodes();
+                elementsStresses.Add(element, elementStress);
+            }
+            return elementsStresses;
         }
     }
 }

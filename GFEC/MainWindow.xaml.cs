@@ -110,6 +110,19 @@ namespace GFEC
             exampleList.Add("CNTExample");
             exampleList.Add("CNTsInParallelFinalExample");
             exampleList.Add("CNTsInAngleFinalExample");
+            exampleList.Add("ElasticContrainsCNTsInAngleFinal");
+            exampleList.Add("NewExampleContacts");
+            exampleList.Add("DynamicExample");
+            exampleList.Add("ImpactElasticAgainstRigid");
+            exampleList.Add("NewDynamicExample");
+            exampleList.Add("ImpactBetweenBars");
+            exampleList.Add("ImpactElasticAgainstRigid2");
+            exampleList.Add("ImpactCircle");
+            exampleList.Add("ImpactCircle2");
+            exampleList.Add("CantileverWithTriangElements");
+            exampleList.Add("CantileverWithQuad8Elements");
+            exampleList.Add("TwoBlocksInContact3D");
+            exampleList.Add("Hxa8TestExample");
 
             ComboBox1.ItemsSource = exampleList;
         }
@@ -236,6 +249,57 @@ namespace GFEC
                     CNTsInAngleFinalExample.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
                     CNTsInAngleFinalExample.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
                     finalResults = CNTsInAngleFinalExample.RunStaticExample();
+                    break;
+                case "ElasticContrainsCNTsInAngleFinal":
+                    ElasticContrainsCNTsInAngleFinal.structuralSolution = new StaticSolver();
+                    ElasticContrainsCNTsInAngleFinal.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+                    ElasticContrainsCNTsInAngleFinal.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
+                    finalResults = ElasticContrainsCNTsInAngleFinal.RunStaticExample();
+                    break;
+                case "NewExampleContacts":
+                    NewExampleContacts.structuralSolution = new StaticSolver();
+                    NewExampleContacts.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+                    NewExampleContacts.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
+                    finalResults = NewExampleContacts.RunStaticExample();
+                    break;
+                case "DynamicExample":
+                    finalResults = DynamicExample.RunExample();
+                    break;
+                case "ImpactElasticAgainstRigid":
+                    finalResults = ImpactElasticAgainstRigid.RunExample();
+                    break;
+                case "NewDynamicExample":
+                    finalResults = NewDynamicExample.RunExample();
+                    break;
+                case "ImpactBetweenBars":
+                    finalResults = ImpactBetweenBars.RunExample();
+                    break;
+                case "ImpactElasticAgainstRigid2":
+                    finalResults = ImpactElasticAgainstRigid2.RunExample();
+                    break;
+                case "ImpactCircle":
+                    finalResults = ImpactCircle.RunExample();
+                    break;
+                case "CantileverWithTriangElements":
+                    finalResults = CantileverWithTriangElements.RunExample();
+                    break;
+                case "CantileverWithQuad8Elements":
+                    finalResults = CantileverWithQuad8Elements.RunExample();
+                    break;
+                case "ImpactCircle2":
+                    finalResults = ImpactCircle2.RunExample();
+                    break;
+                case "TwoBlocksInContact3D":
+                    TwoBlocksInContact3D.newSolu = new StaticSolver();
+                    TwoBlocksInContact3D.newSolu.NonLinearScheme = new LoadControlledNewtonRaphson();
+                    TwoBlocksInContact3D.newSolu.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
+                    finalResults = TwoBlocksInContact3D.RunStaticExample();
+                    break;
+                case "Hxa8TestExample":
+                    Hxa8TestExample.newSolu = new StaticSolver();
+                    Hxa8TestExample.newSolu.NonLinearScheme = new LoadControlledNewtonRaphson();
+                    Hxa8TestExample.newSolu.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
+                    finalResults = Hxa8TestExample.RunStaticExample();
                     break;
                 default:
                     finalResults = TwoQuadsExample.RunStaticExample();

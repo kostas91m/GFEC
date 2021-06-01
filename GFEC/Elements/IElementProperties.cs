@@ -23,6 +23,8 @@ namespace GFEC
         double Dx { get; set; }
         double A { get; set; }
         double B { get; set; }
+        double PoissonRatio { get; set; }
+
     }
 }
 

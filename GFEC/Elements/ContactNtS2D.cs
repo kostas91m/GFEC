@@ -23,7 +23,9 @@ namespace GFEC
             ElementFreedomSignature[2] = new bool[] { true, true, false, false, false, false };
             ElementFreedomSignature[3] = new bool[] { true, true, false, false, false, false };
             DisplacementVector = new double[6];
-            PenaltyFactor = properties.YoungMod * 2.0;
+            //PenaltyFactor = properties.YoungMod * 1000.0 * properties.SectionArea;
+            //PenaltyFactor = properties.YoungMod * 3000.0 * properties.SectionArea;
+            PenaltyFactor = properties.YoungMod * 100.0;
         }
 
         //private double[] CalculateNormalUnitVector(double detm)
@@ -43,10 +45,42 @@ namespace GFEC
             Dictionary<int, INode> finalNodes = new Dictionary<int, INode>();
             finalNodes[1] = new Node(Nodes[1].XCoordinate + DisplacementVector[0], Nodes[1].YCoordinate + DisplacementVector[1]);
             finalNodes[2] = new Node(Nodes[2].XCoordinate + DisplacementVector[2], Nodes[2].YCoordinate + DisplacementVector[3]);
-            finalNodes[2] = new Node(Nodes[3].XCoordinate + DisplacementVector[4], Nodes[3].YCoordinate + DisplacementVector[5]);
+            //finalNodes[2] = new Node(Nodes[3].XCoordinate + DisplacementVector[4], Nodes[3].YCoordinate + DisplacementVector[5]);//?
+            finalNodes[3] = new Node(Nodes[3].XCoordinate + DisplacementVector[4], Nodes[3].YCoordinate + DisplacementVector[5]);
             return finalNodes;
         }
 
+        public List<double[]> GetStressVector()
+        {
+            List<double[]> l = new List<double[]>();
+            l.Add(new double[] { 0.0, 0.0, 0.0 });
+            return l;
+        }
+        public List<double[]> GetStrainVector()
+        {
+            List<double[]> l = new List<double[]>();
+            l.Add(new double[] { 0.0, 0.0, 0.0 });
+            return l;
+        }
+
+        public List<double[]> GetGaussPointsInPhysicalSpace()
+        {
+            List<double[]> l = new List<double[]>();
+            l.Add(new double[] { 0.0, 0.0 });
+            return l;
+        }
+        public List<double[]> GetStressFromElementsNodes()
+        {
+            List<double[]> l = new List<double[]>();
+            l.Add(new double[] { 0.0, 0.0, 0.0 });
+            return l;
+        }
+        public List<double[]> GetStrainFromElementsNodes()
+        {
+            List<double[]> l = new List<double[]>();
+            l.Add(new double[] { 0.0, 0.0, 0.0 });
+            return l;
+        }
         public double ClosestPointProjection()
         {
             double Xm1 = Nodes[1].XCoordinate + DisplacementVector[0];

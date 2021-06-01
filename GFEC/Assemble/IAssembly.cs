@@ -21,6 +21,13 @@ namespace GFEC
         double[,] CreateTotalMassMatrix();
         double[,] CreateTotalDampingMatrix();
         Dictionary<int, double[]> GetElementsInternalForces(double[] totalInternalForcesVector);
+        Dictionary<int, List<double[]>> GetElementsStresses(double[] totalDisplacementVector);
+        Dictionary<int, List<double[]>> GetElementsStains(double[] totalDisplacementVector);
+        Dictionary<int, List<double[]>> GetElementsNodesStresses(double[] totalDisplacementVector);
+        Dictionary<int, List<double[]>> GetElementsNodesStains(double[] totalDisplacementVector);
+        Dictionary<int, List<double[]>> GetElementsGaussPoints(double[] totalDisplacementVector);
+
+
         List<string> GetElementsType();
         Dictionary<int, IElement> ElementsAssembly { get; set; }
         int CountElementsOfSameType(Type elementType);

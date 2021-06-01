@@ -329,6 +329,16 @@ namespace GFEC
             }
             File.WriteAllLines(path, dataToPrint);
         }
+        public static double Trace(double[,] matrix)
+        {
+            int matrixrows = matrix.GetLength(0);
+            double trace = new double();
 
+            for (int row = 0; row < matrixrows; row++)
+            {
+                trace += matrix[row, row];
+            }
+            return trace;
+        }
     }
 }

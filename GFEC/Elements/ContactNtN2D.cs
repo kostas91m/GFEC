@@ -22,14 +22,45 @@ namespace GFEC
             ElementFreedomSignature[1] = new bool[] { true, true, false, false, false, false };
             ElementFreedomSignature[2] = new bool[] { true, true, false, false, false, false };
             DisplacementVector = new double[4];
+            //PenaltyFactor = properties.YoungMod * 1000.0 * properties.SectionArea;
             PenaltyFactor = properties.YoungMod * 100.0;
+            //PenaltyFactor = properties.YoungMod * 3000.0 * properties.SectionArea;
         }
 
         public double ClosestPointProjection()
         {
             throw new Exception("Needs to be removed. Has beeb used only for testing purposes");
         }
-
+        public List<double[]> GetStressVector()
+        {
+            List<double[]> l = new List<double[]>();
+            l.Add(new double[] { 0.0, 0.0, 0.0 });
+            return l;
+        }
+        public List<double[]> GetStrainVector()
+        {
+            List<double[]> l = new List<double[]>();
+            l.Add(new double[] { 0.0, 0.0, 0.0 });
+            return l;
+        }
+        public List<double[]> GetGaussPointsInPhysicalSpace()
+        {
+            List<double[]> l = new List<double[]>();
+            l.Add(new double[] { 0.0, 0.0 });
+            return l;
+        }
+        public List<double[]> GetStressFromElementsNodes()
+        {
+            List<double[]> l = new List<double[]>();
+            l.Add(new double[] { 0.0, 0.0, 0.0 });
+            return l;
+        }
+        public List<double[]> GetStrainFromElementsNodes()
+        {
+            List<double[]> l = new List<double[]>();
+            l.Add(new double[] { 0.0, 0.0, 0.0 });
+            return l;
+        }
         public Dictionary<int, INode> NodesAtFinalState()
         {
             Dictionary<int, INode> finalNodes = new Dictionary<int, INode>();

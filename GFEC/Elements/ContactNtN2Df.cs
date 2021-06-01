@@ -30,12 +30,37 @@ namespace GFEC
         {
             throw new Exception("Needs to be removed. Has beeb used only for testing purposes");
         }
-
+        public List<double[]> GetStressVector()
+        {
+            throw new Exception("Needs to be removed. Has beeb used only for testing purposes");
+        }
+        public List<double[]> GetStrainVector()
+        {
+            throw new Exception("Needs to be removed. Has beeb used only for testing purposes");
+        }
         public Dictionary<int, INode> NodesAtFinalState()
         {
             throw new Exception("Method not implemenented");
         }
 
+        public List<double[]> GetGaussPointsInPhysicalSpace()
+        {
+            List<double[]> l = new List<double[]>();
+            l.Add(new double[] { 0.0, 0.0 });
+            return l;
+        }
+        public List<double[]> GetStressFromElementsNodes()
+        {
+            List<double[]> l = new List<double[]>();
+            l.Add(new double[] { 0.0, 0.0, 0.0 });
+            return l;
+        }
+        public List<double[]> GetStrainFromElementsNodes()
+        {
+            List<double[]> l = new List<double[]>();
+            l.Add(new double[] { 0.0, 0.0, 0.0 });
+            return l;
+        }
         private double[] CalculateNormalUnitVector()
         {
             double X1 = Nodes[1].XCoordinate;

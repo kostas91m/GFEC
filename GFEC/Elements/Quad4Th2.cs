@@ -41,6 +41,26 @@ namespace GFEC
         {
             throw new Exception("Method not implemenented");
         }
+        public List<double[]> GetStressVector()
+        {
+            throw new Exception("Needs to be removed. Has beeb used only for testing purposes");
+        }
+        public List<double[]> GetStrainVector()
+        {
+            throw new Exception("Needs to be removed. Has beeb used only for testing purposes");
+        }
+        public List<double[]> GetGaussPointsInPhysicalSpace()
+        {
+            throw new Exception("Needs to be removed. Has beeb used only for testing purposes");
+        }
+        public List<double[]> GetStressFromElementsNodes()
+        {
+            throw new Exception("Method not implemenented");
+        }
+        public List<double[]> GetStrainFromElementsNodes()
+        {
+            throw new Exception("Method not implemenented");
+        }
         public double[,] CreateGlobalStiffnessMatrix()
         {
             kc = Properties.ThermalConductivity;

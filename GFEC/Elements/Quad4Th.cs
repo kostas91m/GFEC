@@ -37,32 +37,71 @@ namespace GFEC
         {
             throw new Exception("Method not implemenented");
         }
-
+        public List<double[]> GetStressVector()
+        {
+            throw new Exception("Needs to be removed. Has beeb used only for testing purposes");
+        }
+        public List<double[]> GetStrainVector()
+        {
+            throw new Exception("Needs to be removed. Has beeb used only for testing purposes");
+        }
+        public List<double[]> GetGaussPointsInPhysicalSpace()
+        {
+            throw new Exception("Needs to be removed. Has beeb used only for testing purposes");
+        }
+        public List<double[]> GetStressFromElementsNodes()
+        {
+            throw new Exception("Method not implemenented");
+        }
+        public List<double[]> GetStrainFromElementsNodes()
+        {
+            throw new Exception("Method not implemenented");
+        }
         public double[,] CreateGlobalStiffnessMatrix()
         {
+            double a = this.Nodes.Single(m => m.Key == 2).Value.XCoordinate - this.Nodes.Single(m => m.Key == 1).Value.XCoordinate;
+            double b = this.Nodes.Single(m => m.Key == 4).Value.YCoordinate - this.Nodes.Single(m => m.Key == 1).Value.YCoordinate;
             kc = Properties.ThermalConductivity;
             double[,] K = new double[4, 4];
-            
-            K[0, 0] = kc / 6.0 * 4.0;
-            K[0, 1] = -kc / 6.0;
-            K[0, 2] = -kc / 6.0 * 2.0;
-            K[0, 3] = -kc / 6.0;
+
+            //K[0, 0] = kc / 6.0 * 4.0;
+            //K[0, 1] = -kc / 6.0;
+            //K[0, 2] = -kc / 6.0 * 2.0;
+            //K[0, 3] = -kc / 6.0;
+
+            //K[1, 0] = K[0, 1];
+            //K[1, 1] = kc / 6.0 * 4.0;
+            //K[1, 2] = -kc / 6.0;
+            //K[1, 3] = -kc / 6.0 * 2.0;
+
+            //K[2, 0] = K[0, 2];
+            //K[2, 1] = K[1, 2];
+            //K[2, 2] = kc / 6.0 * 4.0;
+            //K[2, 3] = -kc / 6.0;
+
+            //K[3, 0] = K[0, 3];
+            //K[3, 1] = K[1, 3];
+            //K[3, 2] = K[2, 3];
+            //K[3, 3] = kc / 6.0 * 4.0;
+            K[0, 0] = kc / (6.0 * a * b)*2*(Math.Pow(a,2) + Math.Pow(b, 2));
+            K[0, 1] = kc / (6.0 * a * b) * (Math.Pow(a, 2) -2 * Math.Pow(b, 2));
+            K[0, 2] = -kc / (6.0 * a * b) * (Math.Pow(a, 2) + Math.Pow(b, 2));
+            K[0, 3] = kc / (6.0 * a * b) * (Math.Pow(b, 2) - 2 * Math.Pow(a, 2));
 
             K[1, 0] = K[0, 1];
-            K[1, 1] = kc / 6.0 * 4.0;
-            K[1, 2] = -kc / 6.0;
-            K[1, 3] = -kc / 6.0 * 2.0;
+            K[1, 1] = kc / (6.0 * a * b) * 2 * (Math.Pow(a, 2) + Math.Pow(b, 2));
+            K[1, 2] = kc / (6.0 * a * b) * (Math.Pow(b, 2) - 2 * Math.Pow(a, 2));
+            K[1, 3] = -kc / (6.0 * a * b) * (Math.Pow(a, 2) + Math.Pow(b, 2));
 
             K[2, 0] = K[0, 2];
             K[2, 1] = K[1, 2];
-            K[2, 2] = kc / 6.0 * 4.0;
-            K[2, 3] = -kc / 6.0;
+            K[2, 2] = kc / (6.0 * a * b) * 2 * (Math.Pow(a, 2) + Math.Pow(b, 2));
+            K[2, 3] = kc / (6.0 * a * b) * (Math.Pow(a, 2) - 2 * Math.Pow(b, 2));
 
             K[3, 0] = K[0, 3];
             K[3, 1] = K[1, 3];
             K[3, 2] = K[2, 3];
-            K[3, 3] = kc / 6.0 * 4.0;
-
+            K[3, 3] = kc / (6.0 * a * b) * 2 * (Math.Pow(a, 2) + Math.Pow(b, 2));
             return K;
         }
 
