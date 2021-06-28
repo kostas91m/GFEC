@@ -155,7 +155,18 @@ namespace GFEC
             }
             File.WriteAllLines(@"C:\Users\Public\Documents\finalCoordinateData.dat", finalCoordinateData);
         }
+        public static void ExportUpdatedNodalCoordinates(IAssembly assembly, double[] displacements, string fileName)
+        {
+            List<string> finalCoordinateData = new List<string>();
 
+            Dictionary<int, INode> nodesAtFinalState = Assembly.CalculateFinalNodalCoordinates(assembly.Nodes, displacements);
+
+            foreach (var node in nodesAtFinalState)
+            {
+                finalCoordinateData.Add(node.Key.ToString() + "\t" + node.Value.XCoordinate.ToString() + "\t" + node.Value.YCoordinate.ToString());
+            }
+            File.WriteAllLines(@"C:\Users\Public\Documents\"+ fileName+".dat", finalCoordinateData);
+        }
         public static void ExportCondactivityForAllLoadSteps(List<Dictionary<int, double>> contactContactivityForEachStep)
         {
             int k = 0;

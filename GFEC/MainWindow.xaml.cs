@@ -123,7 +123,12 @@ namespace GFEC
             exampleList.Add("CantileverWithQuad8Elements");
             exampleList.Add("TwoBlocksInContact3D");
             exampleList.Add("Hxa8TestExample");
-
+            exampleList.Add("ThreeTrusses");
+            exampleList.Add("TwoBlocks2DNtN");
+            exampleList.Add("TwoBlocks2DNtS");
+            exampleList.Add("BendingBeamContact2d");
+            exampleList.Add("BendingOveraRigidCylinder");
+            exampleList.Add("TwoBlocksHigherOrderNTS");
             ComboBox1.ItemsSource = exampleList;
         }
 
@@ -300,6 +305,42 @@ namespace GFEC
                     Hxa8TestExample.newSolu.NonLinearScheme = new LoadControlledNewtonRaphson();
                     Hxa8TestExample.newSolu.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
                     finalResults = Hxa8TestExample.RunStaticExample();
+                    break;
+                case "ThreeTrusses":
+                    ThreeTrusses.structuralSolution = new StaticSolver();
+                    ThreeTrusses.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+                    ThreeTrusses.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
+                    finalResults = ThreeTrusses.RunStaticExample();
+                    break;
+                case "TwoBlocks2DNtN":
+                    TwoBlocks2DNtN.structuralSolution = new StaticSolver();
+                    TwoBlocks2DNtN.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+                    TwoBlocks2DNtN.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
+                    finalResults = TwoBlocks2DNtN.RunStaticExample();
+                    break;
+                case "TwoBlocks2DNtS":
+                    TwoBlocks2DNtS.structuralSolution = new StaticSolver();
+                    TwoBlocks2DNtS.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+                    TwoBlocks2DNtS.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
+                    finalResults = TwoBlocks2DNtS.RunStaticExample();
+                    break;
+                case "BendingBeamContact2d":
+                    BendingBeamContact2d.structuralSolution = new StaticSolver();
+                    BendingBeamContact2d.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+                    BendingBeamContact2d.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
+                    finalResults = BendingBeamContact2d.RunStaticExample();
+                    break;
+                case "BendingOveraRigidCylinder":
+                    BendingOveraRigidCylinder.structuralSolution = new StaticSolver();
+                    BendingOveraRigidCylinder.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+                    BendingOveraRigidCylinder.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
+                    finalResults = BendingOveraRigidCylinder.RunStaticExample();
+                    break;
+                case "TwoBlocksHigherOrderNTS":
+                    TwoBlocksHigherOrderNTS.structuralSolution = new StaticSolver();
+                    TwoBlocksHigherOrderNTS.structuralSolution.NonLinearScheme = new LoadControlledNewtonRaphson();
+                    TwoBlocksHigherOrderNTS.structuralSolution.NonLinearScheme.convergenceResult += NonLinearScheme_convergenceResult;
+                    finalResults = TwoBlocksHigherOrderNTS.RunStaticExample();
                     break;
                 default:
                     finalResults = TwoQuadsExample.RunStaticExample();

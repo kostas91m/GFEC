@@ -27,7 +27,7 @@ namespace GFEC
             ElementFreedomSignature[4] = new bool[] { true, true, true, false, false, false };
             ElementFreedomSignature[5] = new bool[] { true, true, true, false, false, false };
             DisplacementVector = new double[15];
-            PenaltyFactor = properties.YoungMod * 1.0;
+            PenaltyFactor = properties.YoungMod * 0.10;
             lastKsiVector = new double[2];
         }
 
@@ -43,11 +43,15 @@ namespace GFEC
         }
         public List<double[]> GetStressVector()
         {
-            throw new Exception("Needs to be removed. Has beeb used only for testing purposes");
+            List<double[]> l = new List<double[]>();
+            l.Add(new double[] { 0.0, 0.0, 0.0 });
+            return l;
         }
         public List<double[]> GetStrainVector()
         {
-            throw new Exception("Needs to be removed. Has beeb used only for testing purposes");
+            List<double[]> l = new List<double[]>();
+            l.Add(new double[] { 0.0, 0.0, 0.0 });
+            return l;
         }
         public List<double[]> GetGaussPointsInPhysicalSpace()
         {

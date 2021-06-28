@@ -25,7 +25,7 @@ namespace GFEC
             DisplacementVector = new double[6];
             //PenaltyFactor = properties.YoungMod * 1000.0 * properties.SectionArea;
             //PenaltyFactor = properties.YoungMod * 3000.0 * properties.SectionArea;
-            PenaltyFactor = properties.YoungMod * 100.0;
+            PenaltyFactor = properties.YoungMod * 100.0;// εN / Ε is to be added to element properties
         }
 
         //private double[] CalculateNormalUnitVector(double detm)

@@ -24,6 +24,11 @@ namespace GFEC
         double A { get; set; }
         double B { get; set; }
         double PoissonRatio { get; set; }
+        int MasterSegmentPolynomialDegree { get; set; }
+        int SlaveSegmentPolynomialDegree { get; set; }
+        int IntegrationPoints { get; set; }
+        double PenaltyFactorRatio { get; set; }
+
 
     }
 }

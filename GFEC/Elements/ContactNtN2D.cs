@@ -23,7 +23,7 @@ namespace GFEC
             ElementFreedomSignature[2] = new bool[] { true, true, false, false, false, false };
             DisplacementVector = new double[4];
             //PenaltyFactor = properties.YoungMod * 1000.0 * properties.SectionArea;
-            PenaltyFactor = properties.YoungMod * 100.0;
+            PenaltyFactor = properties.YoungMod * 10.0;
             //PenaltyFactor = properties.YoungMod * 3000.0 * properties.SectionArea;
         }
 

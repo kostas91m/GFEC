@@ -42,15 +42,71 @@ namespace GFEC
         }
         public List<double[]> GetStressVector()
         {
-            throw new Exception("Needs to be removed. Has beeb used only for testing purposes");
+            List<double[]> GpointsStress = new List<double[]>();
+            double[,] E = CalculateStressStrainMatrix(Properties.YoungMod, Properties.PoissonRatio);
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    for (int k = 0; k < 2; k++)
+                    {
+                        double[] gP = GaussPoints(i, j, k).Item1;
+                        double[] gW = GaussPoints(i, j, k).Item2;
+                        Dictionary<string, double[]> localdN = CalculateShapeFunctionsLocalDerivatives(gP);
+                        double[,] J = CalculateJacobian(localdN);
+                        double[,] invJ = CalculateInverseJacobian(J).Item1;
+                        double detJ = CalculateInverseJacobian(J).Item2;
+                        Dictionary<int, double[]> globaldN = CalculateShapeFunctionsGlobalDerivatives(localdN, invJ);
+                        double[,] B = CalculateBMatrix(globaldN);
+                        double[] strainVector = CalculateStrainsVector(B);
+                        double[] stressVector = CalculateStressVector(E, strainVector);
+                        GpointsStress.Add(stressVector);
+                    }
+                }
+            }
+            return GpointsStress;
         }
         public List<double[]> GetStrainVector()
         {
-            throw new Exception("Needs to be removed. Has beeb used only for testing purposes");
+            List<double[]> GpointsDeformation = new List<double[]>();
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    for (int k = 0; k < 2; k++)
+                    {
+                        double[] gP = GaussPoints(i, j, k).Item1;
+                        double[] gW = GaussPoints(i, j, k).Item2;
+                        Dictionary<string, double[]> localdN = CalculateShapeFunctionsLocalDerivatives(gP);
+                        double[,] J = CalculateJacobian(localdN);
+                        double[,] invJ = CalculateInverseJacobian(J).Item1;
+                        double detJ = CalculateInverseJacobian(J).Item2;
+                        Dictionary<int, double[]> globaldN = CalculateShapeFunctionsGlobalDerivatives(localdN, invJ);
+                        double[,] B = CalculateBMatrix(globaldN);
+                        double[] strainVector = CalculateStrainsVector(B);
+                        GpointsDeformation.Add(strainVector);
+                    }
+                }
+            }
+            return GpointsDeformation;
         }
         public List<double[]> GetGaussPointsInPhysicalSpace()
         {
-            throw new Exception("Needs to be removed. Has beeb used only for testing purposes");
+            List<double[]> GpointsPhysicalCoordinates = new List<double[]>();
+            double[] xUpdated = UpdateNodalCoordinates(DisplacementVector);
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    for (int k = 0; k < 2; k++)
+                    {
+                        double[] gP = GaussPoints(i, j, k).Item1;
+                        double[] gaussPoint = VectorOperations.MatrixVectorProduct(CalculateShapeFunctionMatrix(gP[0], gP[1], gP[2]), xUpdated);
+                        GpointsPhysicalCoordinates.Add(gaussPoint);
+                    }
+                }
+            }
+            return GpointsPhysicalCoordinates;
         }
         public List<double[]> GetStressFromElementsNodes()
         {
@@ -89,6 +145,23 @@ namespace GFEC
             double N8 = 1.0 / 8.0 * (1 - ksi) * (1 + ihta) * (1 + mhi); shapeFunctions.Add(8, N8);
 
             return shapeFunctions;
+        }
+        private double[,] CalculateShapeFunctionMatrix(double ksi, double ihta, double zita)
+        {
+            double N1 = 1.0 / 8.0 * (1 - ksi) * (1 - ihta) * (1 - zita); 
+            double N2 = 1.0 / 8.0 * (1 + ksi) * (1 - ihta) * (1 - zita); 
+            double N3 = 1.0 / 8.0 * (1 + ksi) * (1 + ihta) * (1 - zita); 
+            double N4 = 1.0 / 8.0 * (1 - ksi) * (1 + ihta) * (1 - zita); 
+            double N5 = 1.0 / 8.0 * (1 - ksi) * (1 - ihta) * (1 + zita); 
+            double N6 = 1.0 / 8.0 * (1 + ksi) * (1 - ihta) * (1 + zita); 
+            double N7 = 1.0 / 8.0 * (1 + ksi) * (1 + ihta) * (1 + zita); 
+            double N8 = 1.0 / 8.0 * (1 - ksi) * (1 + ihta) * (1 + zita);
+            double[,] shapeFunctionsMat = new double[,] {
+                {N1, 0.0, 0.0, N2, 0.0, 0.0, N3, 0.0, 0.0, N4, 0.0, 0.0, N5, 0.0, 0.0, N6, 0.0, 0.0, N7, 0.0, 0.0, N8, 0.0, 0.0 },
+                {0.0, N1, 0.0, 0.0, N2, 0.0, 0.0, N3, 0.0, 0.0, N4, 0.0, 0.0, N5, 0.0, 0.0, N6, 0.0, 0.0, N7, 0.0, 0.0, N8, 0.0 },
+                {0.0, 0.0, N1, 0.0, 0.0, N2, 0.0, 0.0, N3, 0.0, 0.0, N4, 0.0, 0.0, N5, 0.0, 0.0, N6, 0.0, 0.0, N7, 0.0, 0.0, N8 },
+            };
+            return shapeFunctionsMat;
         }
 
         private Dictionary<string, double[]> CalculateShapeFunctionsLocalDerivatives(double[] naturalCoordinates)

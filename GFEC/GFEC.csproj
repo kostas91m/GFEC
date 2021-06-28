@@ -88,6 +88,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Assemble\AssemblyHelpMethods.cs" />
+    <Compile Include="Elements\ContactStS2D.cs" />
+    <Compile Include="Elements\SecondOrderContactNtS2D.cs" />
     <Compile Include="Elements\ContactNtS3D.cs" />
     <Compile Include="Elements\Quad8.cs" />
     <Compile Include="Elements\Triangle3.cs" />
@@ -101,6 +103,12 @@
     <Compile Include="Examples\CentralDifferencesTest.cs" />
     <Compile Include="Examples\CantileverWithTriangElements.cs" />
     <Compile Include="Examples\CantileverWithQuad8Elements.cs" />
+    <Compile Include="Examples\BendingBeamContact2d.cs" />
+    <Compile Include="Examples\BendingOveraRigidCylinder.cs" />
+    <Compile Include="Examples\TwoBlocksHigherOrderNTS.cs" />
+    <Compile Include="Examples\TwoBlocks2DNtS.cs" />
+    <Compile Include="Examples\TwoBlocks2DNtN.cs" />
+    <Compile Include="Examples\ThreeTrusses.cs" />
     <Compile Include="Examples\Hxa8TestExample.cs" />
     <Compile Include="Examples\TwoBlocksInContact3D.cs" />
     <Compile Include="Examples\ImpactCircle2.cs" />
